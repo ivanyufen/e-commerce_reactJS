@@ -1,0 +1,201 @@
+.fix-header > span{
+    font-size: 0.75rem;
+}
+.fix-header:hover{
+    color: orange !important;
+}
+
+a{
+    text-decoration: none !important;
+}
+
+li{
+    list-style-type: none;
+}
+
+/* dropdown keluar saat hover */
+.dropdown:hover>.dropdown-menu{
+    display: block;
+}
+
+.login{
+    border-radius: 50px;
+}
+
+
+
+a.navbar-brand {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 2rem;
+}
+
+.header-icons-noti {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #111111;
+    color: white;
+    font-size: 12px;
+    position: absolute;
+    top: 35px;
+    right: 390px;
+  }
+
+
+  .logo{
+      width: 50px;
+      height: 50px;
+      margin: 0 auto;
+      display: block;
+  }
+
+  .sm-line{
+      width: 30px;
+      height: 3px;
+      background: red;
+      margin: 0 auto;
+
+  }
+  form > .sm-line{
+      width: 30px;
+      height: 3px;
+      background: blue;
+      margin-left: 0;
+      margin-bottom: 5px;
+      
+
+  }
+
+  .socialfeedlg{
+      margin: 0 auto;
+      text-align: center;
+  }
+
+  .socialfeed > img{
+      width: 250px;
+      height: 250px;
+      margin-left: 10px;
+      border: 2px double black;
+  }
+
+
+  .overlay {
+    width: 250px;
+    height: 250px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 22px;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    height: 250px;
+    width: 255px;
+    transition: .5s ease;
+    background-color: gray;
+  }
+  
+  .socialfeed:hover .overlay {
+    opacity: 0.5;
+  }
+  
+  .m-all-1 {
+      margin-bottom: 1px;
+    }
+
+  .p-t-40{
+      padding-top: 40px;
+    }
+  .p-t-27 {
+      padding-top: 27px;
+    }
+  .p-b-30, .p-tb-30, .p-all-30 {
+      padding-bottom: 30px;
+    }
+  .p-b-50, .p-tb-50, .p-all-50 {
+      padding-bottom: 50px;
+    }
+  .p-b-32, .p-tb-32 {
+      padding-bottom: 32px;
+    }
+  .p-t-75, .p-tb-75 {
+      padding-top: 75px;
+    }
+
+    .navbar {
+        padding-top: 25px;
+        padding-bottom: 25px;
+        background: #333;
+        color: #333;
+        transition: all 0.3s;
+      } 
+
+      
+      .navbar.compressed {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        z-index: 10;
+      }
+      
+      .header-icons-noti2{
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: #111111;
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        top: 20px;
+        right: 390px;
+      }
+
+      /* untuk resize gmaps supaya full width */
+      .google-maps {
+        position: relative;
+        padding-bottom: 35%;
+        height: 0;
+        overflow: hidden;
+
+    }
+
+    .google-maps iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+         /*height: 100% !important; */
+    }
+
+    /* NGECILIN SIZE FORMNYA */
+    .join-form{
+        width: 50%;
+    }
+
+    /* WARNA ICON SOCIAL MEDIA DAN HOVERNYA */
+    .fa-stack{
+        color: gray;
+    }
+
+    .fa-stack:hover{
+        color: blue;
+    }
