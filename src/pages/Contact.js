@@ -1,9 +1,12 @@
 import React from 'react';
+import Breadcrumbs from './../components/Breadcrumbs';
 
 class Contact extends React.Component {
+
     render() {
         return (
             <React.Fragment>
+                <Breadcrumbs path={this.props.match.url} />
                 <section id="contact" className="my-5">
                     <div class="container">
                         <div class="row">
@@ -26,7 +29,7 @@ class Contact extends React.Component {
                                     <i class="far fa-envelope"></i>
                                     <span class="lead inl">&ensp; Email</span>
                                 </span>
-                                <p><a href="mailto:vanandco@gmail.com?Subject=Hello%20again" target="_top">vanandco@gmail.com</a></p>
+                                <p><a href="" href="mailto:vanandco@gmail.com?Subject=Hello%20again" target="_top">vanandco@gmail.com</a></p>
                             </div>
 
                             <div class="col-lg-6 col-sm-12 mx-auto">

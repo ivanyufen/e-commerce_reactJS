@@ -7,7 +7,7 @@ class Navbar extends React.Component {
             <React.Fragment>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="container">
-                        <Link to="/"><a className="navbar-brand" href="">Van & Co.</a></Link>
+                        <a href="/" className="navbar-brand" >Van & Co.</a>
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>
@@ -16,31 +16,31 @@ class Navbar extends React.Component {
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav mr-auto">
                                 <li className="nav-item active">
-                                    <Link to="/"><a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a></Link>
+                                    <a href="/" className="nav-link" >Home <span className="sr-only">(current)</span></a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Our Products</a>
+                                    <Link to="/productList"><a href="productList" className="nav-link">Our Products</a></Link>
                                 </li>
                                 <li className="nav-item dropdown">
-                                    <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                    <a href="" className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
                                         Order
                                     </a>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <Link to="/confirmPayment"><a className="dropdown-item" href="#">Confirm Payment</a></Link>
-                                        <a className="dropdown-item" href="#">Order History</a>
+                                        <Link to="/confirmPayment"><a href="" className="dropdown-item" >Confirm Payment</a></Link>
+                                        <a href="" className="dropdown-item" >Order History</a>
                                     </div>
                                 </li>
                                 <li className="nav-item dropdown">
-                                    <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                    <a href="" className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
                                         Information
                                     </a>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a className="dropdown-item" href="">About Us</a>
-                                        <Link to="/contact"><a className="dropdown-item" href="">Contact Us</a></Link>
-                                        <a className="dropdown-item" href="">Events and Promotions</a>
-                                        <a className="dropdown-item" href="">Store Information</a>
+                                        <a href="" className="dropdown-item" >About Us</a>
+                                        <Link to="/contact"><a href="" className="dropdown-item" >Contact Us</a></Link>
+                                        <a href="" className="dropdown-item" >Events and Promotions</a>
+                                        <a href="" className="dropdown-item" >Store Information</a>
                                     </div>
                                 </li>
                             </ul>
@@ -50,12 +50,12 @@ class Navbar extends React.Component {
                                 <button className="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
                             </form>
 
-                            <Link to="/login"><a type="button" className="btn btn-outline-secondary mr-3 login" href="login.html"><i className="fas fa-sign-in-alt"></i>
+                            <Link to="/login"><a href="" type="button" className="btn btn-outline-secondary mr-3 login" href="login.html"><i className="fas fa-sign-in-alt"></i>
                                 Log In</a></Link>
 
-                            <a type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>0</span>)</a>
+                            <a href="" type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>{this.props.cart}</span>)</a>
 
-                            {/* <a href="#"><span className="header-icons-noti">0</span></a> */}
+                            {/* <a href="" ><span className="header-icons-noti">0</span></a> */}
                         </div>
                     </div>
                 </nav>

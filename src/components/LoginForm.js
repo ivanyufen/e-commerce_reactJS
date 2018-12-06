@@ -15,9 +15,9 @@ class LoginForm extends React.Component {
                         <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
                     </div>
                     <div className="form-group">
-                        <p>Forgot your password? <a href="#">Reset</a></p>
+                        <p>Forgot your password? <a href="">Reset</a></p>
                     </div>
-                    <button type="submit" className="btn btn-primary">Log In</button>
+                    <button type="button" className="btn btn-primary">Log In</button>
                 </form>
             </div>
         )

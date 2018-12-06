@@ -2,11 +2,16 @@ import React from 'react';
 import Breadcrumbs from './../components/Breadcrumbs';
 
 class JoinUs extends React.Component {
+
+    // supaya pagenya scroll keatas saat di klik
+    componentDidMount() {
+        window.scrollTo(0, 0);
+    }
+
     render() {
         return (
             <React.Fragment>
-                <Breadcrumbs />
-
+                <Breadcrumbs path={this.props.match.url} />
                 <section className="section">
                     <div className="container join-form">
                         <h2 className="title">Submit your CV</h2>

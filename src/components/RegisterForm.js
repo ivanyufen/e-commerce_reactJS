@@ -1,6 +1,24 @@
 import React from 'react';
 
 class RegisterForm extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            classDisplay: "d-none"
+        }
+    }
+
+    // UNTUK EVENT CHECKBOX REGISTER KE CHECK, TOGGLE CLASS
+    onHandleChange = () => {
+        if (this.state.classDisplay === "d-none") {
+            this.setState({ classDisplay: "d-block" })
+        }
+        else {
+            this.setState({ classDisplay: "d-none" })
+        }
+
+    }
     render() {
         return (
             <div className="col-lg-6">
@@ -9,10 +27,10 @@ class RegisterForm extends React.Component {
                     <div className="sm-line"></div>
                     <p>Register now.</p>
                     <div className="form-group form-check">
-                        <input type="checkbox" className="form-check-input" id="registerCheck" autocomplete="off" onclick="showRegisForm()" />
+                        <input type="checkbox" className="form-check-input" id="registerCheck" autoComplete="off" onChange={this.onHandleChange} />
                         <label className="form-check-label" for="registerCheck">Register</label>
                     </div>
-                    <div id="regis" className="d-none">
+                    <div id="regis" className={this.state.classDisplay}>
                         <div className="form-group">
                             <label for="exampleInputEmail1">Email address</label>
                             <input type="email" className="form-control" id="email"

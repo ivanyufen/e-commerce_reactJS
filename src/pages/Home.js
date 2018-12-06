@@ -4,6 +4,7 @@ import SocialFeed from './../components/SocialFeed';
 import NewsLetter from '../components/NewsLetter';
 
 class Home extends React.Component {
+
     render() {
         return (
             <React.Fragment>

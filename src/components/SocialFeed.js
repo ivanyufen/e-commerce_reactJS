@@ -12,6 +12,17 @@ class SocialFeed extends React.Component {
                         </div>
                         <div className="sm-line"></div>
                     </div>
+
+                    <div className="row my-3" id="instafeed">
+
+                    </div>
+                    {/* <div className="row">
+                        <div className="col-lg-12">
+                            <img className="logo" src="./img/ig-logo.png" />
+                            <h2 className="text-center text-uppercase mt-3">Our Social Feed</h2>
+                        </div>
+                        <div className="sm-line"></div>
+                    </div>
                     <div className="row my-3 socialfeedlg">
                         <div className="col-lg-3 socialfeed">
                             <img src="./img/socialfeed/ig-1.JPG" />
@@ -47,11 +58,11 @@ class SocialFeed extends React.Component {
                             <img src="./img/socialfeed/ig-8.JPG" />
                             <div className="overlay"></div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="text-center">
-                                <a href="https://www.instagram.com/straps_id" target="_blank" className="btn btn-primary">I want to
+                                <a href="" href="https://www.instagram.com/ivanyufen" target="_blank" rel="noopener noreferrer" className="btn btn-primary">I want to
                             see more!</a>
                             </div>
                         </div>
