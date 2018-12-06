@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+I made this project from scratch and inspired by several e-commerce design. There are still a lot of flaws. Thank you for your appreciation :)
+
 ## Available Scripts
 
 In the project directory, you can run:
