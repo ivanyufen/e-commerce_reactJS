@@ -1,19 +1,19 @@
 import React from 'react';
+import ScrollTop from 'react-scrolltop-button';
 
 class BackToTop extends React.Component {
-
-    backToTop = () => {
-        window.scrollTo(0, 0);
-    }
-
     render() {
         return (
             <React.Fragment>
-                <button type="button" className="btn btn-primary" id="backToTop" style={{
-                    position: "fixed",
-                    bottom: "20px",
-                    right: "20px"
-                }} onClick={this.backToTop}>Back to top!</button>
+                <ScrollTop
+                    text="back to top"
+                    distance={100}
+                    breakpoint={768}
+                    style={{ backgroundColor: "#598bdb", color: "#fff", position: "fixed", bottom: "3rem", right: "3rem", border: "none", padding: "10px" }}
+                    className="scroll-your-role btn-primary"
+                    speed={350}
+                    target={75}
+                />
             </React.Fragment>
         )
     }

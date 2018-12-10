@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Link } from 'react-router-dom';
-import faker from 'faker';
 import Home from './pages/Home';
 import JoinUs from './pages/JoinUs';
 import FAQ from './pages/FAQ';
@@ -12,6 +11,10 @@ import Navbar from './components/Navbar';
 import BackToTop from './components/BackToTop';
 import SmallNavbar from './components/SmallNavbar';
 import Footer from './components/Footer';
+import ProductDetails from './pages/ProductDetails';
+import AboutUs from './pages/AboutUs';
+
+
 
 class App extends React.Component {
 
@@ -45,10 +48,13 @@ class App extends React.Component {
                     <Route path="/contact" component={Contact}></Route>
                     <Route path="/confirmPayment" component={ConfirmPayment}></Route>
                     <Route path="/faq" component={FAQ}></Route>
+                    <Route path="/productDetails" component={ProductDetails}></Route>
+                    <Route path="/aboutUs" component={AboutUs}></Route>
                 </div>
 
                 <Footer />
                 <BackToTop />
+
 
             </React.Fragment>
         )

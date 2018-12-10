@@ -1,7 +1,8 @@
 import React from 'react';
 import Breadcrumbs from './../components/Breadcrumbs';
 import Faker from 'faker';
-import ProductDetail from './../components/ProductDetail';
+import ProductDetails from './ProductDetails';
+import { Link } from 'react-router-dom';
 
 class ProductList extends React.Component {
 
@@ -44,7 +45,7 @@ class ProductList extends React.Component {
     }
 
     displayProducts = () => {
-        return this.state.products.map((val) => {
+        return this.state.products.map((val, index) => {
             return (
                 <div className="col-lg-3 my-1">
                     <a href=""><div className="card p-1 text-center text-dark" style={{ width: "15rem", height: "28rem" }}>
@@ -56,7 +57,7 @@ class ProductList extends React.Component {
                             <ul class="list-group list-group-flush mb-2">
                                 <li className="list-group-item text-muted"><a href="">{val.sellerName}</a><br /><i class="fas fa-map-marker-alt mr-1"></i>{val.location}</li>
                             </ul>
-                            <a href="#" className="btn btn-warning mx-3" onClick={(this.onClickCart)}><i className="fas fa-cart-plus"></i></a>
+                            <a href="#" className="btn btn-warning mx-3" id={index} onClick={(this.onClickCart)}><i className="fas fa-cart-plus"></i></a>
                             {/* <a href="#" className="btn btn-warning mx-3" onClick={this.onClickCart}><i className="fas fa-cart-plus"></i></a> */}
                             <a href="#" className="btn btn-danger">Details</a>
                         </div>

@@ -23,7 +23,6 @@ class Breadcrumbs extends React.Component {
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb" style={{ justifyContent: "center" }}>
                     <li className="breadcrumb-item"><Link to="/"><a href="" href="">Home</a></Link></li>
-                    {/* <li className="breadcrumb-item active" aria-current="page">{this.props.path}</li> */}
                     <li className="breadcrumb-item active" aria-current="page">{this.state.path}</li>
                 </ol>
             </nav>

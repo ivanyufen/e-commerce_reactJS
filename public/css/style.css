@@ -5,6 +5,14 @@
     color: orange !important;
 }
 
+
+/* UNTUK HIDE SPINNER DI INPUT TYPE NUMBER */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
 a{
     text-decoration: none !important;
 }

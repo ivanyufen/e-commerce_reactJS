@@ -37,7 +37,7 @@ class Navbar extends React.Component {
                                         Information
                                     </a>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a href="" className="dropdown-item" >About Us</a>
+                                        <a href="/aboutUs" className="dropdown-item">About Us</a>
                                         <Link to="/contact"><a href="" className="dropdown-item" >Contact Us</a></Link>
                                         <a href="" className="dropdown-item" >Events and Promotions</a>
                                         <a href="" className="dropdown-item" >Store Information</a>
