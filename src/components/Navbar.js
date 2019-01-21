@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import LoginBtn from './LoginBtn';
 
 class Navbar extends React.Component {
     render() {
@@ -53,7 +54,8 @@ class Navbar extends React.Component {
                             <Link to="/login"><a href="" type="button" className="btn btn-outline-secondary mr-3 login" href="login.html"><i className="fas fa-sign-in-alt"></i>
                                 Log In</a></Link>
 
-                            <a href="" type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>{this.props.cart}</span>)</a>
+                            <LoginBtn cart={this.props.cart} />
+
 
                             {/* <a href="" ><span className="header-icons-noti">0</span></a> */}
                         </div>

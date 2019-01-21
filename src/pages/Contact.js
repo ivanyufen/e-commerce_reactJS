@@ -17,8 +17,7 @@ class Contact extends React.Component {
                                     <i class="fas fa-map-marker-alt"></i>
                                     <span class="lead inl"> &ensp; Address</span>
                                 </span>
-                                <p class="lnhei">Perumahan Taman Mahkota blok. C2 no. 7-8, Jln. Husein Sastranegara, <br /> Bokor,
-                                    Benda, Tangerang </p>
+                                <p class="lnhei">Sinarmas MSIG Tower, Sudirman </p>
 
                                 <span>
                                     <i class="fas fa-phone"></i>

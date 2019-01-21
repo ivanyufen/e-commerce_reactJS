@@ -28,7 +28,7 @@ class App extends React.Component {
     getCart = (x) => {
         this.setState({
             cart: x
-        })
+        });
     }
 
     render() {

@@ -1,4 +1,5 @@
 import React from 'react'
+import Modal from './Modal';
 
 class SmallNavbar extends React.Component {
     render() {
@@ -31,6 +32,8 @@ class SmallNavbar extends React.Component {
                         </div>
                     </div>
                 </div>
+
+                <Modal />
             </div>
         )
     }
