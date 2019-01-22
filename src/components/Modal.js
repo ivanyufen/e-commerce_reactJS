@@ -1,10 +1,10 @@
 import React from 'react';
 
 class Modal extends React.Component {
-
     render() {
         return (
             <React.Fragment>
+                {/* Modal for Small Navbar Component */}
                 <div className="modal fade" id="free-shipping-modal" tabIndex="-1" role="dialog">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
@@ -14,6 +14,7 @@ class Modal extends React.Component {
                                     <span className="text-uppercase">
                                         <h5 className="d-inline">Free Shipping</h5>
                                     </span>
+                                    <img src="./img/small navbar/shipping.png" style={{ maxWidth: 100, maxHeight: 100, display: "block", margin: "0 auto", marginTop: "20px" }} />
                                 </div>
                                 <br />
                                 <div className="m-4">
@@ -42,6 +43,7 @@ class Modal extends React.Component {
                                     <span className="text-uppercase">
                                         <h5 className="d-inline">High Quality Straps</h5>
                                     </span>
+                                    <img src="./img/small navbar/straps.jpg" style={{ maxWidth: 250, maxHeight: 250, display: "block", margin: "0 auto", marginTop: "20px" }} />
                                 </div>
                                 <br />
                                 <div className="m-4">
@@ -67,34 +69,13 @@ class Modal extends React.Component {
                                     <span className="text-uppercase">
                                         <h5 className="d-inline">0% Installment</h5>
                                     </span>
+                                    <img src="./img/small navbar/cc.png" style={{ maxWidth: 100, maxHeight: 100, display: "block", margin: "0 auto", marginTop: "20px" }} />
                                 </div>
                                 <br />
                                 <div className="m-4">
                                     <p>Plan to have a payment with credit card?</p>
                                     <small>Worry not. We provide secure and free of installment charge if you intend to pay with credit card. There's also a program for 3, 6, and 12 months installment
                             with BCA and Mandiri credit card.  </small>
-                                </div>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true"><small>Close</small> &times;</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="modal fade" id="modalNewsletter" tabIndex="-1" role="dialog">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="text-center p-3">
-                                <div className="m-2 mb-1 text-success">
-                                    <span className="text-uppercase">
-                                        <h5 className="d-inline">Subscribe Success!</h5>
-                                    </span>
-                                </div>
-                                <br />
-                                <div className="mb-3">
-                                    <p>Thank you for subscribing our newsletter!</p>
-                                    <p>You will receive updates whenever we launch a new product to email: <strong>{this.props.email}</strong> </p>
                                 </div>
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true"><small>Close</small> &times;</span>

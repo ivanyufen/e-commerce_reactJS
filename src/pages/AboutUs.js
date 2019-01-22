@@ -1,6 +1,7 @@
 import React from 'react';
 import Breadcrumbs from './../components/Breadcrumbs';
 import Faker from 'faker';
+import { Link } from 'react-router-dom';
 
 class AboutUs extends React.Component {
     render() {
@@ -17,6 +18,8 @@ class AboutUs extends React.Component {
                     <img className="my-3" src={Faker.image.image()} />
                     <p>{Faker.lorem.paragraphs()}</p>
                     <p>{Faker.lorem.paragraphs()}</p>
+
+                    <a href="/productList" className="btn btn-outline-success btn-lg btn-block">SHOP NOW! <i class="fas fa-shopping-bag"></i></a>
                 </div>
             </React.Fragment>
         )

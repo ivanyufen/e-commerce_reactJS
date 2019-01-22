@@ -30,6 +30,10 @@ li{
     border-radius: 50px;
 }
 
+.login:hover{
+    background: #4183c4;
+}
+
 
 
 a.navbar-brand {
@@ -191,5 +195,5 @@ a.navbar-brand {
     }
 
     .fa-stack:hover{
-        color: blue;
+        color: #4183c4;
     }

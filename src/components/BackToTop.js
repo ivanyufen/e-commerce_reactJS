@@ -12,7 +12,7 @@ class BackToTop extends React.Component {
                     style={{ backgroundColor: "#598bdb", color: "#fff", position: "fixed", bottom: "3rem", right: "3rem", border: "none", padding: "10px" }}
                     className="scroll-your-role btn-primary"
                     speed={350}
-                    target={75}
+                    target={0}
                 />
             </React.Fragment>
         )

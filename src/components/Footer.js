@@ -92,7 +92,7 @@ class Footer extends React.Component {
                                 <a href="" href="http://www.twitter.com/ivanyufen" target="_blank" rel="noopener noreferrer">
                                     <span className="fa-stack fa-lg">
                                         <i className="fas fa-circle fa-stack-2x"></i>
-                                        <i className="fab fa-whatsapp fa-stack-1x text-white"></i>
+                                        <i className="fab fa-twitter fa-stack-1x text-white"></i>
                                     </span>
                                 </a>
                             </div>

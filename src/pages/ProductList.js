@@ -3,6 +3,7 @@ import Breadcrumbs from './../components/Breadcrumbs';
 import Faker from 'faker';
 import ProductDetails from './ProductDetails';
 import { Link } from 'react-router-dom';
+import ProductCard from './../components/ProductCard';
 
 class ProductList extends React.Component {
 
@@ -14,7 +15,6 @@ class ProductList extends React.Component {
             cart: 0
         }
     }
-
 
     componentDidMount() {
         var productsTemp = [];
@@ -47,26 +47,15 @@ class ProductList extends React.Component {
     displayProducts = () => {
         return this.state.products.map((val, index) => {
             return (
-                <div className="col-lg-3 my-1">
-                    <a href=""><div className="card p-1 text-center text-dark" style={{ width: "15rem", height: "28rem" }}>
-                        <img className="card-img-top mx-auto" src={val.productImage} style={{ width: "7rem", maxHeight: "13rem" }} alt="Product photo" />
-                        <div className="card-body">
-                            <h5 className="card-title">Name: {val.productName}</h5>
-                            <p className="card-text">Price: ${val.productPrice}</p>
-                            <p className="card-text"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>(67)</p>
-                            <ul class="list-group list-group-flush mb-2">
-                                <li className="list-group-item text-muted"><a href="">{val.sellerName}</a><br /><i class="fas fa-map-marker-alt mr-1"></i>{val.location}</li>
-                            </ul>
-                            <a href="#" className="btn btn-warning mx-3" id={index} onClick={(this.onClickCart)}><i className="fas fa-cart-plus"></i></a>
-                            {/* <a href="#" className="btn btn-warning mx-3" onClick={this.onClickCart}><i className="fas fa-cart-plus"></i></a> */}
-                            <a href="#" className="btn btn-danger">Details</a>
-                        </div>
-                    </div>
-                    </a>
-                </div>
-            )
-        })
-    }
+                <ProductCard productImage={val.productImage}
+                    productName={val.productName}
+                    productPrice={val.productPrice}
+                    sellerName={val.sellerName}
+                    location={val.location}
+                    index={index} />
+            );
+        });
+    };
 
     render() {
         return (
@@ -129,6 +118,14 @@ class ProductList extends React.Component {
                                             </div>
                                         </li>
 
+                                        {/* Size */}
+                                        <label for="size">Size </label>
+                                        <select class="mx-1" style={{ padding: "10px 20px" }} id="size">
+                                            <option>18 mm</option>
+                                            <option>20 mm</option>
+                                            <option>22 mm</option>
+                                        </select>
+
                                         {/* LOKASI */}
                                         <li class="list-group-item">
                                             <h5 class="card-title">Lokasi</h5>
@@ -159,20 +156,36 @@ class ProductList extends React.Component {
                                             <a href="">Lihat semua lokasi</a>
                                         </li>
 
-                                        {/* KONDISI */}
+                                        {/* TYPE STRAP */}
                                         <li class="list-group-item">
-                                            <h5 class="card-title">Kondisi</h5>
+                                            <h5 class="card-title">Type Strap</h5>
+
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
-                                                <label class="form-check-label" for="defaultCheck1">
-                                                    Baru
+                                                <input class="form-check-input" type="checkbox" value="" id="nato" />
+                                                <label class="form-check-label" for="nato">
+                                                    Nato
                                             </label>
                                             </div>
+
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
-                                                <label class="form-check-label" for="defaultCheck1">
-                                                    Bekas
+                                                <input class="form-check-input" type="checkbox" value="" id="zulu" />
+                                                <label class="form-check-label" for="zulu">
+                                                    Zulu
                                             </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="rubber" />
+                                                <label class="form-check-label" for="rubber">
+                                                    Rubber
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="bracelet" />
+                                                <label class="form-check-label" for="rubber">
+                                                    Bracelet
+                                                </label>
                                             </div>
                                         </li>
 
@@ -221,7 +234,8 @@ class ProductList extends React.Component {
                                         <select class="mx-1" style={{ padding: "10px 20px" }} id="sort">
                                             <option>Paling sesuai</option>
                                             <option>Rating</option>
-                                            <option>Termurah</option>
+                                            <option>Harga Terendah</option>
+                                            <option>Harga Termahal</option>
                                             <option>Terbaru</option>
                                         </select>
                                     </div>
@@ -231,6 +245,7 @@ class ProductList extends React.Component {
                             <div className="row">
                                 {this.displayProducts()}
                             </div>
+
                             {/* PAGINATION */}
                             <nav aria-label="...">
                                 <ul class="pagination">
@@ -247,6 +262,7 @@ class ProductList extends React.Component {
                                     </li>
                                 </ul>
                             </nav>
+
                         </div>
                     </div>
                 </div>
