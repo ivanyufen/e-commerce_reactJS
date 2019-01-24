@@ -62,7 +62,7 @@ class LoginRegister extends React.Component {
     // }
 
     login = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         //cek ke database
         axios.post("http://localhost:3007/login", {
             username: this.state.username,
@@ -95,10 +95,10 @@ class LoginRegister extends React.Component {
         axios.post("http://localhost:3007/users", this.state.data_user)
             .then((x) => {
                 if (x.data.status == "dataExist") {
-                    alert("Anda sudah terdaftar!");
-                    this.setState({
-                        files: ""
-                    });
+                    alert("Username / Email sudah terdaftar!");
+                    // this.setState({
+                    //     files: ""
+                    // });
                 }
                 else {
 
@@ -168,6 +168,13 @@ class LoginRegister extends React.Component {
         }
     }
 
+    handleEnter = (e) => {
+
+        if (e.keyCode == 13) {
+            this.login();
+        }
+    }
+
 
     render() {
         return (
@@ -185,7 +192,7 @@ class LoginRegister extends React.Component {
                                 </div>
                                 <div className="form-group">
                                     <label for="password">Password</label>
-                                    <input type="password" className="form-control" id="password" value={this.state.password} onChange={(e) => { this.setState({ password: e.target.value }) }} placeholder="Password" />
+                                    <input type="password" className="form-control" id="password" value={this.state.password} onKeyDown={this.handleEnter} onChange={(e) => { this.setState({ password: e.target.value }) }} placeholder="Password" />
                                 </div>
                                 <div className="form-group">
                                     <p>Forgot your password? <a href="">Reset</a></p>

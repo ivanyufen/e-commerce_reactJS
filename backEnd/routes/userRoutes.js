@@ -129,7 +129,7 @@ userRouter.post("/users", (req, res) => {
     let phone_number = req.body.phone_number;
     let address = req.body.address;
     let data = req.body;
-    let sql = `SELECT * FROM users WHERE username = '${username}'`;
+    let sql = `SELECT * FROM users WHERE username = '${username}' OR email = '${email}'`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             throw err;
@@ -168,8 +168,6 @@ userRouter.post("/users", (req, res) => {
                         }
                     });
                     // sampai sini
-
-
                 });
             })
         }
