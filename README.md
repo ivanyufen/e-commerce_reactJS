@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-### I made this project from zero using bootstrap, semantic ui, and React Js. Inspired by several e-commerce I commonly visit. Tried really hard to avoid jQuery besides to show instagram pages and shrinking navbar. There are still a lot of flaws. Anyway, thank you for your appreciation :)
+###
 
 ## Available Scripts
 
