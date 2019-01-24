@@ -22,11 +22,9 @@ userRouter.use(cors());
 userRouter.use(fileupload());
 
 userRouter.get("/users", (req, res) => {
-    let data = req.body;
     let sql = "SELECT * FROM users;";
-    let query = db.query(sql, data, (err, result) => {
+    let query = db.query(sql, (err, result) => {
         if (err) throw err;
-        console.log(result);
         // res.send("All users data successfully fetched!");
         res.send(result);
     });
@@ -182,19 +180,17 @@ userRouter.post("/users", (req, res) => {
 //request edit data user
 userRouter.put("/users/:id", (req, res) => {
     let data = req.body;
-    let id = req.params.id;
-    let sql = `UPDATE users SET ? where id = ${id} ;`;
+    let sql = `UPDATE users SET ? where id = ${req.params.id} ;`;
     let query = db.query(sql, data, (err, result) => {
         if (err) throw err;
-        console.log(result);
-        // res.send(`User with id: ${id} successfully updated!`);
-        res.send(result);
+        res.send(`User with id: ${req.params.id} successfully updated!`);
     });
 });
 
 
 //request delete data user
 userRouter.delete("/users/:id", (req, res) => {
+    console.log(req.params.id)
     let id = req.params.id;
     console.log(id)
     let sql = `DELETE FROM users where id = ${id} ;`;
@@ -203,6 +199,7 @@ userRouter.delete("/users/:id", (req, res) => {
             throw err;
         }
         res.send(`User with id: ${id} successfully deleted!`);
+        console.log("sukses terhapus")
         // res.send(result);
 
     });

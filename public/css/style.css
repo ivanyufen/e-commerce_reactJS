@@ -197,3 +197,8 @@ a.navbar-brand {
     .fa-stack:hover{
         color: #4183c4;
     }
+
+.navmenu:hover{
+    color: white;
+    background: #4183c4;
+}

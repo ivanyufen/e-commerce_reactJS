@@ -12,7 +12,6 @@ class LoginBtn extends React.Component {
         };
     }
 
-
     logout = () => {
         //saat user logout, delete local storage dan set state kosong
         // localStorage.removeItem("user_data");
@@ -42,6 +41,7 @@ class LoginBtn extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu>
                     <DropdownItem style={{ cursor: "pointer" }}> Edit Profile</DropdownItem>
+                    {this.props.data.role == "Admin" && <a href="/dashboard"><DropdownItem style={{ cursor: "pointer" }}>Dashboard</DropdownItem></a>}
                     <DropdownItem divider />
                     <DropdownItem onClick={this.logout} style={{ cursor: "pointer" }}>Log Out</DropdownItem>
                 </DropdownMenu>
@@ -49,7 +49,7 @@ class LoginBtn extends React.Component {
         )
     }
 
-    displayLoginBtn() {
+    displayLoginBtn(x) {
         return (
             <Link to="/login">
                 <a href="" type="button" className="btn btn-outline-secondary mr-3 login" href=""><i className="fas fa-sign-in-alt"></i>Log In</a>
@@ -58,11 +58,20 @@ class LoginBtn extends React.Component {
     }
 
     render() {
-        return (
-            <React.Fragment>
-                {this.props.data ? this.displayDropDown() : this.displayLoginBtn()}
-            </React.Fragment>
-        )
+
+        if (this.props.checkUserSession == true) {
+            return (
+                <a href="" type="button" className="btn btn-outline-secondary mr-3 login" style={{ visibility: "hidden" }} href="">><i className="fas fa-sign-in-alt"></i>Log In</a>
+            )
+        }
+        else {
+            return (
+                <React.Fragment>
+                    {this.props.data ? this.displayDropDown() : this.displayLoginBtn()}
+                </React.Fragment>
+            )
+        }
+
     }
 }
 

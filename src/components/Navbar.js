@@ -17,13 +17,13 @@ class Navbar extends React.Component {
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav mr-auto">
                                 <li className="nav-item">
-                                    <a href="/" className="nav-link text-dark" >Home <span className="sr-only">(current)</span></a>
+                                    <a href="/" className="nav-link text-dark navmenu" >Home <span className="sr-only">(current)</span></a>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/productList"><a href="productList" className="nav-link text-dark">Shop</a></Link>
+                                    <Link to="/productList"><a href="productList" className="nav-link text-dark navmenu">Shop</a></Link>
                                 </li>
                                 <li className="nav-item dropdown">
-                                    <a href="" className="nav-link text-dark dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                    <a href="" className="nav-link text-dark dropdown-toggle navmenu" id="navbarDropdown" role="button" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
                                         Order
                                     </a>
@@ -33,12 +33,12 @@ class Navbar extends React.Component {
                                     </div>
                                 </li>
                                 <li className="nav-item dropdown">
-                                    <a href="" className="nav-link text-dark dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                    <a href="" className="nav-link text-dark dropdown-toggle navmenu" id="navbarDropdown" role="button" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
                                         Information
                                     </a>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a href="/aboutUs" className="dropdown-item">About Us</a>
+                                        <Link to="/aboutUs"><a href="" className="dropdown-item" >About Us</a></Link>
                                         <Link to="/contact"><a href="" className="dropdown-item" >Contact Us</a></Link>
                                         <a href="" className="dropdown-item" >Events and Promotions</a>
                                         <a href="" className="dropdown-item" >Store Information</a>
@@ -51,7 +51,7 @@ class Navbar extends React.Component {
                                 <button className="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search{this.props.username_user}</button>
                             </form>
 
-                            <LoginBtn data={this.props.data_user} />
+                            <LoginBtn data={this.props.data_user} checkUserSession={this.props.isCheckingSession} />
 
                             <a href="" type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>{this.props.cart}</span>)</a>
                         </div>

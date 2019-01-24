@@ -26,7 +26,8 @@ class App extends React.Component {
             cart: 0,
             data_user: "",
             files: "",
-            isLoggedIn: false
+            isLoggedIn: false,
+            isCheckingSession: true
         }
     }
 
@@ -52,15 +53,18 @@ class App extends React.Component {
                     this.setState({
                         isLoggedIn: true,
                         data_user: data_user,
-                        files: ""
+                        files: "",
+                        isCheckingSession: false
                     });
-                    console.log(this.state.data_user)
                 });
             });
         }
         // kalau session gaada di local storage, lsg login
         else {
             console.log("Silakan login!");
+            this.setState({
+                isCheckingSession: false
+            })
         }
     }
 
@@ -85,7 +89,7 @@ class App extends React.Component {
         return (
             <React.Fragment>
                 <SmallNavbar />
-                <Navbar cart={this.state.cart} data_user={this.state.data_user} />
+                <Navbar cart={this.state.cart} data_user={this.state.data_user} isCheckingSession={this.state.isCheckingSession} />
 
                 <div>
                     <Route exact path="/" component={Home}></Route>
@@ -117,6 +121,7 @@ class App extends React.Component {
                     <Route path="/faq" component={FAQ}></Route>
                     <Route path="/productDetails" component={ProductDetails}></Route>
                     <Route path="/aboutUs" component={AboutUs}></Route>
+
                 </div>
 
                 <Footer />

@@ -138,6 +138,7 @@ class LoginRegister extends React.Component {
                     if (user_session) {
                         alert("Register sukses! Anda telah ter-login!");
                         this.props.checkUserSession();
+                        console.log(x)
                         this.props.history.push('/productList');
                     }
 
@@ -178,7 +179,7 @@ class LoginRegister extends React.Component {
                         <div className="col-lg-6">
                             <form className="border p-3 m-5">
                                 <div className="form-group">
-                                    <label for="username">Email address</label>
+                                    <label for="username">Username</label>
                                     <input type="text" className="form-control" id="username" value={this.state.username} onChange={(e) => { this.setState({ username: e.target.value }) }}
                                         placeholder="Enter username" />
                                 </div>
