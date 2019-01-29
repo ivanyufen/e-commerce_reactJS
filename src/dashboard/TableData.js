@@ -9,7 +9,6 @@ class TableData extends React.Component {
     constructor() {
         super();
         this.state = {
-            users: "",
             isLoading: false,
             modalEdit: false,
             modalDelete: false,
@@ -22,6 +21,15 @@ class TableData extends React.Component {
                 address: "",
                 phone_number: "",
                 role: ""
+            },
+            data_product: {
+                name: "",
+                price: "",
+                category: "",
+                stock: "",
+                description: "",
+                size: "",
+                location: ""
             },
             files: ""
         }
@@ -156,7 +164,6 @@ class TableData extends React.Component {
                             <td>{val.role}</td>
                             <td><button type="button" className="btn btn-primary" onClick={() => { this.toggleEditYes(val.id) }}>Edit</button></td>
                             <td><button type="button" className="btn btn-danger" onClick={() => { this.toggleDeleteYes(val.id) }}>Remove</button></td>
-                            {/* <td><button type="button" className="btn btn-danger">{val.profpict.substr(37, [val.profpict.length - 1])}</button></td> */}
                         </tr>
                     )
                 }
@@ -164,6 +171,31 @@ class TableData extends React.Component {
         }
         else {
             console.log("No user data");
+        }
+    }
+
+    displayProductsTable() {
+        if (this.props.data_product) {
+            return this.props.data_product.map((val, i) => {
+                return (
+                    <tr>
+                        <td>{val.id}</td>
+                        <td>{val.name}</td>
+                        <td>{val.price}</td>
+                        <td>{val.id_category}</td>
+                        <td>{val.stock}</td>
+                        <td>{val.description}</td>
+                        <td>{val.size}</td>
+                        <td>{val.location}</td>
+                        {/* <td>{<img src={val.profpict} style={{ width: 50, height: 50 }} />}</td> */}
+                        <td><button type="button" className="btn btn-primary" onClick={() => { this.toggleEditYes(val.id) }}>Edit</button></td>
+                        <td><button type="button" className="btn btn-danger" onClick={() => { this.toggleDeleteYes(val.id) }}>Remove</button></td>
+                    </tr>
+                )
+            })
+        }
+        else {
+            console.log("No product data");
         }
     }
 
@@ -179,7 +211,7 @@ class TableData extends React.Component {
 
                                 {/* Email */}
                                 <div className="form-group">
-                                    <label for="email">Email address</label>
+                                    <label htmlFor="email">Email address</label>
                                     <input type="email" className="form-control" id="email" value={this.state.data_user.email} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.email = e.target.value;
@@ -192,7 +224,7 @@ class TableData extends React.Component {
 
                                 {/* Name */}
                                 <div className="form-group">
-                                    <label for="name">Name</label>
+                                    <label htmlFor="name">Name</label>
                                     <input type="name" className="form-control" id="email" value={this.state.data_user.name} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.name = e.target.value;
@@ -205,7 +237,7 @@ class TableData extends React.Component {
 
                                 {/* Username */}
                                 <div className="form-group">
-                                    <label for="username">Username</label>
+                                    <label htmlFor="username">Username</label>
                                     <input type="text" className="form-control" id="username" value={this.state.data_user.username} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.username = e.target.value;
@@ -229,7 +261,7 @@ class TableData extends React.Component {
 
                                 {/* Phone Number */}
                                 <div className="form-group">
-                                    <label for="phone_number">Phone Number</label>
+                                    <label htmlFor="phone_number">Phone Number</label>
                                     <input type="text" className="form-control" id="phone_number" value={this.state.data_user.phone_number} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.phone_number = e.target.value;
@@ -244,7 +276,7 @@ class TableData extends React.Component {
                                 <div className="form-group">
                                     <p>Profile Picture</p>
                                     <img src={this.state.data_user.profpict} style={{ maxWidth: 100, maxHeight: 150 }} />
-                                    <label for="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name.length > 20 ? this.state.files.name.slice(0, 15) + "..." : this.state.files.name : <span>Browse image..</span>}</label>
+                                    <label htmlFor="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name.length > 20 ? this.state.files.name.slice(0, 15) + "..." : this.state.files.name : <span>Browse image..</span>}</label>
                                     <input id="file-upload" type="file" name="filename" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0] }) }} />
                                 </div>
                             </div>
@@ -285,7 +317,7 @@ class TableData extends React.Component {
                             <div id="regis">
                                 {/* Email */}
                                 <div className="form-group">
-                                    <label for="email">Email address</label>
+                                    <label htmlFor="email">Email address</label>
                                     <input type="email" className="form-control" id="email" value={this.state.data_user.email} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.email = e.target.value;
@@ -298,7 +330,7 @@ class TableData extends React.Component {
 
                                 {/* Name */}
                                 <div className="form-group">
-                                    <label for="name">Name</label>
+                                    <label htmlFor="name">Name</label>
                                     <input type="name" className="form-control" id="email" value={this.state.data_user.name} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.name = e.target.value;
@@ -311,7 +343,7 @@ class TableData extends React.Component {
 
                                 {/* Username */}
                                 <div className="form-group">
-                                    <label for="username">Username</label>
+                                    <label htmlFor="username">Username</label>
                                     <input type="text" className="form-control" id="username" value={this.state.data_user.username} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.username = e.target.value;
@@ -324,7 +356,7 @@ class TableData extends React.Component {
 
                                 {/* Password */}
                                 <div className="form-group">
-                                    <label for="pass">Password</label>
+                                    <label htmlFor="pass">Password</label>
                                     <input type="password" className="form-control" value={this.state.data_user.password} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.password = e.target.value;
@@ -337,7 +369,7 @@ class TableData extends React.Component {
 
                                 {/* Address */}
                                 <div className="form-group">
-                                    <label for="address">Address</label>
+                                    <label htmlFor="address">Address</label>
                                     <textarea className="form-control" id="address" value={this.state.data_user.address} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.address = e.target.value;
@@ -349,7 +381,7 @@ class TableData extends React.Component {
 
                                 {/* Phone Number */}
                                 <div className="form-group">
-                                    <label for="phone_number">Phone Number</label>
+                                    <label htmlFor="phone_number">Phone Number</label>
                                     <input type="text" className="form-control" id="phone_number" value={this.state.data_user.phone_number} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.phone_number = e.target.value;
@@ -361,8 +393,8 @@ class TableData extends React.Component {
                                 </div>
 
                                 <div className="form-group">
-                                    <label for="role" >Role</label>
-                                    <select onChange={(e) => {
+                                    <label htmlFor="role" >Role</label>
+                                    <select className="form-control" onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.role = e.target.value;
                                         this.setState({
@@ -377,7 +409,7 @@ class TableData extends React.Component {
                                 {/* Profile Picture */}
                                 <div className="form-group">
                                     <p>Profile Picture</p>
-                                    <label for="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name.length > 20 ? this.state.files.name.slice(0, 15) + "..." : this.state.files.name : <span>Browse image..</span>}</label>
+                                    <label htmlFor="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name.length > 20 ? this.state.files.name.slice(0, 15) + "..." : this.state.files.name : <span>Browse image..</span>}</label>
                                     <input id="file-upload" type="file" name="filename" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0] }) }} />
                                 </div>
 
@@ -394,12 +426,13 @@ class TableData extends React.Component {
     }
 
     render() {
+
         return (
             <React.Fragment>
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-6">
-                            <p className="my-3 d-inline">Total {this.props.data_user.length - 1} users.</p>
+                            <p className="my-3 d-inline">Showing {this.props.active == 1 && this.props.data_user.length - 1 || this.props.active == 2 && this.props.data_product.length} data.</p>
                             <button type="button" className="btn btn-outline-secondary mx-3 my-2" onClick={this.reloadData}>
                                 <i class="fas fa-sync-alt"></i> Reload </button>
                         </div>
@@ -413,20 +446,37 @@ class TableData extends React.Component {
 
                 <Table>
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Username</th>
-                            <th>Address</th>
-                            <th>Phone Number</th>
-                            <th>Profile Picture</th>
-                            <th>Role</th>
-                            <th colSpan="2" className="text-center">Action</th>
-                        </tr>
+                        {this.props.active == 1 &&
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Username</th>
+                                <th>Address</th>
+                                <th>Phone Number</th>
+                                <th>Profile Picture</th>
+                                <th>Role</th>
+                                <th colSpan="2" className="text-center">Action</th>
+                            </tr>
+                        }
+                        {this.props.active == 2 &&
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Description</th>
+                                <th>Size</th>
+                                <th>Location</th>
+                                <th colSpan="2" className="text-center">Action</th>
+                            </tr>
+                        }
+
                     </thead>
                     <tbody>
                         {this.displayUsersTable()}
+                        {this.displayProductsTable()}
                     </tbody>
                 </Table>
 

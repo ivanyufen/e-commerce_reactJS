@@ -10,19 +10,31 @@ class Tab extends React.Component {
         super();
         this.state = {
             data_user: "",
-            files: ""
+            files: "",
+            data_product: "",
+            isLoading: false
         }
     }
     componentDidMount() {
-        if (this.props.activeTab == '1') {
-            axios.get('http://localhost:3007/users').then((x) => {
-                this.setState({
-                    data_user: x.data
-                })
-            }).catch((err) => {
-                console.log(err);
+        this.setState({
+            isLoading: true
+        })
+        // if (this.props.activeTab == "1") {
+        axios.get('http://localhost:3007/users').then((x) => {
+            this.setState({
+                data_user: x.data,
+                isLoading: false
             })
-        }
+        })
+        // }
+        // else if (this.props.activeTab == "2") {
+        axios.get('http://localhost:3007/products').then((x) => {
+            this.setState({
+                data_product: x.data,
+                isLoading: false
+            })
+        })
+        // }
     }
 
     editDataUser = (id, newData, files) => {
@@ -92,44 +104,42 @@ class Tab extends React.Component {
     }
 
     reloadData = () => {
-        if (this.props.activeTab == '1') {
-            axios.get('http://localhost:3007/users').then((x) => {
-                this.setState({
-                    data_user: x.data
-                })
-            });
-        }
+        // if (this.props.activeTab == '1') {
+        axios.get('http://localhost:3007/users').then((x) => {
+            this.setState({
+                data_user: x.data
+            })
+        });
+        // }
+        axios.get('http://localhost:3007/products').then((x) => {
+            this.setState({
+                data_product: x.data,
+                isLoading: false
+            })
+        })
     }
 
     render() {
         return (
             <TabContent activeTab={this.props.activeTab}>
-                <TabPane tabId="1">
-                    <Row>
-                        <Col sm="12">
-                            <TableData data_user={this.state.data_user} removeDataUser={this.removeDataUser} editDataUser={this.editDataUser} addDataUser={this.addDataUser} reloadData={this.reloadData} />
-                        </Col>
-                    </Row>
-                </TabPane>
+                {this.props.activeTab == 1 &&
+                    <TabPane tabId="1">
+                        <Row>
+                            <Col sm="12">
+                                <TableData data_user={this.state.data_user} active="1" removeDataUser={this.removeDataUser} editDataUser={this.editDataUser} addDataUser={this.addDataUser} reloadData={this.reloadData} />
+                            </Col>
+                        </Row>
+                    </TabPane>}
 
-                <TabPane tabId="2">
-                    <Row>
-                        <Col sm="6">
-                            <Card body>
-                                <CardTitle>Special Title Treatment</CardTitle>
-                                <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                                <Button>Go somewhere</Button>
-                            </Card>
-                        </Col>
-                        <Col sm="6">
-                            <Card body>
-                                <CardTitle>Special Title Treatment</CardTitle>
-                                <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                                <Button>Go somewhere</Button>
-                            </Card>
-                        </Col>
-                    </Row>
-                </TabPane>
+                {this.props.activeTab == 2 &&
+                    <TabPane tabId="2">
+                        <Row>
+                            <Col sm="12">
+                                <TableData data_product={this.state.data_product} active="2" removeDataUser={this.removeDataUser} editDataUser={this.editDataUser} addDataUser={this.addDataUser} reloadData={this.reloadData} />
+                            </Col>
+                        </Row>
+                    </TabPane>
+                }
             </TabContent>
         )
     }

@@ -49,6 +49,9 @@ class App extends React.Component {
                         id: y.data[0].id,
                         name: y.data[0].name,
                         username: y.data[0].username,
+                        email: y.data[0].email,
+                        address: y.data[0].address,
+                        phone_number: y.data[0].phone_number,
                         profpict: y.data[0].profpict,
                         role: y.data[0].role
                     };
@@ -110,7 +113,15 @@ class App extends React.Component {
                             render={(props) => <ProductList {...props} onCartClick={this.getCart} />}
                         />
 
+                        {this.state.isLoggedIn &&
+                            <Route
+                                path='/editProfile'
+                                render={(props) => <EditProfile {...props} data={this.state.data_user} checkUserSession={this.checkUserSession} />}
+                            />
+                        }
+
                         <Route path="/joinUs" component={JoinUs}></Route>
+                        {/* <Route path="/editProfile" component={EditProfile}></Route> */}
                         <Route path="/contact" component={Contact}></Route>
                         <Route path="/confirmPayment" component={ConfirmPayment}></Route>
                         <Route path="/faq" component={FAQ}></Route>

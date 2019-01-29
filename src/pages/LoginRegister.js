@@ -21,7 +21,8 @@ class LoginRegister extends React.Component {
                 address: "",
                 phone_number: ""
             },
-            files: ""
+            files: "",
+            warningMessage: ""
         }
     }
 
@@ -53,60 +54,91 @@ class LoginRegister extends React.Component {
 
     register = (e) => {
         e.preventDefault();
-        //cek ke database
-        axios.post("http://localhost:3007/users", this.state.data_user)
-            .then((x) => {
-                if (x.data.status == "dataExist") {
-                    swal("Username / Email sudah terdaftar!");
-                }
-                else {
-                    //kalau file nya ada, upload
-                    if (this.state.files) {
-                        //baru upload gambar profile picturenya
-                        var url = 'http://localhost:3007/upload';
-                        var formData = new FormData();
 
-                        //ngirim id user ke back end
-                        formData.append('userid', x.data.id_user);
-
-                        //ngirim file gambarnya ke back end
-                        formData.append('file', this.state.files);
-
-                        var config = {
-                            headers:
-                                { 'Content-Type': 'multipart/form-data' }
-                        };
-
-                        axios.post(url, formData, config).then((res) => {
-                            console.log("file masuk");
-                        });
+        //cek secara front end
+        if (this.state.data_user.email == "") {
+            this.setState({ warningMessage: "Email can't be blank" });
+        }
+        else if (this.state.data_user.email.includes("@") == false || this.state.data_user.email.includes(".") == false) {
+            this.setState({ warningMessage: "Wrong email format!" });
+        }
+        else if (this.state.data_user.name == "") {
+            this.setState({ warningMessage: "Name can't be blank" });
+        }
+        else if (this.state.data_user.username == "") {
+            this.setState({ warningMessage: "Username can't be blank" });
+        }
+        else if (this.state.data_user.username.includes(" ")) {
+            this.setState({ warningMessage: "Username can't have space" });
+        }
+        else if (this.state.data_user.password == "") {
+            this.setState({ warningMessage: "Password can't be blank" });
+        }
+        else if (this.state.data_user.address == "") {
+            this.setState({ warningMessage: "Address can't be blank" });
+        }
+        else if (this.state.data_user.phone_number == "") {
+            this.setState({ warningMessage: "Phone Number can't be blank" });
+        }
+        else if (isNaN(this.state.data_user.phone_number)) {
+            this.setState({ warningMessage: "Phone Number must be a digit!" });
+        }
+        else {
+            //cek ke database
+            axios.post("http://localhost:3007/users", this.state.data_user)
+                .then((x) => {
+                    if (x.data.status == "dataExist") {
+                        swal("Username / Email sudah terdaftar!");
                     }
+                    else {
+                        //kalau file nya ada, upload
+                        if (this.state.files) {
+                            //baru upload gambar profile picturenya
+                            var url = 'http://localhost:3007/upload';
+                            var formData = new FormData();
 
-                    // user setelah ke regis, mau langsung kita bikin logged in, jadi kita buat sessionnya.
-                    let user_session = x.data.session_token;
-                    localStorage.setItem("user_session", user_session);
+                            //ngirim id user ke back end
+                            formData.append('userid', x.data.id_user);
 
-                    if (user_session) {
-                        swal("Register sukses! Anda telah ter-login!").then(() => {
-                            this.props.checkUserSession();
-                            this.props.history.push('/productList');
-                        });
-                    }
+                            //ngirim file gambarnya ke back end
+                            formData.append('file', this.state.files);
 
-                    // state dikosongin supaya form nya kosong lagi
-                    this.setState({
-                        isLoggedIn: true,
-                        data_user: {
-                            name: "",
-                            email: "",
-                            password: "",
-                            username: "",
-                            address: "",
-                            phone_number: ""
+                            var config = {
+                                headers:
+                                    { 'Content-Type': 'multipart/form-data' }
+                            };
+
+                            axios.post(url, formData, config).then((res) => {
+                                console.log("file masuk");
+                            });
                         }
-                    });
-                }
-            });
+
+                        // user setelah ke regis, mau langsung kita bikin logged in, jadi kita buat sessionnya.
+                        let user_session = x.data.session_token;
+                        localStorage.setItem("user_session", user_session);
+
+                        if (user_session) {
+                            swal("Register sukses! Anda telah ter-login!").then(() => {
+                                this.props.checkUserSession();
+                                this.props.history.push('/productList');
+                            });
+                        }
+
+                        // state dikosongin supaya form nya kosong lagi
+                        this.setState({
+                            isLoggedIn: true,
+                            data_user: {
+                                name: "",
+                                email: "",
+                                password: "",
+                                username: "",
+                                address: "",
+                                phone_number: ""
+                            }
+                        });
+                    }
+                });
+        }
     };
 
     // UNTUK EVENT CHECKBOX REGISTER KE CHECK, TOGGLE CLASS
@@ -135,12 +167,12 @@ class LoginRegister extends React.Component {
                             <div className="col-lg-6">
                                 <form className="border p-3 m-5">
                                     <div className="form-group">
-                                        <label for="username">Username</label>
+                                        <label htmlFor="username">Username</label>
                                         <input type="text" className="form-control" id="username" value={this.state.username} onChange={(e) => { this.setState({ username: e.target.value }) }}
                                             placeholder="Enter username" />
                                     </div>
                                     <div className="form-group">
-                                        <label for="password">Password</label>
+                                        <label htmlFor="password">Password</label>
                                         <input type="password" className="form-control" id="password" value={this.state.password} onKeyDown={this.handleEnter} onChange={(e) => { this.setState({ password: e.target.value }) }} placeholder="Password" />
                                     </div>
                                     <div className="form-group">
@@ -158,13 +190,13 @@ class LoginRegister extends React.Component {
                                     <p>Register now.</p>
                                     <div className="form-group form-check">
                                         <input type="checkbox" className="form-check-input" id="registerCheck" autoComplete="off" onChange={this.onHandleChange} />
-                                        <label className="form-check-label" for="registerCheck">Register</label>
+                                        <label className="form-check-label" htmlFor="registerCheck">Register</label>
                                     </div>
                                     <div id="regis" className={this.state.classDisplay}>
 
                                         {/* Email */}
                                         <div className="form-group">
-                                            <label for="email">Email address</label>
+                                            <label htmlFor="email">Email address</label>
                                             <input type="email" className="form-control" id="email" value={this.state.data_user.email} onChange={(e) => {
                                                 let data_userCopy = this.state.data_user;
                                                 data_userCopy.email = e.target.value;
@@ -177,7 +209,7 @@ class LoginRegister extends React.Component {
 
                                         {/* Name */}
                                         <div className="form-group">
-                                            <label for="name">Name</label>
+                                            <label htmlFor="name">Name</label>
                                             <input type="name" className="form-control" id="email" value={this.state.data_user.name} onChange={(e) => {
                                                 let data_userCopy = this.state.data_user;
                                                 data_userCopy.name = e.target.value;
@@ -190,7 +222,7 @@ class LoginRegister extends React.Component {
 
                                         {/* Username */}
                                         <div className="form-group">
-                                            <label for="username">Username</label>
+                                            <label htmlFor="username">Username</label>
                                             <input type="text" className="form-control" id="username" value={this.state.data_user.username} onChange={(e) => {
                                                 let data_userCopy = this.state.data_user;
                                                 data_userCopy.username = e.target.value;
@@ -203,7 +235,7 @@ class LoginRegister extends React.Component {
 
                                         {/* Password */}
                                         <div className="form-group">
-                                            <label for="pass">Password</label>
+                                            <label htmlFor="pass">Password</label>
                                             <input type="password" className="form-control" value={this.state.data_user.password} onChange={(e) => {
                                                 let data_userCopy = this.state.data_user;
                                                 data_userCopy.password = e.target.value;
@@ -216,7 +248,7 @@ class LoginRegister extends React.Component {
 
                                         {/* Address */}
                                         <div className="form-group">
-                                            <label for="address">Address</label>
+                                            <label htmlFor="address">Address</label>
                                             <textarea className="form-control" id="address" value={this.state.data_user.address} onChange={(e) => {
                                                 let data_userCopy = this.state.data_user;
                                                 data_userCopy.address = e.target.value;
@@ -228,7 +260,7 @@ class LoginRegister extends React.Component {
 
                                         {/* Phone Number */}
                                         <div className="form-group">
-                                            <label for="phone_number">Phone Number</label>
+                                            <label htmlFor="phone_number">Phone Number</label>
                                             <input type="text" className="form-control" id="phone_number" value={this.state.data_user.phone_number} onChange={(e) => {
                                                 let data_userCopy = this.state.data_user;
                                                 data_userCopy.phone_number = e.target.value;
@@ -242,9 +274,11 @@ class LoginRegister extends React.Component {
                                         {/* Profile Picture */}
                                         <div className="form-group">
                                             <p>Profile Picture</p>
-                                            <label for="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name : <span>Browse image..</span>}</label>
+                                            <label htmlFor="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name : <span>Browse image..</span>}</label>
                                             <input id="file-upload" type="file" name="filename" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0] }) }} />
                                         </div>
+
+                                        <p className="text-danger">{this.state.warningMessage}</p>
 
                                         <button type="submit" onClick={this.register} className="btn btn-primary">Register</button>
                                     </div>

@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const userRouter = require("./routes/userRoutes");
+const productRouter = require("./routes/productRoutes");
 const app = express();
 
 //untuk memakai connection mysql
@@ -8,6 +9,7 @@ const db = require("./connection/Connection");
 
 //middleware yg dipakai
 app.use(userRouter);
+app.use(productRouter);
 app.use(cors());
 
 //untuk route utama

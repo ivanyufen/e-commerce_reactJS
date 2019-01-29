@@ -191,9 +191,7 @@ userRouter.put("/users/:id", (req, res) => {
 
 //request delete data user
 userRouter.delete("/users/:id", (req, res) => {
-    console.log(req.params.id)
     let id = req.params.id;
-    console.log(id)
     let sql = `DELETE FROM users where id = ${id} ;`;
     let query = db.query(sql, (err, result) => {
         if (err) {
@@ -252,7 +250,7 @@ userRouter.post('/upload', (req, res) => {
                         throw err;
                     } else {
                         // res.send(fileDataName);
-                        console.log("Photo successfully stored in storage!")
+                        console.log("Photo successfully stored in storage!");
                     }
                 });
             }
@@ -264,23 +262,11 @@ userRouter.post('/upload', (req, res) => {
                         throw err;
                     } else {
                         // res.send(fileDataName);
-                        console.log("Photo successfully stored in storage!")
+                        console.log("Photo successfully stored in storage!");
                     }
                 });
             }
         })
-        // fs.mkdirSync(`./files/users/${userid}`);
-        // fileData.mv(`./files/users/${userid}/` + fileDataName, (err) => {
-        //     if (err) {
-        //         throw err;
-        //     } else {
-        //         // res.send(fileDataName);
-        //         console.log("Photo successfully stored in storage!")
-        //     }
-        // });
-
-
-
     }
 });
 
