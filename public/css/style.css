@@ -28,6 +28,7 @@ li{
 
 .login{
     border-radius: 50px;
+    padding: 10px;
 }
 
 .login:hover{

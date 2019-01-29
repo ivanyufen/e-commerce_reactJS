@@ -2,6 +2,7 @@ import React from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 class LoginBtn extends React.Component {
     constructor() {
@@ -13,15 +14,20 @@ class LoginBtn extends React.Component {
     }
 
     logout = () => {
-        //saat user logout, delete local storage dan set state kosong
-        // localStorage.removeItem("user_data");
-        axios.delete(`http://localhost:3007/session/${this.props.data.id}`).then(() => {
-            console.log("Delete berhasil!")
-        })
-        localStorage.removeItem("user_session");
-        // di refresh supaya si App.js jalanin check session lagi
-        document.location.reload();
-        // this.setState({ username: "", password: "", isLoggedIn: false, files: "", profpict: "" });
+        // kalau admin logout, supaya ga stay di /dashboard, diarahkan ke home
+        if (this.props.data.role == "Admin") {
+            window.location.replace("/");
+            axios.delete(`http://localhost:3007/session/${this.props.data.id}`);
+            localStorage.removeItem("user_session");
+        }
+        else {
+            //saat user logout, delete local storage dan set state kosong
+            axios.delete(`http://localhost:3007/session/${this.props.data.id}`);
+            localStorage.removeItem("user_session");
+
+            // refresh supaya check session jalan lagi
+            document.location.reload();
+        }
     };
 
 
@@ -32,7 +38,6 @@ class LoginBtn extends React.Component {
     }
 
     displayDropDown() {
-        console.log(this.props.data)
         return (
             <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                 <DropdownToggle caret className="btn btn-outline-secondary mr-3 login">
@@ -40,7 +45,7 @@ class LoginBtn extends React.Component {
                     {this.props.data.name}
                 </DropdownToggle>
                 <DropdownMenu>
-                    <DropdownItem style={{ cursor: "pointer" }}> Edit Profile</DropdownItem>
+                    <Link to="/editProfile" className="text-dark"><DropdownItem style={{ cursor: "pointer" }}> Edit Profile</DropdownItem></Link>
                     {this.props.data.role == "Admin" && <a href="/dashboard"><DropdownItem style={{ cursor: "pointer" }}>Dashboard</DropdownItem></a>}
                     <DropdownItem divider />
                     <DropdownItem onClick={this.logout} style={{ cursor: "pointer" }}>Log Out</DropdownItem>
@@ -52,22 +57,23 @@ class LoginBtn extends React.Component {
     displayLoginBtn(x) {
         return (
             <Link to="/login">
-                <a href="" type="button" className="btn btn-outline-secondary mr-3 login" href=""><i className="fas fa-sign-in-alt"></i>Log In</a>
+                <a href="" type="button" className="btn btn-outline-secondary mr-3 login" style={{ visibility: x }} href=""><i className="fas fa-sign-in-alt"></i>Log In / Register</a>
             </Link>
         )
     }
 
     render() {
-
-        if (this.props.checkUserSession == true) {
+        // kalau proses check session masih berjalan, show nothing dulu.
+        if (this.props.isCheckSession == true) {
             return (
-                <a href="" type="button" className="btn btn-outline-secondary mr-3 login" style={{ visibility: "hidden" }} href="">><i className="fas fa-sign-in-alt"></i>Log In</a>
+                this.displayLoginBtn("hidden")
             )
         }
+        // proses check session selesai, di cek apakah ada data user yang didapat sbg props? kalau ada, berarti sudah ke log in dan ditampilkan button dropdown. Kalau gaada, tampilkan button login.
         else {
             return (
                 <React.Fragment>
-                    {this.props.data ? this.displayDropDown() : this.displayLoginBtn()}
+                    {this.props.data ? this.displayDropDown() : this.displayLoginBtn("visible")}
                 </React.Fragment>
             )
         }

@@ -3,19 +3,18 @@ import { Redirect, Link } from 'react-router-dom';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col, Container } from 'reactstrap';
 import classnames from 'classnames';
 import Tab from './Tab';
+import swal from '@sweetalert/with-react';
 
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
-
-        this.toggle = this.toggle.bind(this);
         this.state = {
             activeTab: '1',
             tabId: '1'
         };
     }
 
-    toggle(tab) {
+    toggle = (tab) => {
         if (this.state.activeTab !== tab) {
             this.setState({
                 activeTab: tab
@@ -24,8 +23,10 @@ class Dashboard extends React.Component {
     }
 
     render() {
-        if (this.props.location.role != "Admin") {
-            return <Redirect to="/" />
+        if (this.props.location.role != "Admin" && this.props.role != "Admin") { //cek apakah role user admin atau bukan, kalau bukan, akan otomatis di direct ke Home
+            return (
+                <Redirect to="/" />
+            )
         }
         else {
             return (

@@ -17,7 +17,7 @@ class Navbar extends React.Component {
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav mr-auto">
                                 <li className="nav-item">
-                                    <a href="/" className="nav-link text-dark navmenu" >Home <span className="sr-only">(current)</span></a>
+                                    <a href="/" className="nav-link text-dark navmenu" >Home</a>
                                 </li>
                                 <li className="nav-item">
                                     <Link to="/productList"><a href="productList" className="nav-link text-dark navmenu">Shop</a></Link>
@@ -51,7 +51,7 @@ class Navbar extends React.Component {
                                 <button className="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search{this.props.username_user}</button>
                             </form>
 
-                            <LoginBtn data={this.props.data_user} checkUserSession={this.props.isCheckingSession} />
+                            <LoginBtn data={this.props.data_user} isCheckSession={this.props.isCheckingSession} />
 
                             <a href="" type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>{this.props.cart}</span>)</a>
                         </div>

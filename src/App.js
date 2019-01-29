@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Link, Redirect } from 'react-router-dom';
+import { Route, Link, Redirect, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import JoinUs from './pages/JoinUs';
 import FAQ from './pages/FAQ';
@@ -15,6 +15,9 @@ import ProductDetails from './pages/ProductDetails';
 import AboutUs from './pages/AboutUs';
 import axios from 'axios';
 import Dashboard from './dashboard/Dashboard';
+import EditProfile from './pages/EditProfile';
+import swal from 'sweetalert';
+import NotFound from './pages/NotFound';
 
 
 
@@ -42,7 +45,7 @@ class App extends React.Component {
                 axios.get(`http://localhost:3007/users/${x.data[0].id_user}`).then((y) => {
                     // dan kita kasi data2 user yg mau dipakai
                     //buat object sementara
-                    let data_user = {
+                    let data_user_temp = {
                         id: y.data[0].id,
                         name: y.data[0].name,
                         username: y.data[0].username,
@@ -52,19 +55,17 @@ class App extends React.Component {
                     // dikasi ke state objectnya
                     this.setState({
                         isLoggedIn: true,
-                        data_user: data_user,
-                        files: "",
+                        data_user: data_user_temp,
                         isCheckingSession: false
                     });
                 });
             });
         }
-        // kalau session gaada di local storage, lsg login
+        // kalau session gaada di local storage, user harus login
         else {
-            console.log("Silakan login!");
             this.setState({
                 isCheckingSession: false
-            })
+            });
         }
     }
 
@@ -72,12 +73,6 @@ class App extends React.Component {
         this.checkUserSession();
     }
 
-    // ini nanti kalau user login/register, buat ambil user datanya dari component LoginRegister, terus di pass ke Navbar
-    getUserData = (x) => {
-        this.setState({
-            data_user: x
-        });
-    }
 
     getCart = (x) => {
         this.setState({
@@ -86,43 +81,45 @@ class App extends React.Component {
     }
 
     render() {
+        console.log(this.state.data_user.role)
         return (
             <React.Fragment>
                 <SmallNavbar />
                 <Navbar cart={this.state.cart} data_user={this.state.data_user} isCheckingSession={this.state.isCheckingSession} />
 
-                <div>
-                    <Route exact path="/" component={Home}></Route>
-                    <Route path="/dashboard" component={Dashboard}></Route>
+                {this.state.isCheckingSession == false &&
+                    <Switch>
+                        <Route exact path="/" component={Home}></Route>
 
-                    {/* kalau user ke login, dia gaakan bisa ke /login, akan ke direct ke Home; kalau ga login, bisa */}
-                    {this.state.isLoggedIn ? this.state.data_user.role == "Admin" ?
-                        <Redirect to={{
-                            pathname: '/dashboard',
-                            role: this.state.data_user.role
-                        }}
-                        />
-                        :
-                        <Route path="/login" component={Home}></Route>
-                        :
+                        {/* Jika user yg login adalah admin, route admin aktif, jika bukan, akan menampilkan halaman tidak ada. */}
+                        {
+                            this.state.data_user.role == "Admin"
+                            &&
+                            <Route
+                                path='/dashboard'
+                                render={(props) => <Dashboard {...props} role={this.state.data_user.role} />} />
+                        }
+
                         <Route
                             path='/login'
-                            render={(props) => <LoginRegister {...props} onLoginClick={this.getUserData} checkUserSession={this.checkUserSession} />}
+                            render={(props) => <LoginRegister {...props} role={this.state.data_user.role} checkUserSession={this.checkUserSession} isLoggedIn={this.state.isLoggedIn} />}
                         />
-                    }
 
-                    <Route
-                        path='/productList'
-                        render={(props) => <ProductList {...props} onCartClick={this.getCart} />}
-                    />
-                    <Route path="/joinUs" component={JoinUs}></Route>
-                    <Route path="/contact" component={Contact}></Route>
-                    <Route path="/confirmPayment" component={ConfirmPayment}></Route>
-                    <Route path="/faq" component={FAQ}></Route>
-                    <Route path="/productDetails" component={ProductDetails}></Route>
-                    <Route path="/aboutUs" component={AboutUs}></Route>
+                        <Route
+                            path='/productList'
+                            render={(props) => <ProductList {...props} onCartClick={this.getCart} />}
+                        />
 
-                </div>
+                        <Route path="/joinUs" component={JoinUs}></Route>
+                        <Route path="/contact" component={Contact}></Route>
+                        <Route path="/confirmPayment" component={ConfirmPayment}></Route>
+                        <Route path="/faq" component={FAQ}></Route>
+                        <Route path="/productDetails" component={ProductDetails}></Route>
+                        <Route path="/aboutUs" component={AboutUs}></Route>
+                        <Route component={NotFound}></Route> {/*  Route untuk menampilkan halaman jika user ke path yang tidak ada. */}
+                    </Switch>
+                }
+
 
                 <Footer />
                 <BackToTop />

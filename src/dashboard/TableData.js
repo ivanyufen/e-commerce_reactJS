@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'reactstrap';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import swal from 'sweetalert';
 
 
 class TableData extends React.Component {
@@ -19,15 +20,13 @@ class TableData extends React.Component {
                 email: "",
                 username: "",
                 address: "",
-                phone_number: ""
+                phone_number: "",
+                role: ""
             },
             files: ""
         }
     }
 
-    componentDidMount() {
-
-    }
 
     toggleDeleteYes = (id) => {
         this.setState({
@@ -70,7 +69,8 @@ class TableData extends React.Component {
                         email: val.email,
                         username: val.username,
                         address: val.address,
-                        phone_number: val.phone_number
+                        phone_number: val.phone_number,
+                        profpict: val.profpict
                     }
                 })
             }
@@ -96,15 +96,15 @@ class TableData extends React.Component {
         this.setState({
             modalDelete: !this.state.modalDelete
         });
-        alert("Data deleted!");
+        swal("Data deleted!");
     }
 
     editDataUser = (x) => {
-        this.props.editDataUser(x, this.state.data_user);
+        this.props.editDataUser(x, this.state.data_user, this.state.files);
         this.setState({
             modalEdit: !this.state.modalEdit
         });
-        alert("Data saved!");
+        swal("Data saved!");
         this.setState({
             data_user: {
                 name: "",
@@ -112,16 +112,17 @@ class TableData extends React.Component {
                 username: "",
                 address: "",
                 phone_number: ""
-            }
+            },
+            files: ""
         })
     }
 
     addDataUser = () => {
-        this.props.addDataUser(this.state.data_user);
+        this.props.addDataUser(this.state.data_user, this.state.files);
         this.setState({
             modalAdd: !this.state.modalAdd
         });
-        alert("Data added!");
+        swal("Data added!");
         this.setState({
             data_user: {
                 name: "",
@@ -129,7 +130,8 @@ class TableData extends React.Component {
                 username: "",
                 address: "",
                 phone_number: ""
-            }
+            },
+            files: ""
         })
     }
 
@@ -154,6 +156,7 @@ class TableData extends React.Component {
                             <td>{val.role}</td>
                             <td><button type="button" className="btn btn-primary" onClick={() => { this.toggleEditYes(val.id) }}>Edit</button></td>
                             <td><button type="button" className="btn btn-danger" onClick={() => { this.toggleDeleteYes(val.id) }}>Remove</button></td>
+                            {/* <td><button type="button" className="btn btn-danger">{val.profpict.substr(37, [val.profpict.length - 1])}</button></td> */}
                         </tr>
                     )
                 }
@@ -215,15 +218,13 @@ class TableData extends React.Component {
 
                                 {/* Address */}
                                 <div className="form-group">
-                                    <label for="address">Address</label>
-                                    <input type="text" className="form-control" id="address" value={this.state.data_user.address} onChange={(e) => {
+                                    <textarea className="form-control" id="address" value={this.state.data_user.address} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.address = e.target.value;
                                         this.setState({
                                             data_user: data_userCopy
                                         });
-                                    }}
-                                        placeholder="Enter address" />
+                                    }} placeholder="Enter address" ></textarea>
                                 </div>
 
                                 {/* Phone Number */}
@@ -242,7 +243,8 @@ class TableData extends React.Component {
                                 {/* Profile Picture */}
                                 <div className="form-group">
                                     <p>Profile Picture</p>
-                                    <label for="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name : <span>Browse image..</span>}</label>
+                                    <img src={this.state.data_user.profpict} style={{ maxWidth: 100, maxHeight: 150 }} />
+                                    <label for="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name.length > 20 ? this.state.files.name.slice(0, 15) + "..." : this.state.files.name : <span>Browse image..</span>}</label>
                                     <input id="file-upload" type="file" name="filename" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0] }) }} />
                                 </div>
                             </div>
@@ -336,14 +338,13 @@ class TableData extends React.Component {
                                 {/* Address */}
                                 <div className="form-group">
                                     <label for="address">Address</label>
-                                    <input type="text" className="form-control" id="address" value={this.state.data_user.address} onChange={(e) => {
+                                    <textarea className="form-control" id="address" value={this.state.data_user.address} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.address = e.target.value;
                                         this.setState({
                                             data_user: data_userCopy
                                         });
-                                    }}
-                                        placeholder="Enter address" />
+                                    }} placeholder="Enter address" ></textarea>
                                 </div>
 
                                 {/* Phone Number */}
@@ -359,10 +360,24 @@ class TableData extends React.Component {
                                         placeholder="Enter phone number" />
                                 </div>
 
+                                <div className="form-group">
+                                    <label for="role" >Role</label>
+                                    <select onChange={(e) => {
+                                        let data_userCopy = this.state.data_user;
+                                        data_userCopy.role = e.target.value;
+                                        this.setState({
+                                            data_user: data_userCopy
+                                        });
+                                    }}>
+                                        <option value="User">User</option>
+                                        <option value="Admin">Admin</option>
+                                    </select>
+                                </div>
+
                                 {/* Profile Picture */}
                                 <div className="form-group">
                                     <p>Profile Picture</p>
-                                    <label for="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name : <span>Browse image..</span>}</label>
+                                    <label for="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name.length > 20 ? this.state.files.name.slice(0, 15) + "..." : this.state.files.name : <span>Browse image..</span>}</label>
                                     <input id="file-upload" type="file" name="filename" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0] }) }} />
                                 </div>
 

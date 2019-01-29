@@ -9,15 +9,13 @@ class Tab extends React.Component {
     constructor() {
         super();
         this.state = {
-            data_user: ""
+            data_user: "",
+            files: ""
         }
     }
     componentDidMount() {
-        console.log(this.props.activeTab)
-        console.log("wkwkwk")
         if (this.props.activeTab == '1') {
             axios.get('http://localhost:3007/users').then((x) => {
-                console.log(x);
                 this.setState({
                     data_user: x.data
                 })
@@ -27,66 +25,79 @@ class Tab extends React.Component {
         }
     }
 
-    editDataUser = (id, newData) => {
-        console.log(id);
-        console.log(newData)
+    editDataUser = (id, newData, files) => {
         axios.put(`http://localhost:3007/users/${id}`, newData).then((x) => {
-            console.log(x);
-            // di get supaya ke refresh datanya
-            axios.get('http://localhost:3007/users').then((x) => {
-                console.log(x);
-                this.setState({
-                    data_user: x.data
-                })
-            }).catch((err) => {
-                console.log(err);
-            })
+
+            //kalau file nya ada, upload
+            if (files) {
+                var url = 'http://localhost:3007/upload';
+                var formData = new FormData();
+
+                //ngirim id user ke back end
+                formData.append('userid', id);
+
+                //ngirim file gambarnya ke back end
+                formData.append('file', files);
+
+                var config = {
+                    headers:
+                        { 'Content-Type': 'multipart/form-data' }
+                };
+
+                axios.post(url, formData, config).then(() => {
+                    this.reloadData();
+                });
+            }
+            else {
+                this.reloadData();
+            }
         })
     }
 
-    addDataUser = (newData) => {
+    addDataUser = (newData, files) => {
         axios.post(`http://localhost:3007/users`, newData).then((x) => {
-            console.log(x);
-            console.log("sukses");
-            // di get supaya ke refresh datanya
-            axios.get('http://localhost:3007/users').then((x) => {
-                console.log(x);
-                this.setState({
-                    data_user: x.data
+
+            //kalau file nya ada, upload
+            if (files) {
+                // upload foto
+                var url = 'http://localhost:3007/upload';
+                var formData = new FormData();
+
+                //ngirim id user ke back end
+                formData.append('userid', x.data.id_user);
+
+                //ngirim file gambarnya ke back end
+                formData.append('file', files);
+
+                var config = {
+                    headers:
+                        { 'Content-Type': 'multipart/form-data' }
+                };
+
+                axios.post(url, formData, config).then(() => {
+                    this.reloadData();
                 })
-            }).catch((err) => {
-                console.log(err);
-            })
+            }
+            else {
+                this.reloadData();
+            }
         })
     }
 
     removeDataUser = (id) => {
         axios.delete(`http://localhost:3007/users/${id}`).then((x) => {
-            console.log(x);
-            // di get supaya ke refresh datanya
-            axios.get('http://localhost:3007/users').then((x) => {
-                console.log(x);
-                this.setState({
-                    data_user: x.data
-                })
-            }).catch((err) => {
-                console.log(err);
-            })
-        }).catch((err) => {
-            console.log(err)
+            // di reload datanya
+            this.reloadData();
         })
     }
 
     reloadData = () => {
         if (this.props.activeTab == '1') {
             axios.get('http://localhost:3007/users').then((x) => {
-                console.log(x);
                 this.setState({
                     data_user: x.data
                 })
-            }).catch((err) => {
-                console.log(err);
-            })
+            });
         }
     }
 
