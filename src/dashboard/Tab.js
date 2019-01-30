@@ -32,7 +32,8 @@ class Tab extends React.Component {
             this.setState({
                 data_product: x.data,
                 isLoading: false
-            })
+            });
+            console.log(x.data)
         })
         // }
     }
@@ -47,6 +48,35 @@ class Tab extends React.Component {
 
                 //ngirim id user ke back end
                 formData.append('userid', id);
+
+                //ngirim file gambarnya ke back end
+                formData.append('file', files);
+
+                var config = {
+                    headers:
+                        { 'Content-Type': 'multipart/form-data' }
+                };
+
+                axios.post(url, formData, config).then(() => {
+                    this.reloadData();
+                });
+            }
+            else {
+                this.reloadData();
+            }
+        })
+    }
+
+    editDataProduct = (id, newData, files) => {
+        axios.put(`http://localhost:3007/products/${id}`, newData).then((x) => {
+
+            //kalau file nya ada, upload
+            if (files) {
+                var url = 'http://localhost:3007/uploadProduct';
+                var formData = new FormData();
+
+                //ngirim id user ke back end
+                formData.append('productid', id);
 
                 //ngirim file gambarnya ke back end
                 formData.append('file', files);
@@ -174,7 +204,7 @@ class Tab extends React.Component {
                     <TabPane tabId="2">
                         <Row>
                             <Col sm="12">
-                                <TableData data_product={this.state.data_product} active="2" removeDataProduct={this.removeDataProduct} editDataUser={this.editDataUser} addDataProduct={this.addDataProduct} reloadData={this.reloadData} />
+                                <TableData data_product={this.state.data_product} active="2" removeDataProduct={this.removeDataProduct} editDataproduct={this.editDataProduct} addDataProduct={this.addDataProduct} reloadData={this.reloadData} />
                             </Col>
                         </Row>
                     </TabPane>

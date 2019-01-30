@@ -28,11 +28,12 @@ class TableData extends React.Component {
             data_product: {
                 name: "",
                 price: "",
-                category: "1",
+                id_category: "1",
                 stock: "",
                 description: "",
                 size: "18",
-                location: ""
+                location: "",
+                photo: ""
             },
             files: "",
             tempImageURL: ""
@@ -80,15 +81,15 @@ class TableData extends React.Component {
         }
     }
 
-    toggleAddNo = (activeTab) => {
-        if (activeTab == 1) {
+    toggleAddNo = () => {
+        if (this.props.active == 1) {
             this.setState({
                 modalAddUser: !this.state.modalAddUser,
                 tempImageURL: "",
                 files: ""
             });
         }
-        else if (activeTab == 2) {
+        else if (this.props.active == 2) {
             this.setState({
                 modalAddProduct: !this.state.modalAddProduct,
                 tempImageURL: "",
@@ -124,6 +125,52 @@ class TableData extends React.Component {
         })
     }
 
+    toggleEditProductYes = (id) => {
+        this.setState({
+            modalEditProduct: !this.state.modalEditProduct,
+            id_temp: id,
+            files: ""
+        });
+        var dataproduct_temp = [];
+        this.props.data_product.map((val, i) => {
+            if (val.id == id) {
+                dataproduct_temp.push(val);
+                this.setState({
+                    data_product: {
+                        name: val.name,
+                        price: val.price,
+                        id_category: val.id_category,
+                        stock: val.stock,
+                        description: val.description,
+                        size: val.size,
+                        location: val.location,
+                        photo: val.photo
+                    },
+                    tempImageURL: "",
+                    files: ""
+                })
+            }
+        })
+    }
+
+    toggleEditProductNo = () => {
+        this.setState({
+            modalEditProduct: !this.state.modalEditProduct,
+            data_product: {
+                name: "",
+                price: "",
+                category: "1",
+                stock: "",
+                description: "",
+                size: "18",
+                location: "",
+                photo: ""
+            },
+            tempImageURL: "",
+            files: ""
+        });
+    }
+
     toggleEditUserNo = () => {
         this.setState({
             modalEditUser: !this.state.modalEditUser,
@@ -155,8 +202,8 @@ class TableData extends React.Component {
         swal("Data deleted!");
     }
 
-    editDataUser = (x) => {
-        this.props.editDataUser(x, this.state.data_user, this.state.files);
+    editDataUser = (id) => {
+        this.props.editDataUser(id, this.state.data_user, this.state.files);
         this.setState({
             modalEditUser: !this.state.modalEditUser
         });
@@ -168,6 +215,28 @@ class TableData extends React.Component {
                 username: "",
                 address: "",
                 phone_number: ""
+            },
+            files: ""
+        })
+    }
+
+
+    editDataproduct = (id) => {
+        this.props.editDataproduct(id, this.state.data_product, this.state.files);
+        this.setState({
+            modalEditProduct: !this.state.modalEditProduct
+        });
+        swal("Data saved!");
+        this.setState({
+            data_product: {
+                name: "",
+                price: "",
+                id_category: "1",
+                stock: "",
+                description: "",
+                size: "18",
+                location: "",
+                photo: ""
             },
             files: ""
         })
@@ -249,13 +318,14 @@ class TableData extends React.Component {
                         <td>{val.id}</td>
                         <td>{val.name}</td>
                         <td>{val.price}</td>
-                        <td>{val.id_category}</td>
+                        {/* <td>{val.id_category}</td> */}
+                        <td>{val.category_name}</td>
                         <td>{val.stock}</td>
                         <td>{val.description}</td>
                         <td>{val.size}</td>
                         <td>{val.location}</td>
                         <td>{<img src={val.photo} style={{ maxWidth: 250, maxHeight: 500 }} />}</td>
-                        <td><button type="button" className="btn btn-primary" onClick={() => { this.toggleEditUserYes(val.id) }}>Edit</button></td>
+                        <td><button type="button" className="btn btn-primary" onClick={() => { this.toggleEditProductYes(val.id) }}>Edit</button></td>
                         <td><button type="button" className="btn btn-danger" onClick={() => { this.toggleDeleteYes(val.id) }}>Remove</button></td>
                     </tr>
                 )
@@ -264,6 +334,132 @@ class TableData extends React.Component {
         else {
             console.log("No product data");
         }
+    }
+
+    displayModalEditProduct() {
+        return (
+            <React.Fragment>
+                {/* Modal untuk add data product */}
+                <Modal isOpen={this.state.modalEditProduct} fade={false} centered={true} toggle={this.toggle} className={this.props.className}>
+                    <ModalHeader toggle={this.toggle}>Add data</ModalHeader>
+                    <ModalBody>
+                        <form className="border p-3 m-5">
+                            <div id="regis">
+                                {/* Name */}
+                                <div className="form-group">
+                                    <label htmlFor="productName">Product Name</label>
+                                    <input type="text" className="form-control" id="productName" value={this.state.data_product.name} onChange={(e) => {
+                                        let data_productCopy = this.state.data_product;
+                                        data_productCopy.name = e.target.value;
+                                        this.setState({
+                                            data_product: data_productCopy
+                                        });
+                                    }}
+                                        placeholder="Enter product name" />
+                                </div>
+
+                                {/* Price */}
+                                <div className="form-group">
+                                    <label htmlFor="price">Price</label>
+                                    <input type="number" className="form-control" id="price" value={this.state.data_product.price} onChange={(e) => {
+                                        let data_productCopy = this.state.data_product;
+                                        data_productCopy.price = e.target.value;
+                                        this.setState({
+                                            data_product: data_productCopy
+                                        });
+                                    }}
+                                        placeholder="Enter price" />
+                                </div>
+
+                                {/* Category */}
+                                <div className="form-group">
+                                    <label htmlFor="category" >Category</label>
+                                    <select className="form-control" value={this.state.data_product.id_category} onChange={(e) => {
+                                        let data_productCopy = this.state.data_product;
+                                        data_productCopy.id_category = e.target.value;
+                                        this.setState({
+                                            data_product: data_productCopy
+                                        });
+                                    }}>
+                                        <option value="1">Nato</option>
+                                        <option value="2">Rubber</option>
+                                        <option value="3">Steel</option>
+                                        <option value="4">Leather</option>
+                                    </select>
+                                </div>
+
+                                {/* Stock */}
+                                <div className="form-group">
+                                    <label htmlFor="stock">Stock</label>
+                                    <input type="number" className="form-control" value={this.state.data_product.stock} onChange={(e) => {
+                                        let data_productCopy = this.state.data_product;
+                                        data_productCopy.stock = e.target.value;
+                                        this.setState({
+                                            data_product: data_productCopy
+                                        });
+                                    }}
+                                        placeholder="Stock" />
+                                </div>
+
+                                {/* Description */}
+                                <div className="form-group">
+                                    <label htmlFor="description">Description</label>
+                                    <textarea className="form-control" id="description" value={this.state.data_product.description} onChange={(e) => {
+                                        let data_productCopy = this.state.data_product;
+                                        data_productCopy.description = e.target.value;
+                                        this.setState({
+                                            data_product: data_productCopy
+                                        });
+                                    }} placeholder="Enter description" ></textarea>
+                                </div>
+
+                                {/* Size */}
+                                <div className="form-group">
+                                    <label htmlFor="size" >Size</label>
+                                    <select className="form-control" value={this.state.data_product.size} onChange={(e) => {
+                                        let data_productCopy = this.state.data_product;
+                                        data_productCopy.size = e.target.value;
+                                        this.setState({
+                                            data_product: data_productCopy
+                                        });
+                                    }}>
+                                        <option value="18" selected>18 mm</option>
+                                        <option value="20">20 mm</option>
+                                        <option value="22">22 mm</option>
+                                    </select>
+                                </div>
+
+                                {/* Location */}
+                                <div className="form-group">
+                                    <label htmlFor="location">Location</label>
+                                    <input type="text" className="form-control" value={this.state.data_product.location} onChange={(e) => {
+                                        let data_productCopy = this.state.data_product;
+                                        data_productCopy.location = e.target.value;
+                                        this.setState({
+                                            data_product: data_productCopy
+                                        });
+                                    }}
+                                        placeholder="Location" />
+                                </div>
+
+                                {/* Product Picture */}
+                                <div className="form-group">
+                                    <p>Product Picture</p>
+                                    <img src={this.state.tempImageURL ? this.state.tempImageURL : this.state.data_product.photo} style={{ maxWidth: 100, maxHeight: 150 }} />
+                                    <label htmlFor="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name.length > 20 ? this.state.files.name.slice(0, 15) + "..." : this.state.files.name : <span>Browse image..</span>}</label>
+                                    <input id="file-upload" type="file" name="filename" accept="image/*" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0], tempImageURL: URL.createObjectURL(e.target.files[0]) }) }} />
+                                </div>
+
+                            </div>
+                        </form>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={() => { this.editDataproduct(this.state.id_temp) }}>Save</Button>
+                        <Button color="secondary" onClick={this.toggleEditProductNo}>Cancel</Button>
+                    </ModalFooter>
+                </Modal>
+            </React.Fragment>
+        )
     }
 
     displayModalEditUser() {
@@ -701,6 +897,8 @@ class TableData extends React.Component {
                 {this.displayModalAddProduct()}
 
                 {this.displayModalDeleteProduct()}
+
+                {this.displayModalEditProduct()}
 
             </React.Fragment>
         )

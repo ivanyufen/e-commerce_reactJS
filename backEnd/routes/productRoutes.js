@@ -19,7 +19,8 @@ productRouter.use(cors());
 productRouter.use(fileupload());
 
 productRouter.get("/products", (req, res) => {
-    let sql = "SELECT * FROM products;";
+    // let sql = "SELECT * FROM products;";
+    let sql = "SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, c.category_name FROM products p, categories c WHERE p.id_category = c.id;";
     let query = db.query(sql, (err, result) => {
         if (err) throw err;
         // res.send("All users data successfully fetched!");
@@ -28,8 +29,8 @@ productRouter.get("/products", (req, res) => {
 });
 
 productRouter.get("/products/:id", (req, res) => {
-    let id_user = req.params.id; //kenapa ini id bukan id_user karena parameter yg ditrima itu :id walau yg dikirim dr front end id_user
-    let sql = `SELECT * FROM users WHERE id = ${id_user} ;`;
+    let id_product = req.params.id; //kenapa ini id bukan id_user karena parameter yg ditrima itu :id walau yg dikirim dr front end id_user
+    let sql = `SELECT * FROM users WHERE id = ${id_product} ;`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             throw err;
@@ -42,81 +43,9 @@ productRouter.get("/products/:id", (req, res) => {
     });
 });
 
-//saat di refresh / login, buat session user
-productRouter.post("/session", (req, res) => {
-    let user_session = req.body.user_session;
-    let sql = `SELECT * FROM sessions WHERE session_token = '${user_session}'`;
-    let query = db.query(sql, (err, result) => {
-        if (err) {
-            throw err;
-        }
-        else {
-            res.send(result);
-            console.log(result);
-        }
-    });
-});
-
-//logout dan hapus session user
-productRouter.delete('/session/:id_user', (req, res) => {
-    let id_user = req.params.id_user;
-    let sql = `DELETE FROM sessions WHERE id_user = ${id_user}`;
-    let query = db.query(sql, (err, result) => {
-        console.log(`User with id ${id_user} just logged out!`);
-    });
-});
 
 
-// request login dr user
-productRouter.post("/login", (req, res) => {
-    let username = req.body.username;
-    let password = req.body.password;
-    let sql = `SELECT * FROM users WHERE username = '${username}'`;
-    let query = db.query(sql, (err, result) => {
-        console.log(result)
-        if (err) {
-            throw err;
-        }
-        else if (result.length > 0) {
-            bcrypt.compare(password, result[0].password, (err, checkPass) => {
-                if (checkPass == true) {
-                    // createSession(res, result);
-                    // res.send(result);
-                    // algoritma untuk hash session token user
-                    let date = new Date();
-                    let time = date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
-                    let id_user = result[0].id;
-                    let stringSession = id_user + "-" + time;
-                    console.log(stringSession)
-                    let session_token = md5(stringSession);
-                    let session = {
-                        id_user: result[0].id,
-                        session_token: session_token
-                    }
-                    let sql = `INSERT INTO sessions SET ?`;
-                    let query = db.query(sql, session, (err, resultSession) => {
-                        if (err) {
-                            throw err;
-                        }
-                        else {
-                            console.log("Data session sukses masuk!");
-                            res.send(session.session_token);
-                        }
-                    });
-                    // sampai sini
-                }
-                else {
-                    res.send({ "status": "wrongPassword" });
-                }
-            });
-        }
-        else {
-            res.send({ "status": "notRegistered" });
-        }
-    });
-});
-
-//request register dr user
+//request add product
 productRouter.post("/products", (req, res) => {
     console.log(req.body);
     let name = req.body.name;
@@ -157,14 +86,13 @@ productRouter.post("/products", (req, res) => {
 });
 
 
-//request edit data user
-productRouter.put("/users/:id", (req, res) => {
-    console.log("wow ada yg mau edit")
+//request edit data product
+productRouter.put("/products/:id", (req, res) => {
     let data = req.body;
-    let sql = `UPDATE users SET ? where id = ${req.params.id} ;`;
+    let sql = `UPDATE products SET ? where id = ${req.params.id} ;`;
     let query = db.query(sql, data, (err, result) => {
         if (err) throw err;
-        res.send(`User with id: ${req.params.id} successfully updated!`);
+        res.send(`Product with id: ${req.params.id} successfully updated!`);
     });
 });
 
