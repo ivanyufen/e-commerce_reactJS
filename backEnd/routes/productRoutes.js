@@ -169,30 +169,28 @@ productRouter.put("/users/:id", (req, res) => {
 });
 
 
-//request delete data user
-productRouter.delete("/users/:id", (req, res) => {
-    console.log(req.params.id)
+//request delete data product
+productRouter.delete("/products/:id", (req, res) => {
     let id = req.params.id;
-    console.log(id)
-    let sql = `DELETE FROM users where id = ${id} ;`;
+    let sql = `DELETE FROM products where id = ${id} ;`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             throw err;
         }
-        res.send(`User with id: ${id} successfully deleted!`);
+        res.send(`Product with id: ${id} successfully deleted!`);
 
         // remove files user and the directory
         var deleteFolderRecursive = function (path) {
-            if (fs.existsSync(`./files/users/${id}`)) {
-                fs.readdirSync(`./files/users/${id}`).forEach(function (file, index) {
-                    var curPath = `./files/users/${id}` + "/" + file;
+            if (fs.existsSync(`./files/products/${id}`)) {
+                fs.readdirSync(`./files/products/${id}`).forEach(function (file, index) {
+                    var curPath = `./files/products/${id}` + "/" + file;
                     if (fs.lstatSync(curPath).isDirectory()) { // recurse
                         deleteFolderRecursive(curPath);
                     } else { // delete file
                         fs.unlinkSync(curPath);
                     }
                 });
-                fs.rmdirSync(`./files/users/${id}`);
+                fs.rmdirSync(`./files/products/${id}`);
             }
         };
         deleteFolderRecursive();

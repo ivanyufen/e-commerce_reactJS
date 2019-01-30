@@ -14,6 +14,8 @@ class TableData extends React.Component {
             modalDeleteUser: false,
             modalAddUser: false,
             modalAddProduct: false,
+            modalEditProduct: false,
+            modalDeleteProduct: false,
             id_temp: "",
             data_user: {
                 name: "",
@@ -39,10 +41,19 @@ class TableData extends React.Component {
 
 
     toggleDeleteYes = (id) => {
-        this.setState({
-            modalDeleteUser: !this.state.modalDeleteUser,
-            id_temp: id
-        });
+        if (this.props.active == 1) {
+            this.setState({
+                modalDeleteUser: !this.state.modalDeleteUser,
+                id_temp: id
+            });
+        }
+        else if (this.props.active == 2) {
+            this.setState({
+                modalDeleteProduct: !this.state.modalDeleteProduct,
+                id_temp: id
+            });
+        }
+
 
     }
 
@@ -129,8 +140,15 @@ class TableData extends React.Component {
     }
 
 
-    removeDataUser = (x) => {
-        this.props.removeDataUser(x);
+    removeDataProduct = (id) => {
+        this.props.removeDataProduct(id);
+        this.setState({
+            modalDeleteProduct: !this.state.modalDeleteProduct
+        });
+        swal("Data deleted!");
+    }
+    removeDataUser = (id) => {
+        this.props.removeDataUser(id);
         this.setState({
             modalDeleteUser: !this.state.modalDeleteUser
         });
@@ -194,7 +212,6 @@ class TableData extends React.Component {
     }
 
     reloadData = () => {
-        console.log("reloaded!")
         this.props.reloadData();
     }
 
@@ -210,7 +227,7 @@ class TableData extends React.Component {
                             <td>{val.username}</td>
                             <td>{val.address}</td>
                             <td>{val.phone_number}</td>
-                            <td>{<img src={val.profpict} style={{ width: 50, height: 50 }} />}</td>
+                            <td>{<img src={val.profpict} style={{ maxWidth: 150, maxHeight: 300 }} />}</td>
                             <td>{val.role}</td>
                             <td><button type="button" className="btn btn-primary" onClick={() => { this.toggleEditUserYes(val.id) }}>Edit</button></td>
                             <td><button type="button" className="btn btn-danger" onClick={() => { this.toggleDeleteYes(val.id) }}>Remove</button></td>
@@ -237,7 +254,7 @@ class TableData extends React.Component {
                         <td>{val.description}</td>
                         <td>{val.size}</td>
                         <td>{val.location}</td>
-                        {/* <td>{<img src={val.profpict} style={{ width: 50, height: 50 }} />}</td> */}
+                        <td>{<img src={val.photo} style={{ maxWidth: 250, maxHeight: 500 }} />}</td>
                         <td><button type="button" className="btn btn-primary" onClick={() => { this.toggleEditUserYes(val.id) }}>Edit</button></td>
                         <td><button type="button" className="btn btn-danger" onClick={() => { this.toggleDeleteYes(val.id) }}>Remove</button></td>
                     </tr>
@@ -341,7 +358,7 @@ class TableData extends React.Component {
         )
     }
 
-    displayModalDelete() {
+    displayModalDeleteUser() {
         return (
             <React.Fragment>
                 {/* Modal untuk validasi sebelum hapus data user */}
@@ -349,6 +366,21 @@ class TableData extends React.Component {
                     <ModalHeader toggle={this.toggle}>You sure want to delete?</ModalHeader>
                     <ModalFooter>
                         <Button color="primary" onClick={() => { this.removeDataUser(this.state.id_temp) }}>Yes</Button>
+                        <Button color="secondary" onClick={this.toggleDeleteNo}>No</Button>
+                    </ModalFooter>
+                </Modal>
+            </React.Fragment>
+        )
+    }
+
+    displayModalDeleteProduct() {
+        return (
+            <React.Fragment>
+                {/* Modal untuk validasi sebelum hapus data user */}
+                <Modal isOpen={this.state.modalDeleteProduct} fade={false} centered={true} toggle={this.toggle} className={this.props.className}>
+                    <ModalHeader toggle={this.toggle}>You sure want to delete?</ModalHeader>
+                    <ModalFooter>
+                        <Button color="primary" onClick={() => { this.removeDataProduct(this.state.id_temp) }}>Yes</Button>
                         <Button color="secondary" onClick={this.toggleDeleteNo}>No</Button>
                     </ModalFooter>
                 </Modal>
@@ -648,6 +680,7 @@ class TableData extends React.Component {
                                 <th>Description</th>
                                 <th>Size</th>
                                 <th>Location</th>
+                                <th>Image</th>
                                 <th colSpan="2" className="text-center">Action</th>
                             </tr>
                         }
@@ -659,13 +692,15 @@ class TableData extends React.Component {
                     </tbody>
                 </Table>
 
-                {this.displayModalDelete()}
+                {this.displayModalDeleteUser()}
 
                 {this.displayModalEditUser()}
 
                 {this.displayModalAddUser()}
 
                 {this.displayModalAddProduct()}
+
+                {this.displayModalDeleteProduct()}
 
             </React.Fragment>
         )

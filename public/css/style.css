@@ -17,6 +17,10 @@ a{
     text-decoration: none !important;
 }
 
+td{
+    vertical-align: middle !important;
+}
+
 li{
     list-style-type: none;
 }

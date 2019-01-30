@@ -96,6 +96,13 @@ class Tab extends React.Component {
         })
     }
 
+    removeDataProduct = (id) => {
+        axios.delete(`http://localhost:3007/products/${id}`).then((x) => {
+            // di reload datanya
+            this.reloadData();
+        })
+    }
+
     removeDataUser = (id) => {
         axios.delete(`http://localhost:3007/users/${id}`).then((x) => {
             // di reload datanya
@@ -103,14 +110,11 @@ class Tab extends React.Component {
         })
     }
 
-    addDataProduct = (newData, photo) => {
+    addDataProduct = (newData, files) => {
         console.log(newData)
         axios.post(`http://localhost:3007/products`, newData).then((x) => {
-            console.log(x);
-            alert(x.data.id_product)
             //kalau file nya ada, upload
-            if (photo) {
-                console.log(photo);
+            if (files) {
                 // upload foto
                 var url = 'http://localhost:3007/uploadProduct';
                 var formData = new FormData();
@@ -121,7 +125,7 @@ class Tab extends React.Component {
                 //ngirim id user ke back end
                 formData.append('productid', x.data.id_product);
 
-                formData.append('file', photo);
+                formData.append('file', files);
 
                 var config = {
                     headers:
@@ -129,7 +133,6 @@ class Tab extends React.Component {
                 };
 
                 axios.post(url, formData, config).then(() => {
-                    alert("posted")
                     this.reloadData();
                 })
             }
@@ -171,7 +174,7 @@ class Tab extends React.Component {
                     <TabPane tabId="2">
                         <Row>
                             <Col sm="12">
-                                <TableData data_product={this.state.data_product} active="2" removeDataUser={this.removeDataUser} editDataUser={this.editDataUser} addDataProduct={this.addDataProduct} reloadData={this.reloadData} />
+                                <TableData data_product={this.state.data_product} active="2" removeDataProduct={this.removeDataProduct} editDataUser={this.editDataUser} addDataProduct={this.addDataProduct} reloadData={this.reloadData} />
                             </Col>
                         </Row>
                     </TabPane>

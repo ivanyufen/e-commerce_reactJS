@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 class Banner extends React.Component {
     render() {
@@ -11,7 +12,7 @@ class Banner extends React.Component {
                 </ol>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img class="d-block w-100" src="./img/banner/banner1.jpg" alt="" />
+                        <a href="/productList"><img class="d-block w-100" src="./img/banner/banner1.jpg" alt="" /></a>
                     </div>
                     <div class="carousel-item">
                         <img class="d-block w-100" src="./img/banner/banner2.jpg" alt="" />
