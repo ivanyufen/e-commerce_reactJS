@@ -83,8 +83,6 @@ userRouter.post("/login", (req, res) => {
         else if (result.length > 0) {
             bcrypt.compare(password, result[0].password, (err, checkPass) => {
                 if (checkPass == true) {
-                    // createSession(res, result);
-                    // res.send(result);
                     // algoritma untuk hash session token user
                     let date = new Date();
                     let time = date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
@@ -216,58 +214,6 @@ userRouter.delete("/users/:id", (req, res) => {
         deleteFolderRecursive();
 
     });
-});
-
-
-//request upload profile picture user
-userRouter.post('/upload', (req, res) => {
-    //kalau ada data nya, masukin; kalau gaada, default di database udh ada profpict.png
-    if (req.files) {
-        var userid = req.body.userid;
-        var fileData = req.files.file;
-        var fileDataName = fileData.name;
-
-        //masukin url path gambarnya ke row user
-        var filePath = `http://localhost:3007/files/users/${userid}/${fileDataName}`;
-        let query = db.query(`UPDATE users SET profpict = ? WHERE ID = ${userid}`, filePath, (err, result) => {
-            if (err) {
-                console.log("error");
-            }
-            else {
-                res.send(filePath);
-            }
-        });
-
-        //masukin foto nya ke storage backend
-        //kalau udh ada foldernya (berarti mau update)
-        fs.pathExists(`./files/users/${userid}`, (err, exists) => {
-            if (exists) {
-                // hapus isi dari direktori nya
-                fs.emptyDirSync(`./files/users/${userid}`);
-                // dimasukin file yg baru
-                fileData.mv(`./files/users/${userid}/` + fileDataName, (err) => {
-                    if (err) {
-                        throw err;
-                    } else {
-                        // res.send(fileDataName);
-                        console.log("Photo successfully stored in storage!");
-                    }
-                });
-            }
-            // kalau belum ada direktori nya (berarti baru register), buat folder baru, trus dimasukin file yg baru
-            else {
-                fs.mkdirSync(`./files/users/${userid}`);
-                fileData.mv(`./files/users/${userid}/` + fileDataName, (err) => {
-                    if (err) {
-                        throw err;
-                    } else {
-                        // res.send(fileDataName);
-                        console.log("Photo successfully stored in storage!");
-                    }
-                });
-            }
-        })
-    }
 });
 
 

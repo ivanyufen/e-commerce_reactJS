@@ -103,6 +103,42 @@ class Tab extends React.Component {
         })
     }
 
+    addDataProduct = (newData, photo) => {
+        console.log(newData)
+        axios.post(`http://localhost:3007/products`, newData).then((x) => {
+            console.log(x);
+            alert(x.data.id_product)
+            //kalau file nya ada, upload
+            if (photo) {
+                console.log(photo);
+                // upload foto
+                var url = 'http://localhost:3007/uploadProduct';
+                var formData = new FormData();
+
+                //ngirim file gambarnya ke back end
+                // formData.append('file', files);
+
+                //ngirim id user ke back end
+                formData.append('productid', x.data.id_product);
+
+                formData.append('file', photo);
+
+                var config = {
+                    headers:
+                        { 'Content-Type': 'multipart/form-data' }
+                };
+
+                axios.post(url, formData, config).then(() => {
+                    alert("posted")
+                    this.reloadData();
+                })
+            }
+            else {
+                this.reloadData();
+            }
+        })
+    }
+
     reloadData = () => {
         // if (this.props.activeTab == '1') {
         axios.get('http://localhost:3007/users').then((x) => {
@@ -135,7 +171,7 @@ class Tab extends React.Component {
                     <TabPane tabId="2">
                         <Row>
                             <Col sm="12">
-                                <TableData data_product={this.state.data_product} active="2" removeDataUser={this.removeDataUser} editDataUser={this.editDataUser} addDataUser={this.addDataUser} reloadData={this.reloadData} />
+                                <TableData data_product={this.state.data_product} active="2" removeDataUser={this.removeDataUser} editDataUser={this.editDataUser} addDataProduct={this.addDataProduct} reloadData={this.reloadData} />
                             </Col>
                         </Row>
                     </TabPane>

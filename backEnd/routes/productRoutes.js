@@ -27,7 +27,7 @@ productRouter.get("/products", (req, res) => {
     });
 });
 
-productRouter.get("/users/:id", (req, res) => {
+productRouter.get("/products/:id", (req, res) => {
     let id_user = req.params.id; //kenapa ini id bukan id_user karena parameter yg ditrima itu :id walau yg dikirim dr front end id_user
     let sql = `SELECT * FROM users WHERE id = ${id_user} ;`;
     let query = db.query(sql, (err, result) => {
@@ -117,19 +117,20 @@ productRouter.post("/login", (req, res) => {
 });
 
 //request register dr user
-productRouter.post("/users", (req, res) => {
+productRouter.post("/products", (req, res) => {
+    console.log(req.body);
     let name = req.body.name;
-    let username = req.body.username;
-    let password = req.body.password;
-    let email = req.body.email;
-    let phone_number = req.body.phone_number;
-    let address = req.body.address;
-    let role = "";
-    req.body.role ? role = req.body.role : role = "User"
+    let price = req.body.price;
+    let id_category = req.body.category;
+    let stock = req.body.stock;
+    let description = req.body.description;
+    let size = req.body.size;
+    let location = req.body.location;
 
 
     let data = req.body;
-    let sql = `SELECT * FROM users WHERE username = '${username}' OR email = '${email}'`;
+    console.log(data);
+    let sql = `SELECT * FROM products WHERE name = '${name}'`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             throw err;
@@ -138,38 +139,19 @@ productRouter.post("/users", (req, res) => {
             res.send({ "status": "dataExist" });
         }
         else {
-            bcrypt.hash(password, saltRounds, (err, hash) => {
-                let query = db.query(`INSERT INTO users (name, email, password, username, address, phone_number, role ) VALUES (?, ?, ?, ?, ?, ?, ?)`, [name, email, hash, username, address, phone_number, role], (err, resultt) => {
-                    if (err) {
-                        throw err;
-                    };
-                    console.log(resultt.insertId);
-
-                    // algoritma untuk hash session token user
-                    let date = new Date();
-                    let time = date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
-                    // let id_user = result[0].id;
-                    let id_user = resultt.insertId;
-                    let stringSession = id_user + "-" + time;
-                    console.log(stringSession)
-                    let session_token = md5(stringSession);
-                    let session = {
-                        id_user: id_user,
-                        session_token: session_token
+            let query = db.query(`INSERT INTO products (name, price, id_category, stock, description, size, location ) VALUES (?, ?, ?, ?, ?, ?, ?)`, [name, price, id_category, stock, description, size, location], (err, resultt) => {
+                if (err) {
+                    throw err;
+                }
+                else {
+                    let id_product = {
+                        id_product: resultt.insertId
                     }
-                    let sql = `INSERT INTO sessions SET ?`;
-                    let query = db.query(sql, session, (err, resultSession) => {
-                        if (err) {
-                            throw err;
-                        }
-                        else {
-                            console.log("Data session sukses masuk!");
-                            res.send(session);
-                        }
-                    });
-                    // sampai sini
-                });
-            })
+                    console.log("Product inserted successfully");
+
+                    res.send(id_product);
+                }
+            });
         }
     });
 });
@@ -218,69 +200,6 @@ productRouter.delete("/users/:id", (req, res) => {
     });
 });
 
-
-//request upload profile picture user
-productRouter.post('/upload', (req, res) => {
-    //kalau ada data nya, masukin; kalau gaada, default di database udh ada profpict.png
-    if (req.files) {
-        var userid = req.body.userid;
-        var fileData = req.files.file;
-        var fileDataName = fileData.name;
-
-        //masukin url path gambarnya ke row user
-        var filePath = `http://localhost:3007/files/users/${userid}/${fileDataName}`;
-        let query = db.query(`UPDATE users SET profpict = ? WHERE ID = ${userid}`, filePath, (err, result) => {
-            if (err) {
-                console.log("error");
-            }
-            else {
-                res.send(filePath);
-            }
-        });
-
-        //masukin foto nya ke storage backend
-        //kalau udh ada foldernya (berarti mau update)
-        fs.pathExists(`./files/users/${userid}`, (err, exists) => {
-            if (exists) {
-                // hapus isi dari direktori nya
-                fs.emptyDirSync(`./files/users/${userid}`);
-                // dimasukin file yg baru
-                fileData.mv(`./files/users/${userid}/` + fileDataName, (err) => {
-                    if (err) {
-                        throw err;
-                    } else {
-                        // res.send(fileDataName);
-                        console.log("Photo successfully stored in storage!")
-                    }
-                });
-            }
-            // kalau belum ada direktori nya (berarti baru register), buat folder baru, trus dimasukin file yg baru
-            else {
-                fs.mkdirSync(`./files/users/${userid}`);
-                fileData.mv(`./files/users/${userid}/` + fileDataName, (err) => {
-                    if (err) {
-                        throw err;
-                    } else {
-                        // res.send(fileDataName);
-                        console.log("Photo successfully stored in storage!")
-                    }
-                });
-            }
-        })
-        // fs.mkdirSync(`./files/users/${userid}`);
-        // fileData.mv(`./files/users/${userid}/` + fileDataName, (err) => {
-        //     if (err) {
-        //         throw err;
-        //     } else {
-        //         // res.send(fileDataName);
-        //         console.log("Photo successfully stored in storage!")
-        //     }
-        // });
-
-
-
-    }
-});
 
 
 module.exports = productRouter;

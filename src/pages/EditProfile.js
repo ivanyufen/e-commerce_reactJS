@@ -21,7 +21,8 @@ class EditProfile extends React.Component {
             files: "",
             msg: "Save",
             isLoading: false,
-            warningMessage: ""
+            warningMessage: "",
+            tempImageURL: ""
         }
     }
 
@@ -207,9 +208,9 @@ class EditProfile extends React.Component {
                         {/* Profile Picture */}
                         <div className="form-group">
                             <p>Profile Picture</p>
-                            <img src={this.state.data_user.profpict} className="d-block" style={{ maxWidth: 100, maxHeight: 150 }} />
+                            <img src={this.state.tempImageURL ? this.state.tempImageURL : this.state.data_user.profpict} className="d-block" style={{ maxWidth: 100, maxHeight: 150 }} />
                             <label htmlFor="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name.length > 20 ? this.state.files.name.slice(0, 15) + "..." : this.state.files.name : <span>Browse image..</span>}</label>
-                            <input id="file-upload" type="file" name="filename" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0] }) }} />
+                            <input id="file-upload" type="file" accept="image/*" name="filename" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0], tempImageURL: URL.createObjectURL(e.target.files[0]) }) }} />
                         </div>
 
                         <div className="text-left">

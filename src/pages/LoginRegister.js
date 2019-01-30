@@ -22,7 +22,8 @@ class LoginRegister extends React.Component {
                 phone_number: ""
             },
             files: "",
-            warningMessage: ""
+            warningMessage: "",
+            tempImageURL: ""
         }
     }
 
@@ -274,8 +275,9 @@ class LoginRegister extends React.Component {
                                         {/* Profile Picture */}
                                         <div className="form-group">
                                             <p>Profile Picture</p>
+                                            <img src={this.state.tempImageURL} style={{ maxWidth: "150px", maxHeight: "250px", display: "block" }} />
                                             <label htmlFor="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name : <span>Browse image..</span>}</label>
-                                            <input id="file-upload" type="file" name="filename" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0] }) }} />
+                                            <input id="file-upload" type="file" accept="image/*" name="filename" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0], tempImageURL: URL.createObjectURL(e.target.files[0]) }) }} />
                                         </div>
 
                                         <p className="text-danger">{this.state.warningMessage}</p>
