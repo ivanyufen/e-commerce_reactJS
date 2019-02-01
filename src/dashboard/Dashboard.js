@@ -35,7 +35,7 @@ class Dashboard extends React.Component {
                     <Container>
                         {/* START NAVIGATION NAME */}
                         <Nav tabs>
-                            <NavItem>
+                            <NavItem style={{ cursor: "pointer" }}>
                                 <NavLink
                                     className={classnames({ active: this.state.activeTab === '1' })}
                                     onClick={(e) => { this.toggle('1'); this.setState({ tabId: 1 }) }}
@@ -44,7 +44,7 @@ class Dashboard extends React.Component {
                                     </NavLink>
                             </NavItem>
 
-                            <NavItem>
+                            <NavItem style={{ cursor: "pointer" }}>
                                 <NavLink
                                     className={classnames({ active: this.state.activeTab === '2' })}
                                     onClick={() => { this.toggle('2'); this.setState({ tabId: 2 }) }}

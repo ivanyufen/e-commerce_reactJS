@@ -20,7 +20,7 @@ class Navbar extends React.Component {
                                     <a href="/" className="nav-link text-dark navmenu" >Home</a>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/productList"><a href="productList" className="nav-link text-dark navmenu">Shop</a></Link>
+                                    <Link to="/shop"><a href="productList" className="nav-link text-dark navmenu">Shop</a></Link>
                                 </li>
                                 <li className="nav-item dropdown">
                                     <a href="" className="nav-link text-dark dropdown-toggle navmenu" id="navbarDropdown" role="button" data-toggle="dropdown"

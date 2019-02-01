@@ -4,6 +4,10 @@ import Faker from 'faker';
 import ProductDetails from './ProductDetails';
 import { Link } from 'react-router-dom';
 import ProductCard from './../components/ProductCard';
+import axios from 'axios';
+import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { relative } from 'path';
 
 class ProductList extends React.Component {
 
@@ -11,31 +15,50 @@ class ProductList extends React.Component {
         super();
         this.state = {
             products: [],
-            isLoading: false,
-            cart: 0
+            isLoading: true,
+            isViewMore: false,
+            cart: 0,
+            data_products: "",
+            data_productsShown: "",
+            init: 0,
+            size: 12,
+            hasMore: true,
+            isDone: false
         }
     }
 
-    componentDidMount() {
-        var productsTemp = [];
-        this.setState({
-            isLoading: true
-        })
-        for (var i = 1; i < 29; i++) {
-            productsTemp.push({
-                productId: i,
-                productName: Faker.commerce.product(),
-                productImage: Faker.image.avatar(),
-                productPrice: Faker.commerce.price(),
-                sellerName: Faker.internet.userName(),
-                location: Faker.address.cityPrefix()
-            })
-        }
-        this.setState({
-            products: productsTemp,
-            isLoading: false
-        })
+    loadProducts = (x) => {
+        axios.get(x).then((x) => {
+            console.log(x.data);
+            this.setState({
+                data_products: x.data,
+                data_productsShown: x.data.slice(this.state.init, this.state.size),
+                isLoading: false
+            });
+        });
     }
+
+    componentDidMount() {
+        this.loadProducts('http://localhost:3007/products');
+    }
+
+    fetchMoreData = () => {
+        this.setState({
+            init: this.state.size,
+            size: this.state.size + 12,
+            isViewMore: true
+        });
+
+        setTimeout(() => {
+            this.setState({
+                data_productsShown: this.state.data_productsShown.concat(...this.state.data_products.slice(this.state.init, this.state.size)),
+            });
+            this.setState({
+                isDone: this.state.data_productsShown.length == this.state.data_products.length,
+                isViewMore: false
+            });
+        }, 500);
+    };
 
     onClickCart = () => {
         this.setState({
@@ -44,28 +67,39 @@ class ProductList extends React.Component {
         this.props.onCartClick(this.state.cart)
     }
 
-    displayProducts = () => {
-        return this.state.products.map((val, index) => {
-            return (
-                <ProductCard productImage={val.productImage}
-                    productName={val.productName}
-                    productPrice={val.productPrice}
-                    sellerName={val.sellerName}
-                    location={val.location}
-                    index={index} />
-            );
-        });
+    loader() {
+        return (
+            <Loader size='large' active inline='centered' />
+        )
+    }
+
+
+    showProducts = () => {
+        if (this.state.isLoading == false) {
+            return this.state.data_productsShown.map((val, index) => {
+                return (
+                    <ProductCard image={val.photo}
+                        name={val.name}
+                        price={val.price}
+                        categoryName={val.category_name}
+                        location={val.location}
+                        description={val.description}
+                        size={val.size}
+                        index={index} />
+                );
+            });
+        }
     };
 
     render() {
         return (
             <React.Fragment>
                 <Breadcrumbs path={this.props.match.url} />
-                {this.state.isLoading && <h1>Loading...</h1>}
+
                 <div className="container mb-5">
                     <div className="row">
-                        <div className="col-lg-3 pt-2 border-0">
-                            <div class="card border border-dark" style={{ width: "18rem" }}>
+                        <div className="col-lg-3 pt-2">
+                            <div class="card border border-dark" style={{ width: "18rem", position: "sticky", top: 100, bottom: 100 }}>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
                                         {/* KATEGORI */}
@@ -120,10 +154,13 @@ class ProductList extends React.Component {
 
                                         {/* Size */}
                                         <label for="size">Size </label>
-                                        <select class="mx-1" style={{ padding: "10px 20px" }} id="size">
-                                            <option>18 mm</option>
-                                            <option>20 mm</option>
-                                            <option>22 mm</option>
+                                        <select class="mx-1" style={{ padding: "10px 20px" }} id="size" onChange={(e) => {
+                                            this.loadProducts(`http://localhost:3007/products?size=${e.target.value}`)
+                                        }}>
+                                            <option selected disabled hidden>Select your size..</option>
+                                            <option value="18">18 mm</option>
+                                            <option value="20">20 mm</option>
+                                            <option value="22">22 mm</option>
                                         </select>
 
                                         {/* LOKASI */}
@@ -161,36 +198,47 @@ class ProductList extends React.Component {
                                             <h5 class="card-title">Type Strap</h5>
 
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="nato" />
+                                                <input class="form-check-input" type="checkbox" value="Nato" id="nato" onChange={(e) => {
+                                                    this.loadProducts(`http://localhost:3007/products?type=${e.target.value}`)
+                                                }
+
+                                                } />
                                                 <label class="form-check-label" for="nato">
                                                     Nato
                                             </label>
                                             </div>
 
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="zulu" />
+                                                <input class="form-check-input" type="checkbox" value="Zulu" id="zulu" />
                                                 <label class="form-check-label" for="zulu">
                                                     Zulu
                                             </label>
                                             </div>
 
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="rubber" />
-                                                <label class="form-check-label" for="rubber">
-                                                    Rubber
+                                                <input class="form-check-input" type="checkbox" value="Perlon" id="perlon" />
+                                                <label class="form-check-label" for="perlon">
+                                                    Perlon
                                                 </label>
                                             </div>
 
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="bracelet" />
-                                                <label class="form-check-label" for="rubber">
-                                                    Bracelet
+                                                <input class="form-check-input" type="checkbox" value="Leather" id="leather" />
+                                                <label class="form-check-label" for="leather">
+                                                    Leather
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="Canvas" id="canvas" />
+                                                <label class="form-check-label" for="canvas">
+                                                    Canvas
                                                 </label>
                                             </div>
                                         </li>
 
                                         {/* DUKUNGAN PENGIRIMAN */}
-                                        <li class="list-group-item">
+                                        {/* <li class="list-group-item">
                                             <h5 class="card-title">Dukungan pengiriman</h5>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
@@ -218,7 +266,12 @@ class ProductList extends React.Component {
                                             </div>
                                             <a href="">Lihat semua pengiriman</a>
                                         </li>
+                                    */}
+                                        <button className="btn btn-success text-center d-block" onClick={() => {
+                                            this.loadProducts('http://localhost:3007/products');
+                                        }}>Reset</button>
                                     </ul>
+
                                 </div>
                             </div>
                         </div>
@@ -226,7 +279,7 @@ class ProductList extends React.Component {
                         <div className="col-lg-9">
                             <div className="row">
                                 <div className="col-lg-6">
-                                    <p>Daftar Produk <strong>1 - 50</strong> dari <strong>17.025</strong></p>
+                                    <p>Daftar Produk <strong>1 - {this.state.data_productsShown.length}</strong> dari <strong>{this.state.data_products.length}</strong></p>
                                 </div>
                                 <div className="col-lg-6 text-right">
                                     <div class="form-group">
@@ -243,11 +296,17 @@ class ProductList extends React.Component {
                             </div>
                             <hr />
                             <div className="row">
-                                {this.displayProducts()}
-                            </div>
+                                {this.state.isLoading ? this.loader() : this.showProducts()}
 
+                            </div>
+                            {!this.state.isDone ? this.state.isViewMore ? <p className="d-block my-3 text-primary text-center"> <b>Loading... </b></p> :
+                                <a className="d-block text-center my-3 text-primary" style={{ cursor: "pointer" }} onClick={this.fetchMoreData}>View More... </a>
+                                :
+                                <p className="text-center">
+                                    <b>Wow! You've seen all of our high quality products!</b>
+                                </p>}
                             {/* PAGINATION */}
-                            <nav aria-label="...">
+                            {/* <nav aria-label="...">
                                 <ul class="pagination">
                                     <li class="page-item disabled">
                                         <a class="page-link" href="#" tabindex="-1">Previous</a>
@@ -261,7 +320,7 @@ class ProductList extends React.Component {
                                         <a class="page-link" href="#">Next</a>
                                     </li>
                                 </ul>
-                            </nav>
+                            </nav> */}
 
                         </div>
                     </div>

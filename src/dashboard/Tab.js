@@ -18,7 +18,7 @@ class Tab extends React.Component {
     componentDidMount() {
         this.setState({
             isLoading: true
-        })
+        });
         // if (this.props.activeTab == "1") {
         axios.get('http://localhost:3007/users').then((x) => {
             this.setState({
@@ -174,18 +174,19 @@ class Tab extends React.Component {
 
     reloadData = () => {
         // if (this.props.activeTab == '1') {
-        axios.get('http://localhost:3007/users').then((x) => {
-            this.setState({
-                data_user: x.data
-            })
-        });
-        // }
         axios.get('http://localhost:3007/products').then((x) => {
             this.setState({
                 data_product: x.data,
                 isLoading: false
-            })
-        })
+            });
+        });
+        axios.get('http://localhost:3007/users').then((x) => {
+            this.setState({
+                data_user: x.data
+            });
+        });
+        // }
+
     }
 
     render() {

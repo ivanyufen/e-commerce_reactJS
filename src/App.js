@@ -109,7 +109,7 @@ class App extends React.Component {
                         />
 
                         <Route
-                            path='/productList'
+                            path='/shop'
                             render={(props) => <ProductList {...props} onCartClick={this.getCart} />}
                         />
 

@@ -159,7 +159,7 @@ class TableData extends React.Component {
             data_product: {
                 name: "",
                 price: "",
-                category: "1",
+                id_category: "1",
                 stock: "",
                 description: "",
                 size: "18",
@@ -252,10 +252,10 @@ class TableData extends React.Component {
             data_product: {
                 name: "",
                 price: "",
-                category: "",
+                id_category: "1",
                 stock: "",
                 description: "",
-                size: "",
+                size: "18",
                 location: ""
             },
             files: ""
@@ -382,9 +382,10 @@ class TableData extends React.Component {
                                         });
                                     }}>
                                         <option value="1">Nato</option>
-                                        <option value="2">Rubber</option>
-                                        <option value="3">Steel</option>
+                                        <option value="2">Zulu</option>
+                                        <option value="3">Perlon</option>
                                         <option value="4">Leather</option>
+                                        <option value="5">Canvas</option>
                                     </select>
                                 </div>
 
@@ -743,17 +744,18 @@ class TableData extends React.Component {
                                 {/* Category */}
                                 <div className="form-group">
                                     <label htmlFor="category" >Category</label>
-                                    <select className="form-control" value={this.state.data_product.category} onChange={(e) => {
+                                    <select className="form-control" value={this.state.data_product.id_category} onChange={(e) => {
                                         let data_productCopy = this.state.data_product;
-                                        data_productCopy.category = e.target.value;
+                                        data_productCopy.id_category = e.target.value;
                                         this.setState({
                                             data_product: data_productCopy
                                         });
                                     }}>
-                                        <option value="1" selected>Nato</option>
-                                        <option value="2">Rubber</option>
-                                        <option value="3">Steel</option>
+                                        <option value="1">Nato</option>
+                                        <option value="2">Zulu</option>
+                                        <option value="3">Perlon</option>
                                         <option value="4">Leather</option>
+                                        <option value="5">Canvas</option>
                                     </select>
                                 </div>
 
@@ -791,7 +793,6 @@ class TableData extends React.Component {
                                         this.setState({
                                             data_product: data_productCopy
                                         });
-                                        alert(e.target.value)
                                     }}>
                                         <option value="18" selected>18 mm</option>
                                         <option value="20">20 mm</option>
@@ -851,7 +852,7 @@ class TableData extends React.Component {
                 </div>
 
 
-                <Table>
+                <Table responsive>
                     <thead>
                         {this.props.active == 1 &&
                             <tr>

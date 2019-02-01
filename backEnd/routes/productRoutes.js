@@ -19,13 +19,42 @@ productRouter.use(cors());
 productRouter.use(fileupload());
 
 productRouter.get("/products", (req, res) => {
-    // let sql = "SELECT * FROM products;";
-    let sql = "SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, c.category_name FROM products p, categories c WHERE p.id_category = c.id;";
-    let query = db.query(sql, (err, result) => {
-        if (err) throw err;
-        // res.send("All users data successfully fetched!");
-        res.send(result);
-    });
+    if (req.query.max) {
+        let sql = `SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, c.category_name FROM products p, categories c WHERE p.id_category = c.id limit ${req.query.max};`;
+        let query = db.query(sql, (err, result) => {
+            if (err) throw err;
+            console.log("All data successfuly fetched")
+            res.send(result);
+        });
+    }
+    else if (req.query.size) {
+        console.log("ada query size!")
+        let sql = `SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, c.category_name FROM products p, categories c WHERE p.id_category = c.id and p.size = ${req.query.size};`;
+        let query = db.query(sql, (err, result) => {
+            if (err) throw err;
+            console.log("All data successfuly fetched")
+            res.send(result);
+        });
+    }
+
+    else if (req.query.type) {
+        console.log("ada query size!")
+        let sql = `SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, c.category_name FROM products p, categories c WHERE p.id_category = c.id and p.name LIKE "${req.query.type}%";`;
+        let query = db.query(sql, (err, result) => {
+            if (err) throw err;
+            console.log("All data successfuly fetched")
+            res.send(result);
+        });
+    }
+    else {
+        let sql = "SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, c.category_name FROM products p, categories c WHERE p.id_category = c.id;";
+        let query = db.query(sql, (err, result) => {
+            if (err) throw err;
+            console.log("All data successfuly fetched")
+            res.send(result);
+            // console.log(result)
+        });
+    }
 });
 
 productRouter.get("/products/:id", (req, res) => {
@@ -50,7 +79,7 @@ productRouter.post("/products", (req, res) => {
     console.log(req.body);
     let name = req.body.name;
     let price = req.body.price;
-    let id_category = req.body.category;
+    let id_category = req.body.id_category;
     let stock = req.body.stock;
     let description = req.body.description;
     let size = req.body.size;
@@ -59,7 +88,7 @@ productRouter.post("/products", (req, res) => {
 
     let data = req.body;
     console.log(data);
-    let sql = `SELECT * FROM products WHERE name = '${name}'`;
+    let sql = `SELECT * FROM products WHERE name = '${name}' && size = '${size}'`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             throw err;

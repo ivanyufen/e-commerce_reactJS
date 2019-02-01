@@ -47,7 +47,7 @@ class LoginRegister extends React.Component {
                 this.props.checkUserSession();
                 // selesai dicek, tampilkan login sukses dan dicek, admin atau bukan; Jika bukan, ke shopping, jika iya, ke dashboard.
                 swal("Login sukses!").then(() => {
-                    this.props.role == "Admin" ? this.props.history.push("/dashboard") : this.props.history.push('/productList')
+                    this.props.role == "Admin" ? this.props.history.push("/dashboard") : this.props.history.push('/shop')
                 });
             }
         });
@@ -121,7 +121,7 @@ class LoginRegister extends React.Component {
                         if (user_session) {
                             swal("Register sukses! Anda telah ter-login!").then(() => {
                                 this.props.checkUserSession();
-                                this.props.history.push('/productList');
+                                this.props.history.push('/shop');
                             });
                         }
 
@@ -169,7 +169,7 @@ class LoginRegister extends React.Component {
                                 <form className="border p-3 m-5">
                                     <div className="form-group">
                                         <label htmlFor="username">Username</label>
-                                        <input type="text" className="form-control" id="username" value={this.state.username} onChange={(e) => { this.setState({ username: e.target.value }) }}
+                                        <input type="text" className="form-control" id="username" value={this.state.username} autoFocus onChange={(e) => { this.setState({ username: e.target.value }) }}
                                             placeholder="Enter username" />
                                     </div>
                                     <div className="form-group">
