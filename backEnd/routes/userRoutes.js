@@ -186,6 +186,30 @@ userRouter.put("/users/:id", (req, res) => {
     });
 });
 
+//request change password user
+userRouter.put("/userspassword/:id", (req, res) => {
+    console.log(req.params.id)
+    let oldPassword = req.body.password;
+    let newPassword = req.body.newPassword;
+    let sql = `SELECT * FROM users WHERE id = '${req.params.id}'`;
+    let query = db.query(sql, (err, result) => {
+        bcrypt.compare(oldPassword, result[0].password, (err, checkPass) => {
+            if (checkPass) {
+                bcrypt.hash(newPassword, saltRounds, (err, hash) => {
+                    let sql = `UPDATE users SET password = '${hash}' where id = ${req.params.id} ;`;
+                    let query = db.query(sql, (err, result) => {
+                        if (err) throw err;
+                        res.send("passwordChanged");
+                    });
+                })
+            }
+            else {
+                res.send("wrongPassword");
+            }
+        })
+    })
+});
+
 
 //request delete data user
 userRouter.delete("/users/:id", (req, res) => {

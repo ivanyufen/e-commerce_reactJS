@@ -4,6 +4,7 @@ import LoginBtn from './LoginBtn';
 
 class Navbar extends React.Component {
     render() {
+
         return (
             <React.Fragment>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -17,29 +18,30 @@ class Navbar extends React.Component {
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav mr-auto">
                                 <li className="nav-item">
-                                    <a href="/" className="nav-link text-dark navmenu" >Home</a>
+                                    <a href="/" className="nav-link navmenu" style={window.location.pathname == '/' ? { color: '#4183c4' } : { color: 'gray' }}>Home</a>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/shop"><a href="productList" className="nav-link text-dark navmenu">Shop</a></Link>
+                                    <Link to="/shop"><a href="productList" className="nav-link navmenu" style={window.location.pathname == '/shop' ? { color: '#4183c4' } : { color: 'gray' }}>Shop</a></Link>
                                 </li>
                                 <li className="nav-item dropdown">
-                                    <a href="" className="nav-link text-dark dropdown-toggle navmenu" id="navbarDropdown" role="button" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
+                                    <a href="" className="nav-link dropdown-toggle navmenu" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false" style={window.location.pathname == '/confirmPayment' ? { color: '#4183c4' } : { color: 'gray' }}>
                                         Order
                                     </a>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <Link to="/confirmPayment"><a href="" className="dropdown-item" >Confirm Payment</a></Link>
+                                        <Link to="/confirmPayment"><a href="" className="dropdown-item" style={window.location.pathname == '/confirmPayment' ? { color: '#4183c4' } : { color: 'gray' }}>Confirm Payment</a></Link>
                                         <a href="#" className="dropdown-item" >Order History</a>
                                     </div>
                                 </li>
                                 <li className="nav-item dropdown">
-                                    <a href="" className="nav-link text-dark dropdown-toggle navmenu" id="navbarDropdown" role="button" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
+                                    <a href="" className="nav-link dropdown-toggle navmenu" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false" style={window.location.pathname == '/aboutUs' || window.location.pathname == '/faq' || window.location.pathname == '/contact' ? { color: '#4183c4' } : { color: 'gray' }}>
                                         Information
                                     </a>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <Link to="/aboutUs"><a href="" className="dropdown-item" >About Us</a></Link>
                                         <Link to="/contact"><a href="" className="dropdown-item" >Contact Us</a></Link>
+                                        <Link to="/faq"><a href="" className="dropdown-item" >F.A.Q</a></Link>
                                         <a href="" className="dropdown-item" >Events and Promotions</a>
                                         <a href="" className="dropdown-item" >Store Information</a>
                                     </div>

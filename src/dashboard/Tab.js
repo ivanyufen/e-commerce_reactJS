@@ -67,11 +67,15 @@ class Tab extends React.Component {
         })
     }
 
-    editDataProduct = (id, newData, files) => {
+    editDataProduct = (id, newData, files, files2, files3) => {
+        console.log(id)
+        console.log(files)
+        console.log(files2)
+        console.log(files3)
         axios.put(`http://localhost:3007/products/${id}`, newData).then((x) => {
 
             //kalau file nya ada, upload
-            if (files) {
+            if (files || files2 || files3) {
                 var url = 'http://localhost:3007/uploadProduct';
                 var formData = new FormData();
 
@@ -80,6 +84,8 @@ class Tab extends React.Component {
 
                 //ngirim file gambarnya ke back end
                 formData.append('file', files);
+                formData.append('file2', files2);
+                formData.append('file3', files3);
 
                 var config = {
                     headers:
@@ -140,8 +146,7 @@ class Tab extends React.Component {
         })
     }
 
-    addDataProduct = (newData, files) => {
-        console.log(newData)
+    addDataProduct = (newData, files, files2, files3) => {
         axios.post(`http://localhost:3007/products`, newData).then((x) => {
             //kalau file nya ada, upload
             if (files) {
@@ -156,6 +161,8 @@ class Tab extends React.Component {
                 formData.append('productid', x.data.id_product);
 
                 formData.append('file', files);
+                formData.append('file2', files2);
+                formData.append('file3', files3);
 
                 var config = {
                     headers:

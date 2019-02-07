@@ -12,16 +12,16 @@ class Banner extends React.Component {
                 </ol>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <a href="/productList"><img class="d-block w-100" src="./img/banner/banner1.jpg" alt="" /></a>
+                        <a href="/shop"><img class="d-block w-100" src="./img/banner/banner1.jpg" alt="" /></a>
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100" src="./img/banner/banner2.jpg" alt="" />
+                        <a href="/shop"><img class="d-block w-100" src="./img/banner/banner2.jpg" alt="" /></a>
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100" src="./img/banner/banner3.jpg" alt="" />
+                        <a href="/shop"><img class="d-block w-100" src="./img/banner/banner3.jpg" alt="" /></a>
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100" src="./img/banner/banner4.jpg" alt="" />
+                        <a href="/shop"><img class="d-block w-100" src="./img/banner/banner4.jpg" alt="" /></a>
                     </div>
                 </div>
                 <a href="" class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

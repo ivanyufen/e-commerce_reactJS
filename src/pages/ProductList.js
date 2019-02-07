@@ -27,19 +27,76 @@ class ProductList extends React.Component {
         }
     }
 
-    loadProducts = (x) => {
-        axios.get(x).then((x) => {
-            console.log(x.data);
-            this.setState({
-                data_products: x.data,
-                data_productsShown: x.data.slice(this.state.init, this.state.size),
-                isLoading: false
-            });
+    loadProducts = (sort) => {
+        this.setState({
+            init: 0,
+            size: 12
+        });
+        axios.get('http://localhost:3007/products').then((x) => {
+            if (sort == 'typeStrap') {
+                this.setState({
+                    data_products: x.data,
+                    data_productsShown: x.data.slice(this.state.init, this.state.size),
+                    isLoading: false
+                });
+            }
+
+            else if (sort == 'lowestPrice') {
+                var hasil = x.data.sort((a, b) => {
+                    return a.price - b.price
+                });
+                this.setState({
+                    data_products: hasil,
+                    data_productsShown: hasil.slice(this.state.init, this.state.size),
+                    isLoading: false
+                })
+            }
+
+            else if (sort == 'highestPrice') {
+                var hasil = x.data.sort((a, b) => {
+                    return b.price - a.price
+                });
+                this.setState({
+                    data_products: hasil,
+                    data_productsShown: hasil.slice(this.state.init, this.state.size),
+                    isLoading: false
+                })
+            }
+
+            else if (sort == 'alphabet') {
+                var hasil = x.data.sort((a, b) => {
+                    if (a.name == b.name) {
+                        return 0;
+                    }
+                    else if (a.name < b.name) {
+                        return -1;
+                    }
+                    else {
+                        return 1;
+                    }
+                });
+
+                this.setState({
+                    data_products: hasil,
+                    data_productsShown: hasil.slice(this.state.init, this.state.size),
+                    isLoading: false
+                })
+            }
+
+            else {
+                this.setState({
+                    data_products: x.data,
+                    data_productsShown: x.data.slice(this.state.init, this.state.size),
+                    isLoading: false
+                });
+            }
+
         });
     }
 
+
     componentDidMount() {
-        this.loadProducts('http://localhost:3007/products');
+        this.loadProducts();
     }
 
     fetchMoreData = () => {
@@ -78,7 +135,9 @@ class ProductList extends React.Component {
         if (this.state.isLoading == false) {
             return this.state.data_productsShown.map((val, index) => {
                 return (
-                    <ProductCard image={val.photo}
+                    <ProductCard
+                        id={val.id}
+                        image={val.photo}
                         name={val.name}
                         price={val.price}
                         categoryName={val.category_name}
@@ -90,6 +149,7 @@ class ProductList extends React.Component {
             });
         }
     };
+
 
     render() {
         return (
@@ -284,12 +344,11 @@ class ProductList extends React.Component {
                                 <div className="col-lg-6 text-right">
                                     <div class="form-group">
                                         <label for="sort">Urutkan: </label>
-                                        <select class="mx-1" style={{ padding: "10px 20px" }} id="sort">
-                                            <option>Paling sesuai</option>
-                                            <option>Rating</option>
-                                            <option>Harga Terendah</option>
-                                            <option>Harga Termahal</option>
-                                            <option>Terbaru</option>
+                                        <select class="mx-1" style={{ padding: "10px 20px" }} id="sort" onChange={(e) => { this.loadProducts(e.target.value) }}>
+                                            <option value="typeStrap">Type Strap</option>
+                                            <option value="alphabet">Alphabet</option>
+                                            <option value="lowestPrice">Harga Terendah</option>
+                                            <option value="highestPrice">Harga Tertinggi</option>
                                         </select>
                                     </div>
                                 </div>
@@ -325,6 +384,7 @@ class ProductList extends React.Component {
                         </div>
                     </div>
                 </div>
+
             </React.Fragment >
         )
     }

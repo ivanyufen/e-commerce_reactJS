@@ -119,7 +119,7 @@ a.navbar-brand {
     transition: .5s ease;
     background-color: gray;
   }
-  
+
   .ig-img:hover .overlay {
     opacity: 0.5;
   }
@@ -203,9 +203,17 @@ a.navbar-brand {
         color: #4183c4;
     }
 
+    .navmenu{
+        margin-left: 15px;
+        margin-right: 15px;
+        padding: 10px;
+    }
+
 .navmenu:hover{
-    color: white;
-    background: #4183c4;
+    background: rgba(0, 0, 0, 0.1);
+    /* padding: 10px; */
+    text-decoration: line-through;
+    border-radius: 75%;
 }
 
 /* .productCard:hover{

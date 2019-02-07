@@ -24,9 +24,8 @@ class LoginBtn extends React.Component {
             //saat user logout, delete local storage dan set state kosong
             axios.delete(`http://localhost:3007/session/${this.props.data.id}`);
             localStorage.removeItem("user_session");
-
-            // refresh supaya check session jalan lagi
-            document.location.reload();
+            //user di redirect ke login saat logout
+            window.location.replace("/login");
         }
     };
 
@@ -45,8 +44,9 @@ class LoginBtn extends React.Component {
                     {this.props.data.name}
                 </DropdownToggle>
                 <DropdownMenu>
-                    <Link to="/editProfile" className="text-dark"><DropdownItem style={{ cursor: "pointer" }}> Edit Profile</DropdownItem></Link>
-                    {this.props.data.role == "Admin" && <a href="/dashboard"><DropdownItem style={{ cursor: "pointer" }}>Dashboard</DropdownItem></a>}
+                    <Link to="/editProfile" className="text-dark"><DropdownItem style={window.location.pathname == '/editProfile' ? { color: '#4183c4', cursor: "pointer" } : { color: 'black', cursor: "pointer" }}> Edit Profile</DropdownItem></Link>
+                    <Link to="/changePassword" className="text-dark"><DropdownItem style={window.location.pathname == '/changePassword' ? { color: '#4183c4', cursor: "pointer" } : { color: 'black', cursor: "pointer" }}> Change Password</DropdownItem></Link>
+                    {this.props.data.role == "Admin" && <a href="/dashboard"><DropdownItem style={window.location.pathname == '/dashboard' ? { color: '#4183c4', cursor: "pointer" } : { color: 'black', cursor: "pointer" }}>Dashboard</DropdownItem></a>}
                     <DropdownItem divider />
                     <DropdownItem onClick={this.logout} style={{ cursor: "pointer" }}>Log Out</DropdownItem>
                 </DropdownMenu>

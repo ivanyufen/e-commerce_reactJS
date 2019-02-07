@@ -19,47 +19,18 @@ productRouter.use(cors());
 productRouter.use(fileupload());
 
 productRouter.get("/products", (req, res) => {
-    if (req.query.max) {
-        let sql = `SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, c.category_name FROM products p, categories c WHERE p.id_category = c.id limit ${req.query.max};`;
-        let query = db.query(sql, (err, result) => {
-            if (err) throw err;
-            console.log("All data successfuly fetched")
-            res.send(result);
-        });
-    }
-    else if (req.query.size) {
-        console.log("ada query size!")
-        let sql = `SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, c.category_name FROM products p, categories c WHERE p.id_category = c.id and p.size = ${req.query.size};`;
-        let query = db.query(sql, (err, result) => {
-            if (err) throw err;
-            console.log("All data successfuly fetched")
-            res.send(result);
-        });
-    }
-
-    else if (req.query.type) {
-        console.log("ada query size!")
-        let sql = `SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, c.category_name FROM products p, categories c WHERE p.id_category = c.id and p.name LIKE "${req.query.type}%";`;
-        let query = db.query(sql, (err, result) => {
-            if (err) throw err;
-            console.log("All data successfuly fetched")
-            res.send(result);
-        });
-    }
-    else {
-        let sql = "SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, c.category_name FROM products p, categories c WHERE p.id_category = c.id;";
-        let query = db.query(sql, (err, result) => {
-            if (err) throw err;
-            console.log("All data successfuly fetched")
-            res.send(result);
-            // console.log(result)
-        });
-    }
+    let sql = "SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, p.photo2, p.photo3, c.category_name FROM products p, categories c WHERE p.id_category = c.id;";
+    let query = db.query(sql, (err, result) => {
+        if (err) throw err;
+        console.log("All data successfuly fetched")
+        res.send(result);
+        // console.log(result)
+    });
 });
 
-productRouter.get("/products/:id", (req, res) => {
-    let id_product = req.params.id; //kenapa ini id bukan id_user karena parameter yg ditrima itu :id walau yg dikirim dr front end id_user
-    let sql = `SELECT * FROM users WHERE id = ${id_product} ;`;
+productRouter.get("/products/:productID", (req, res) => {
+    let productID = req.params.productID.replace(/\D/g, ""); //untuk extract angka id dari product nya, pakai regular expression
+    let sql = `SELECT * FROM products WHERE id = '${productID}' ;`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             throw err;
@@ -67,8 +38,6 @@ productRouter.get("/products/:id", (req, res) => {
         else {
             res.send(result);
         }
-        // res.send(`User with id: ${id} successfully fetched!`);
-
     });
 });
 
@@ -129,30 +98,21 @@ productRouter.put("/products/:id", (req, res) => {
 //request delete data product
 productRouter.delete("/products/:id", (req, res) => {
     let id = req.params.id;
+    // hapus semua isi didalam folder imagenya
+    fs.emptyDirSync(`./files/products/${id}`);
     let sql = `DELETE FROM products where id = ${id} ;`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             throw err;
         }
-        res.send(`Product with id: ${id} successfully deleted!`);
+        else {
+            res.send({ "status": "Product Deleted" });
 
-        // remove files user and the directory
-        var deleteFolderRecursive = function (path) {
-            if (fs.existsSync(`./files/products/${id}`)) {
-                fs.readdirSync(`./files/products/${id}`).forEach(function (file, index) {
-                    var curPath = `./files/products/${id}` + "/" + file;
-                    if (fs.lstatSync(curPath).isDirectory()) { // recurse
-                        deleteFolderRecursive(curPath);
-                    } else { // delete file
-                        fs.unlinkSync(curPath);
-                    }
-                });
-                fs.rmdirSync(`./files/products/${id}`);
-            }
-        };
-        deleteFolderRecursive();
-
+            //hapus folder imagenya
+            fs.rmdirSync(`./files/products/${id}`);
+        }
     });
+
 });
 
 

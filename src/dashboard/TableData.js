@@ -33,10 +33,16 @@ class TableData extends React.Component {
                 description: "",
                 size: "18",
                 location: "",
-                photo: ""
+                photo: "",
+                photo2: "",
+                photo3: ""
             },
             files: "",
-            tempImageURL: ""
+            files2: "",
+            files3: "",
+            tempImageURL: "",
+            tempImageURL2: "",
+            tempImageURL3: "",
         }
     }
 
@@ -76,6 +82,8 @@ class TableData extends React.Component {
             this.setState({
                 modalAddProduct: !this.state.modalAddProduct,
                 tempImageURL: "",
+                tempImageURL2: "",
+                tempImageURL3: "",
                 files: ""
             });
         }
@@ -93,6 +101,8 @@ class TableData extends React.Component {
             this.setState({
                 modalAddProduct: !this.state.modalAddProduct,
                 tempImageURL: "",
+                tempImageURL2: "",
+                tempImageURL3: "",
                 files: ""
             });
         }
@@ -144,11 +154,17 @@ class TableData extends React.Component {
                         description: val.description,
                         size: val.size,
                         location: val.location,
-                        photo: val.photo
+                        photo: val.photo,
+                        photo2: val.photo2,
+                        photo3: val.photo3
                     },
                     tempImageURL: "",
-                    files: ""
-                })
+                    tempImageURL2: "",
+                    tempImageURL3: "",
+                    files: "",
+                    files2: "",
+                    files3: ""
+                });
             }
         })
     }
@@ -167,6 +183,8 @@ class TableData extends React.Component {
                 photo: ""
             },
             tempImageURL: "",
+            tempImageURL2: "",
+            tempImageURL3: "",
             files: ""
         });
     }
@@ -222,7 +240,7 @@ class TableData extends React.Component {
 
 
     editDataproduct = (id) => {
-        this.props.editDataproduct(id, this.state.data_product, this.state.files);
+        this.props.editDataproduct(id, this.state.data_product, this.state.files, this.state.files2, this.state.files3);
         this.setState({
             modalEditProduct: !this.state.modalEditProduct
         });
@@ -236,14 +254,21 @@ class TableData extends React.Component {
                 description: "",
                 size: "18",
                 location: "",
-                photo: ""
+                photo: "",
+                photo2: "",
+                photo3: ""
             },
-            files: ""
+            files: "",
+            files2: "",
+            files3: ""
         })
     }
 
     addDataProduct = () => {
-        this.props.addDataProduct(this.state.data_product, this.state.files);
+        console.log(this.state.files)
+        console.log(this.state.files2)
+        console.log(this.state.files3)
+        this.props.addDataProduct(this.state.data_product, this.state.files, this.state.files2, this.state.files3);
         this.setState({
             modalAddProduct: !this.state.modalAddProduct
         });
@@ -258,7 +283,9 @@ class TableData extends React.Component {
                 size: "18",
                 location: ""
             },
-            files: ""
+            files: "",
+            files2: "",
+            files3: ""
         })
     }
 
@@ -312,6 +339,7 @@ class TableData extends React.Component {
 
     displayProductsTable() {
         if (this.props.data_product) {
+            console.log(this.props.data_product)
             return this.props.data_product.map((val, i) => {
                 return (
                     <tr>
@@ -446,9 +474,22 @@ class TableData extends React.Component {
                                 {/* Product Picture */}
                                 <div className="form-group">
                                     <p>Product Picture</p>
-                                    <img src={this.state.tempImageURL ? this.state.tempImageURL : this.state.data_product.photo} style={{ maxWidth: 100, maxHeight: 150 }} />
+                                    {/* <img src={this.state.tempImageURL ? this.state.tempImageURL : this.state.data_product.photo} style={{ maxWidth: 100, maxHeight: 150 }} />
                                     <label htmlFor="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name.length > 20 ? this.state.files.name.slice(0, 15) + "..." : this.state.files.name : <span>Browse image..</span>}</label>
+                                    <input id="file-upload" type="file" name="filename" accept="image/*" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0], tempImageURL: URL.createObjectURL(e.target.files[0]) }) }} /> */}
+                                    <label htmlFor="file-upload" className="m-1" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "white", width: "100px", height: "90px", overflow: "hidden" }}> {this.state.tempImageURL ? <img src={this.state.tempImageURL} style={{ maxWidth: "100px", maxHeight: "80px", margin: "auto" }} /> : <img src={this.state.data_product.photo} style={{ maxWidth: "100px", maxHeight: "80px" }} />}</label>
                                     <input id="file-upload" type="file" name="filename" accept="image/*" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0], tempImageURL: URL.createObjectURL(e.target.files[0]) }) }} />
+
+                                    {/* <img src={this.state.tempImageURL2 ? this.state.tempImageURL2 : this.state.data_product.photo2} style={{ maxWidth: 100, maxHeight: 150 }} /> */}
+                                    {/* <label htmlFor="file-upload2" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files2 ? this.state.files2.name.length > 20 ? this.state.files2.name.slice(0, 15) + "..." : this.state.files2.name : <span>Browse image..</span>}</label> */}
+                                    <label htmlFor="file-upload2" className="m-1" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "white", width: "100px", height: "90px", overflow: "hidden" }}> {this.state.tempImageURL2 ? <img src={this.state.tempImageURL2} style={{ maxWidth: "100px", maxHeight: "80px", margin: "auto" }} /> : this.state.data_product.photo2 ? <img src={this.state.data_product.photo2} style={{ maxWidth: "100px", maxHeight: "80px", margin: "auto" }} /> : <p style={{ margin: "0 auto" }}>Add image</p>}</label>
+                                    <input id="file-upload2" type="file" name="filename2" accept="image/*" style={{ display: "none" }} onChange={(e) => { this.setState({ files2: e.target.files[0], tempImageURL2: URL.createObjectURL(e.target.files[0]) }) }} />
+
+                                    {/* <img src={this.state.tempImageURL3 ? this.state.tempImageURL3 : this.state.data_product.photo3} style={{ maxWidth: 100, maxHeight: 150 }} /> */}
+                                    {/* <label htmlFor="file-upload3" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files3 ? this.state.files3.name.length > 20 ? this.state.files3.name.slice(0, 15) + "..." : this.state.files3.name : <span>Browse image..</span>}</label> */}
+                                    <label htmlFor="file-upload3" className="m-1" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "white", width: "100px", height: "90px", overflow: "hidden" }}> {this.state.tempImageURL3 ? <img src={this.state.tempImageURL3} style={{ maxWidth: "100px", maxHeight: "80px", margin: "auto" }} /> : this.state.data_product.photo3 != "null" ? <img src={this.state.data_product.photo3} style={{ maxWidth: "100px", maxHeight: "80px", margin: "auto" }} /> : <p style={{ margin: "0 auto" }}>Add image</p>}</label>
+                                    <input id="file-upload3" type="file" name="filename3" accept="image/*" style={{ display: "none" }} onChange={(e) => { this.setState({ files3: e.target.files[0], tempImageURL3: URL.createObjectURL(e.target.files[0]) }) }} />
+
                                 </div>
 
                             </div>
@@ -816,9 +857,19 @@ class TableData extends React.Component {
                                 {/* Product Picture */}
                                 <div className="form-group">
                                     <p>Product Picture</p>
-                                    <img src={this.state.tempImageURL ? this.state.tempImageURL : this.state.data_product.photo} style={{ maxWidth: 100, maxHeight: 150 }} />
-                                    <label htmlFor="file-upload" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files ? this.state.files.name.length > 20 ? this.state.files.name.slice(0, 15) + "..." : this.state.files.name : <span>Browse image..</span>}</label>
+                                    {/* <img src={this.state.tempImageURL ? this.state.tempImageURL : this.state.data_product.photo} style={{ maxWidth: 100, maxHeight: 150 }} /> */}
+                                    <label htmlFor="file-upload" className="m-1" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "white", width: "100px", height: "90px", overflow: "hidden" }}> {this.state.tempImageURL ? <img src={this.state.tempImageURL} style={{ maxWidth: "100px", maxHeight: "80px", margin: "auto" }} /> : <p style={{ margin: "0 auto" }}>Add image</p>}</label>
                                     <input id="file-upload" type="file" name="filename" accept="image/*" style={{ display: "none" }} onChange={(e) => { this.setState({ files: e.target.files[0], tempImageURL: URL.createObjectURL(e.target.files[0]) }) }} />
+
+                                    {/* <img src={this.state.tempImageURL2 ? this.state.tempImageURL2 : this.state.data_product.photo2} style={{ maxWidth: 100, maxHeight: 150 }} /> */}
+                                    {/* <label htmlFor="file-upload2" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files2 ? this.state.files2.name.length > 20 ? this.state.files2.name.slice(0, 15) + "..." : this.state.files2.name : <span>Browse image..</span>}</label> */}
+                                    <label htmlFor="file-upload2" className="m-1" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "white", width: "100px", height: "90px", overflow: "hidden" }}> {this.state.tempImageURL2 ? <img src={this.state.tempImageURL2} style={{ maxWidth: "100px", maxHeight: "80px", margin: "auto" }} /> : <p style={{ margin: "0 auto" }}>Add image</p>}</label>
+                                    <input id="file-upload2" type="file" name="filename2" accept="image/*" style={{ display: "none" }} onChange={(e) => { this.setState({ files2: e.target.files[0], tempImageURL2: URL.createObjectURL(e.target.files[0]) }) }} />
+
+                                    {/* <img src={this.state.tempImageURL3 ? this.state.tempImageURL3 : this.state.data_product.photo3} style={{ maxWidth: 100, maxHeight: 150 }} /> */}
+                                    {/* <label htmlFor="file-upload3" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "gray", color: "white" }}> {this.state.files3 ? this.state.files3.name.length > 20 ? this.state.files3.name.slice(0, 15) + "..." : this.state.files3.name : <span>Browse image..</span>}</label> */}
+                                    <label htmlFor="file-upload3" className="m-1" style={{ border: "2px solid #ccc", display: "inline-block", padding: "6px 12px", cursor: "pointer", backgroundColor: "white", width: "100px", height: "90px", overflow: "hidden" }}> {this.state.tempImageURL3 ? <img src={this.state.tempImageURL3} style={{ maxWidth: "100px", maxHeight: "80px", margin: "auto" }} /> : <p style={{ margin: "0 auto" }}>Add image</p>}</label>
+                                    <input id="file-upload3" type="file" name="filename3" accept="image/*" style={{ display: "none" }} onChange={(e) => { this.setState({ files3: e.target.files[0], tempImageURL3: URL.createObjectURL(e.target.files[0]) }) }} />
                                 </div>
 
                             </div>

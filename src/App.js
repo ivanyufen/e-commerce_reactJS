@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Link, Redirect, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import JoinUs from './pages/JoinUs';
-import FAQ from './pages/FAQ';
+// import FAQ from './pages/FAQ';
 import ProductList from './pages/ProductList';
 import Contact from './pages/Contact';
 import ConfirmPayment from './pages/ConfirmPayment';
@@ -11,13 +11,15 @@ import Navbar from './components/Navbar';
 import BackToTop from './components/BackToTop';
 import SmallNavbar from './components/SmallNavbar';
 import Footer from './components/Footer';
-import ProductDetails from './pages/ProductDetails';
+import ProductDetail from './pages/ProductDetails';
 import AboutUs from './pages/AboutUs';
 import axios from 'axios';
 import Dashboard from './dashboard/Dashboard';
 import EditProfile from './pages/EditProfile';
 import swal from 'sweetalert';
 import NotFound from './pages/NotFound';
+import faq from './pages/Faq';
+import ChangePassword from './pages/ChangePassword';
 
 
 
@@ -108,10 +110,14 @@ class App extends React.Component {
                             render={(props) => <LoginRegister {...props} role={this.state.data_user.role} checkUserSession={this.checkUserSession} isLoggedIn={this.state.isLoggedIn} />}
                         />
 
+                        <Route path='/shop/:productID' component={ProductDetail}></Route>
+
                         <Route
                             path='/shop'
                             render={(props) => <ProductList {...props} onCartClick={this.getCart} />}
                         />
+
+
 
                         {this.state.isLoggedIn &&
                             <Route
@@ -120,13 +126,19 @@ class App extends React.Component {
                             />
                         }
 
+                        {this.state.isLoggedIn &&
+                            <Route
+                                path='/changePassword'
+                                render={(props) => <ChangePassword {...props} data={this.state.data_user} checkUserSession={this.checkUserSession} />}
+                            />
+                        }
+
                         <Route path="/joinUs" component={JoinUs}></Route>
-                        {/* <Route path="/editProfile" component={EditProfile}></Route> */}
                         <Route path="/contact" component={Contact}></Route>
                         <Route path="/confirmPayment" component={ConfirmPayment}></Route>
-                        <Route path="/faq" component={FAQ}></Route>
-                        <Route path="/productDetails" component={ProductDetails}></Route>
+                        <Route path="/faq" component={faq}></Route>
                         <Route path="/aboutUs" component={AboutUs}></Route>
+                        <Route path="/404" component={NotFound}></Route>
                         <Route component={NotFound}></Route> {/*  Route untuk menampilkan halaman jika user ke path yang tidak ada. */}
                     </Switch>
                 }

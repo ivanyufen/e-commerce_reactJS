@@ -19,7 +19,7 @@ class AboutUs extends React.Component {
                     <p>{Faker.lorem.paragraphs()}</p>
                     <p>{Faker.lorem.paragraphs()}</p>
 
-                    <a href="/productList" className="btn btn-outline-primary btn-lg btn-block">SHOP NOW! <i class="fas fa-shopping-bag"></i></a>
+                    <a href="/shop" className="btn btn-outline-primary btn-lg btn-block">SHOP NOW! <i class="fas fa-shopping-bag"></i></a>
                 </div>
             </React.Fragment>
         )
