@@ -6,6 +6,7 @@ import Breadcrumbs from './../components/Breadcrumbs';
 import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 import { Loader } from 'semantic-ui-react';
+import ModalCart from './../components/ModalCart';
 
 class ProductDetail extends React.Component {
 
@@ -25,7 +26,9 @@ class ProductDetail extends React.Component {
             },
             photoShown: "",
             isLoading: false,
-            isPathRight: true
+            isPathRight: true,
+            modal: false,
+            dataCartTemp: ""
         }
     }
 
@@ -54,10 +57,39 @@ class ProductDetail extends React.Component {
         })
     }
 
+    toggle = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+
     loader() {
         return (
             <Loader size='large' active inline='centered' />
         )
+    }
+
+    addToCart = (id_product, name, image, size) => {
+        // ini untuk dioper ke modal datanya
+        var dataCartTemp = {
+            name: name,
+            image: image,
+            size: size
+        }
+        this.setState({
+            dataCartTemp: dataCartTemp
+        });
+        // sampai sini
+
+        axios.post('http://localhost:3007/cart', {
+            id_user: this.props.id_user,
+            id_product: id_product,
+            quantity: this.state.quantity,
+        }).then((x) => {
+            console.log(x);
+        }).catch(() => {
+            console.log("Error post");
+        })
     }
 
     displayProductDetails() {
@@ -135,7 +167,10 @@ class ProductDetail extends React.Component {
                                                 quantity: 1
                                             })
                                         }
-                                        this.setState({ quantity: e.target.value })
+                                        else {
+                                            this.setState({ quantity: e.target.value })
+                                        }
+
                                     }}
                                     onKeyDown={(e) => {
                                         if (e.key == 0) {
@@ -168,7 +203,7 @@ class ProductDetail extends React.Component {
 
                             {/* Add to cart */}
                             <div>
-                                <a href="#" className="btn btn-warning mx-3"><i className="fas fa-cart-plus"></i>Add to cart</a>
+                                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.toggle(); this.addToCart(this.state.data_product.id, this.state.data_product.name, this.state.data_product.photo, this.state.data_product.size) }} className="btn btn-warning mx-3"><i className="fas fa-cart-plus"></i>Add to cart</button>
                             </div>
 
                         </div>
@@ -180,6 +215,8 @@ class ProductDetail extends React.Component {
                         </div>
                     </div>
                 </div>
+
+                <ModalCart modal={this.state.modal} toggle={this.toggle} data={this.state.dataCartTemp ? this.state.dataCartTemp : "null"} />
             </React.Fragment >
 
         )

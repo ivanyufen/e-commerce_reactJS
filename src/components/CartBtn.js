@@ -40,7 +40,6 @@ class CartBtn extends React.Component {
             )
         }
         else {
-            { console.log(this.props.cart) }
             return (
                 <React.Fragment>
                     {/* <a href="" type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>{this.props.cart}</span>)</a> */}
@@ -49,7 +48,14 @@ class CartBtn extends React.Component {
                             <i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart ({this.props.cart.length})
                         </DropdownToggle>
                         <DropdownMenu>
-                            {this.props.cart && this.displayCart()}
+                            {/* {this.props.cart && this.displayCart()} */}
+                            {this.state.cartData ? this.state.cartData.map((val, i) => {
+                                return (
+                                    <React.Fragment>
+                                        <DropdownItem>{val.name}</DropdownItem>
+                                    </React.Fragment>
+                                )
+                            }) : <span></span>}
                             <DropdownItem>Another Action</DropdownItem>
                             <DropdownItem>Another Action</DropdownItem>
                         </DropdownMenu>

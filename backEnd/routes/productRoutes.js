@@ -20,9 +20,10 @@ productRouter.use(fileupload());
 
 productRouter.post("/cart", (req, res) => {
     console.log(req.body);
-    let id_user = req.body.id_user;
-    let id_product = req.body.id_product;
-    let quantity = req.body.quantity;
+    console.log("WAHAHHAHA");
+    var id_user = req.body.id_user;
+    var id_product = req.body.id_product;
+    var quantityBody = req.body.quantity;
 
     // DI CEK DULU KE PRODUCTS BUAT DIAMBIL HARGANYA
     let sql = `SELECT * FROM products where id = ${id_product}`;
@@ -32,7 +33,7 @@ productRouter.post("/cart", (req, res) => {
         let query = db.query(sql, (err, result2) => {
             if (result2.length > 0) {
                 let price = result[0].price;
-                let quantity = result2[0].quantity + 1;
+                let quantity = result2[0].quantity + quantityBody;
                 let totalPrice = quantity * price;
                 let id_cart = result2[0].id;
 
@@ -57,9 +58,9 @@ productRouter.post("/cart", (req, res) => {
             // KALAU DATA BELUM ADA DI CARTS, YAUDAH DITAMBAH AJA
             else {
                 let price = result[0].price;
-                let totalPrice = quantity * price;
-                let sql = `INSERT INTO carts (id_user, id_product, totalPrice) VALUES (?, ?, ?)`;
-                let query = db.query(sql, [id_user, id_product, totalPrice], (err, result) => {
+                let totalPrice = quantityBody * price;
+                let sql = `INSERT INTO carts (id_user, id_product, quantity, totalPrice) VALUES (?, ?, ?, ?)`;
+                let query = db.query(sql, [id_user, id_product, quantityBody, totalPrice], (err, result) => {
                     if (err) {
                         console.log(err)
                     }
@@ -86,7 +87,7 @@ productRouter.get("/products", (req, res) => {
     let sql = "SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, p.photo2, p.photo3, c.category_name FROM products p, categories c WHERE p.id_category = c.id;";
     let query = db.query(sql, (err, result) => {
         if (err) throw err;
-        console.log("All data successfuly fetched")
+        // console.log("All data successfuly fetched");
         res.send(result);
         // console.log(result)
     });

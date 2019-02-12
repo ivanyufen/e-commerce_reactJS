@@ -117,13 +117,6 @@ class ProductList extends React.Component {
         }, 500);
     };
 
-    onClickCart = () => {
-        this.setState({
-            cart: this.state.cart + 1
-        })
-        this.props.onCartClick(this.state.cart)
-    }
-
     loader() {
         return (
             <Loader size='large' active inline='centered' />

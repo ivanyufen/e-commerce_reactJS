@@ -48,11 +48,11 @@ class App extends React.Component {
                 axios.get(`http://localhost:3007/users/${x.data[0].id_user}`).then((y) => {
 
                     // ambil data cart
-                    axios.get(`http://localhost:3007/cart/${x.data[0].id_user}`).then((cart) => {
-                        this.setState({
-                            cart: cart.data
-                        });
-                    })
+                    // axios.get(`http://localhost:3007/cart/${x.data[0].id_user}`).then((cart) => {
+                    //     this.setState({
+                    //         cart: cart.data
+                    //     });
+                    // })
 
                     // dan kita kasi data2 user yg mau dipakai
                     //buat object sementara
@@ -88,9 +88,13 @@ class App extends React.Component {
         this.checkUserSession();
     }
 
+    getCartData(x) {
+        this.setState({
+            cart: x
+        })
+    }
 
     render() {
-        console.log(this.state.data_user.role)
         return (
             <React.Fragment>
                 <SmallNavbar />
@@ -100,7 +104,7 @@ class App extends React.Component {
                     <Switch>
                         <Route exact path="/" component={Home}></Route>
 
-                        {/* Jika user yg login adalah admin, route admin aktif, jika bukan, akan menampilkan halaman tidak ada. */}
+                        {/* Jika user yg login adalah admin, route dashboard aktif, jika bukan, akan menampilkan halaman tidak ada. */}
                         {
                             this.state.data_user.role == "Admin"
                             &&
@@ -114,11 +118,14 @@ class App extends React.Component {
                             render={(props) => <LoginRegister {...props} role={this.state.data_user.role} checkUserSession={this.checkUserSession} isLoggedIn={this.state.isLoggedIn} />}
                         />
 
-                        <Route path='/shop/:productID' component={ProductDetail}></Route>
+                        <Route
+                            path='/shop/:productID'
+                            render={(props) => <ProductDetail {...props} id_user={this.state.data_user.id} />}
+                        />
 
                         <Route
                             path='/shop'
-                            render={(props) => <ProductList {...props} onCartClick={this.getCart} id_user={this.state.data_user.id} />}
+                            render={(props) => <ProductList {...props} id_user={this.state.data_user.id} />}
                         />
 
 

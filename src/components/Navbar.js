@@ -55,7 +55,7 @@ class Navbar extends React.Component {
                             </form>
 
                             <LoginBtn data={this.props.data_user} isCheckSession={this.props.isCheckingSession} />
-                            <CartBtn isCheckSession={this.props.isCheckingSession} cart={this.props.cart} />
+                            <CartBtn isCheckSession={this.props.isCheckingSession} cart={this.props.cart} data={this.props.data_user} />
 
                             {/* <a href="" type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>{this.props.cart}</span>)</a> */}
                         </div>
