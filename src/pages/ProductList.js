@@ -136,6 +136,7 @@ class ProductList extends React.Component {
             return this.state.data_productsShown.map((val, index) => {
                 return (
                     <ProductCard
+                        id_user={this.props.id_user}
                         id={val.id}
                         image={val.photo}
                         name={val.name}

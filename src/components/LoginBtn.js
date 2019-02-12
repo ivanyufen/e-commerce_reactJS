@@ -41,7 +41,7 @@ class LoginBtn extends React.Component {
             <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                 <DropdownToggle caret className="btn btn-outline-secondary mr-3 login">
                     <img src={this.props.data.profpict} style={{ borderRadius: "50%", border: "1px solid black", width: 30, height: 30, marginRight: 8 }} />
-                    {this.props.data.name}
+                    {this.props.data.name} <i class="fas fa-sort-down"></i>
                 </DropdownToggle>
                 <DropdownMenu>
                     <Link to="/editProfile" className="text-dark"><DropdownItem style={window.location.pathname == '/editProfile' ? { color: '#4183c4', cursor: "pointer" } : { color: 'black', cursor: "pointer" }}> Edit Profile</DropdownItem></Link>

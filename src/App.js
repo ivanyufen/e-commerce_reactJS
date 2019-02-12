@@ -28,7 +28,8 @@ class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            cart: 0,
+            cart: "",
+            cartQty: 0,
             data_user: "",
             files: "",
             isLoggedIn: false,
@@ -45,6 +46,14 @@ class App extends React.Component {
             }).then((x) => {
                 // kalau ada sessionnya di table session, kita minta data user yg login
                 axios.get(`http://localhost:3007/users/${x.data[0].id_user}`).then((y) => {
+
+                    // ambil data cart
+                    axios.get(`http://localhost:3007/cart/${x.data[0].id_user}`).then((cart) => {
+                        this.setState({
+                            cart: cart.data
+                        });
+                    })
+
                     // dan kita kasi data2 user yg mau dipakai
                     //buat object sementara
                     let data_user_temp = {
@@ -64,6 +73,7 @@ class App extends React.Component {
                         isCheckingSession: false
                     });
                 });
+
             });
         }
         // kalau session gaada di local storage, user harus login
@@ -78,12 +88,6 @@ class App extends React.Component {
         this.checkUserSession();
     }
 
-
-    getCart = (x) => {
-        this.setState({
-            cart: x
-        });
-    }
 
     render() {
         console.log(this.state.data_user.role)
@@ -114,7 +118,7 @@ class App extends React.Component {
 
                         <Route
                             path='/shop'
-                            render={(props) => <ProductList {...props} onCartClick={this.getCart} />}
+                            render={(props) => <ProductList {...props} onCartClick={this.getCart} id_user={this.state.data_user.id} />}
                         />
 
 

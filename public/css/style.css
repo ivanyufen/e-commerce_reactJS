@@ -209,6 +209,24 @@ a.navbar-brand {
         padding: 10px;
     }
 
+    .productImage{
+        max-width: 300px;
+        max-height: 300px;
+    }
+
+    .subProductImage {
+        margin-top: 100px;
+        max-width: 75px;
+        max-height: 75px;
+    }
+
+
+    .productImage:hover{
+        transform: scale(1.5);
+    }
+
+    .dropdown-toggle:after { content: none !important}
+
 .navmenu:hover{
     background: rgba(0, 0, 0, 0.1);
     /* padding: 10px; */

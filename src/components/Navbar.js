@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LoginBtn from './LoginBtn';
+import CartBtn from './CartBtn';
 
 class Navbar extends React.Component {
     render() {
@@ -29,7 +30,7 @@ class Navbar extends React.Component {
                                         Order
                                     </a>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <Link to="/confirmPayment"><a href="" className="dropdown-item" style={window.location.pathname == '/confirmPayment' ? { color: '#4183c4' } : { color: 'gray' }}>Confirm Payment</a></Link>
+                                        <Link to="/confirmPayment"><a href="" className="dropdown-item" style={window.location.pathname == '/confirmPayment' ? { color: '#4183c4' } : { color: 'black' }}>Confirm Payment</a></Link>
                                         <a href="#" className="dropdown-item" >Order History</a>
                                     </div>
                                 </li>
@@ -54,8 +55,9 @@ class Navbar extends React.Component {
                             </form>
 
                             <LoginBtn data={this.props.data_user} isCheckSession={this.props.isCheckingSession} />
+                            <CartBtn isCheckSession={this.props.isCheckingSession} cart={this.props.cart} />
 
-                            <a href="" type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>{this.props.cart}</span>)</a>
+                            {/* <a href="" type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>{this.props.cart}</span>)</a> */}
                         </div>
                     </div>
                 </nav>

@@ -23,6 +23,7 @@ class ProductDetail extends React.Component {
                 location: "",
                 photo: ""
             },
+            photoShown: "",
             isLoading: false,
             isPathRight: true
         }
@@ -37,6 +38,9 @@ class ProductDetail extends React.Component {
             if (x.data.length > 0) {
                 this.setState({
                     data_product: x.data[0],
+                    photoShown: x.data[0].photo,
+                    photoShown2: x.data[0].photo2,
+                    photoShown3: x.data[0].photo3,
                     isLoading: false,
                     isPathRight: true
                 });
@@ -60,44 +64,101 @@ class ProductDetail extends React.Component {
         return (
             <React.Fragment>
                 <Breadcrumbs path='/shop' />
+
                 <div className="container">
                     <Link to="/shop/"><button className="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back to shop</button></Link>
                 </div>
                 <div className="container p-5 my-5">
                     <div className="row">
                         <div className="col-lg-3">
-                            <img src={this.state.data_product.photo} alt="Product photo" />
-                            {/* <img src="" style={{ width: "5rem", height: "10rem" }} alt="Product photo" />
-                                <img src="" style={{ width: "5rem", height: "10rem" }} alt="Product photo" /> */}
+                            <img src={this.state.photoShown} className="productImage" style={{ transition: "transform .2s" }} alt="Product photo" />
+                            <img src={this.state.data_product.photo} className="subProductImage" alt="Product photo" onClick={() => {
+                                this.setState({
+                                    photoShown: this.state.data_product.photo
+                                })
+                            }} />
+
+                            {this.state.data_product.photo2 ?
+                                <img src={this.state.data_product.photo2} className="subProductImage" alt="Product photo" onClick={() => {
+                                    this.setState({
+                                        photoShown: this.state.data_product.photo2
+                                    })
+                                }} />
+                                :
+                                <span></span>}
+
+                            {this.state.data_product.photo3 ?
+                                <img src={this.state.data_product.photo3} className="subProductImage" alt="Product photo" onClick={() => {
+                                    this.setState({
+                                        photoShown: this.state.data_product.photo3
+                                    })
+                                }} />
+                                :
+                                <span></span>}
 
                         </div>
                         <div className="col-lg-9">
+                            {/* Product name and size */}
                             <h1 className="my-3">{this.state.data_product.name} {this.state.data_product.size} mm</h1>
-                            <Rate />
+
+                            {/* Rating */}
+                            {/* <Rate /> */}
                             {/* <p className="text-muted"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> 3 ulasan</p> */}
+
+                            {/* Price */}
                             <h3 className="text-warning">Rp {this.state.data_product.price.toLocaleString()}</h3>
+
+                            {/* Quantity */}
                             <div id="quantityCounter" className="my-5">
                                 <p>Jumlah: </p>
-                                <button type="button" style={{ background: "none", border: "none", cursor: "pointer" }} onClick={() => {
-                                    this.setState({
-                                        quantity: parseInt(this.state.quantity) - 1
-                                    })
-                                }}><i class="fas fa-minus-circle fa-lg"></i></button>
-                                <input type="text" value={this.state.quantity} style={{ border: "none", borderBottom: "2px solid black", width: "5rem" }} onKeyPress={(e) => {
-                                    var char = String.fromCharCode(e.which); if (!(/[0-9]/.test(char))) {
-                                        e.preventDefault();
+                                <button type="button" style={{ background: "none", border: "none", cursor: "pointer" }} onClick={(e) => {
+                                    if (this.state.quantity <= 1) {
+                                        this.setState({
+                                            quantity: 1
+                                        })
                                     }
-                                }
-                                } onChange={(e) => { this.setState({ quantity: e.target.value }) }} />
+                                    else {
+                                        this.setState({
+                                            quantity: parseInt(this.state.quantity) - 1
+                                        })
+                                    }
+                                }}><i class="fas fa-minus-circle fa-lg"></i></button>
+
+                                <input type="text" value={this.state.quantity} style={{ border: "none", borderBottom: "2px solid black", width: "5rem" }}
+                                    onKeyPress={(e) => {
+                                        var char = String.fromCharCode(e.which); if (!(/[0-9]/.test(char))) {
+                                            e.preventDefault();
+                                        }
+                                    }} onChange={(e) => {
+                                        if (this.state.quantity <= 1) {
+                                            this.setState({
+                                                quantity: 1
+                                            })
+                                        }
+                                        this.setState({ quantity: e.target.value })
+                                    }}
+                                    onKeyDown={(e) => {
+                                        if (e.key == 0) {
+                                            e.preventDefault();
+                                            this.setState({
+                                                quantity: 1
+                                            })
+                                        }
+                                    }} />
+
                                 <button type="button" style={{ background: "none", border: "none", cursor: "pointer" }} onClick={() => {
                                     this.setState({
                                         quantity: parseInt(this.state.quantity) + 1
                                     })
                                 }}><i class="fas fa-plus-circle fa-lg"></i></button>
                             </div>
+
+                            {/* Shipping */}
                             <div id="shipping">
                                 <p><i class="fas fa-truck"></i> Pengiriman dari: <span className="text-muted">{this.state.data_product.location}</span></p>
                             </div>
+
+                            {/* Notes for seller */}
                             <form className="form-inline my-4">
                                 <div id="notesForSeller" className="form-group">
                                     <label for="notes">Catatan untuk pengirim: &nbsp;</label>
@@ -105,13 +166,17 @@ class ProductDetail extends React.Component {
                                 </div>
                             </form>
 
-                            <a href="#" className="btn btn-warning mx-3"><i className="fas fa-cart-plus"></i>Add to cart</a>
+                            {/* Add to cart */}
+                            <div>
+                                <a href="#" className="btn btn-warning mx-3"><i className="fas fa-cart-plus"></i>Add to cart</a>
+                            </div>
+
                         </div>
                     </div>
 
-                    <div className="row">
+                    <div className="row my-5">
                         <div className="col-lg-12">
-                            <Tabs />
+                            <Tabs productDescription={this.state.data_product.description} productSize={this.state.data_product.size} productColor={this.state.data_product.name.split(" ")[2]} />
                         </div>
                     </div>
                 </div>

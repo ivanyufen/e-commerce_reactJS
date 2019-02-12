@@ -18,6 +18,70 @@ productRouter.use(bodyParser.json());
 productRouter.use(cors());
 productRouter.use(fileupload());
 
+productRouter.post("/cart", (req, res) => {
+    console.log(req.body);
+    let id_user = req.body.id_user;
+    let id_product = req.body.id_product;
+    let quantity = req.body.quantity;
+
+    // DI CEK DULU KE PRODUCTS BUAT DIAMBIL HARGANYA
+    let sql = `SELECT * FROM products where id = ${id_product}`;
+    let query = db.query(sql, (err, result) => {
+        // DI CEK UDAH ADA BELOM DI TABLE CARTS, KALO UDAH, QUANTITY NYA AJA YG DITAMBAH
+        let sql = `SELECT * FROM carts where id_product = ${id_product} and id_user = ${id_user}`;
+        let query = db.query(sql, (err, result2) => {
+            if (result2.length > 0) {
+                let price = result[0].price;
+                let quantity = result2[0].quantity + 1;
+                let totalPrice = quantity * price;
+                let id_cart = result2[0].id;
+
+                let data = {
+                    id_user: id_user,
+                    id_product: id_product,
+                    quantity: quantity,
+                    totalPrice: totalPrice
+                }
+
+                let sql = `UPDATE carts SET ? WHERE id = ${id_cart}`;
+                let query = db.query(sql, data, (err, result) => {
+                    if (err) {
+                        console.log(err)
+                    }
+                    else {
+                        console.log(result);
+                        res.send('Added to cart!');
+                    }
+                })
+            }
+            // KALAU DATA BELUM ADA DI CARTS, YAUDAH DITAMBAH AJA
+            else {
+                let price = result[0].price;
+                let totalPrice = quantity * price;
+                let sql = `INSERT INTO carts (id_user, id_product, totalPrice) VALUES (?, ?, ?)`;
+                let query = db.query(sql, [id_user, id_product, totalPrice], (err, result) => {
+                    if (err) {
+                        console.log(err)
+                    }
+                    else {
+                        console.log(result);
+                        res.send('Added to cart!');
+                    }
+                });
+            }
+        })
+    })
+
+})
+
+productRouter.get("/cart/:id_user", (req, res) => {
+    console.log(req.params.id_user);
+    let sql = `SELECT u.id, u.name, p.name, p.price, p.size, p.location, p.photo, c.quantity, c.totalPrice FROM carts c JOIN users u ON c.id_user = u.id JOIN products p ON c.id_product = p.id WHERE c.id_user = ${req.params.id_user}`;
+    let query = db.query(sql, (err, result) => {
+        res.send(result);
+    })
+});
+
 productRouter.get("/products", (req, res) => {
     let sql = "SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, p.photo2, p.photo3, c.category_name FROM products p, categories c WHERE p.id_category = c.id;";
     let query = db.query(sql, (err, result) => {
