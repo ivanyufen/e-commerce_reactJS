@@ -27,6 +27,12 @@ class LoginRegister extends React.Component {
         }
     }
 
+    componentDidMount() {
+        if (this.props.location.isFromCart) {
+            swal("You need to login first to view your cart!");
+        }
+    }
+
     login = (e) => {
         e.preventDefault();
         //cek ke database
@@ -168,9 +174,9 @@ class LoginRegister extends React.Component {
                             <div className="col-lg-6">
                                 <form className="border p-3 m-5">
                                     <div className="form-group">
-                                        <label htmlFor="username">Username</label>
+                                        <label htmlFor="username">Username / Email</label>
                                         <input type="text" className="form-control" id="username" value={this.state.username} autoFocus onChange={(e) => { this.setState({ username: e.target.value }) }}
-                                            placeholder="Enter username" />
+                                            placeholder="Enter username / email" />
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="password">Password</label>

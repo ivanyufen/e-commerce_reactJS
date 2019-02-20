@@ -20,6 +20,7 @@ import swal from 'sweetalert';
 import NotFound from './pages/NotFound';
 import faq from './pages/Faq';
 import ChangePassword from './pages/ChangePassword';
+import Cart from './pages/Cart';
 
 
 
@@ -98,7 +99,7 @@ class App extends React.Component {
         return (
             <React.Fragment>
                 <SmallNavbar />
-                <Navbar cart={this.state.cart} data_user={this.state.data_user} isCheckingSession={this.state.isCheckingSession} />
+                <Navbar cart={this.state.cart} data_user={this.state.data_user} isCheckingSession={this.state.isCheckingSession} isLoggedIn={this.state.isLoggedIn} />
 
                 {this.state.isCheckingSession == false &&
                     <Switch>
@@ -127,6 +128,13 @@ class App extends React.Component {
                             path='/shop'
                             render={(props) => <ProductList {...props} id_user={this.state.data_user.id} />}
                         />
+
+                        <Route
+                            path='/cart'
+                            render={(props) => <Cart {...props} id_user={this.state.data_user.id} isLoggedIn={this.state.isLoggedIn} />}
+                        />
+
+
 
 
 

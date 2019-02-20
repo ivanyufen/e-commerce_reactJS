@@ -1,38 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { UncontrolledCarousel } from 'reactstrap';
 
 class Banner extends React.Component {
     render() {
+        const items = [
+            {
+                src: './img/banner/banner1.jpg',
+                id: 1,
+                // altText: 'Slide 1'
+            },
+            {
+                src: './img/banner/banner2.jpg',
+                id: 2,
+                altText: 'Slide 2'
+            },
+            {
+                src: './img/banner/banner3.jpg',
+                id: 3,
+                altText: 'Slide 3'
+            }
+        ];
+
         return (
-            <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
-                <ol class="carousel-indicators">
-                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                </ol>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <a href="/shop"><img class="d-block w-100" src="./img/banner/banner1.jpg" alt="" /></a>
-                    </div>
-                    <div class="carousel-item">
-                        <a href="/shop"><img class="d-block w-100" src="./img/banner/banner2.jpg" alt="" /></a>
-                    </div>
-                    <div class="carousel-item">
-                        <a href="/shop"><img class="d-block w-100" src="./img/banner/banner3.jpg" alt="" /></a>
-                    </div>
-                    <div class="carousel-item">
-                        <a href="/shop"><img class="d-block w-100" src="./img/banner/banner4.jpg" alt="" /></a>
-                    </div>
-                </div>
-                <a href="" class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a href="" class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </div>
+            <React.Fragment>
+                <UncontrolledCarousel items={items} />
+            </React.Fragment>
 
         )
     }

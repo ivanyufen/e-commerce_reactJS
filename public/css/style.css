@@ -21,6 +21,7 @@ td{
     vertical-align: middle !important;
 }
 
+
 li{
     list-style-type: none;
 }
@@ -218,6 +219,7 @@ a.navbar-brand {
         margin-top: 100px;
         max-width: 75px;
         max-height: 75px;
+        cursor: pointer;
     }
 
 

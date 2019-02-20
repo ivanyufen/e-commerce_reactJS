@@ -22,7 +22,7 @@ class Navbar extends React.Component {
                                     <a href="/" className="nav-link navmenu" style={window.location.pathname == '/' ? { color: '#4183c4' } : { color: 'gray' }}>Home</a>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/shop"><a href="productList" className="nav-link navmenu" style={window.location.pathname == '/shop' ? { color: '#4183c4' } : { color: 'gray' }}>Shop</a></Link>
+                                    <Link to="/shop" className="nav-link navmenu" style={window.location.pathname == '/shop' ? { color: '#4183c4' } : { color: 'gray' }}>Shop</Link>
                                 </li>
                                 <li className="nav-item dropdown">
                                     <a href="" className="nav-link dropdown-toggle navmenu" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -55,7 +55,7 @@ class Navbar extends React.Component {
                             </form>
 
                             <LoginBtn data={this.props.data_user} isCheckSession={this.props.isCheckingSession} />
-                            <CartBtn isCheckSession={this.props.isCheckingSession} cart={this.props.cart} data={this.props.data_user} />
+                            <CartBtn isCheckSession={this.props.isCheckingSession} cart={this.props.cart} data={this.props.data_user} isLoggedIn={this.props.isLoggedIn} />
 
                             {/* <a href="" type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>{this.props.cart}</span>)</a> */}
                         </div>

@@ -1,17 +1,25 @@
 import React from 'react';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 class CartBtn extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            dropdownOpen: false
+            dropdownOpen: false,
+            cartData: ""
         };
     }
 
     toggle = () => {
+        axios.get(`http://localhost:3007/cart/${this.props.data.id}`).then((x) => {
+            // this.setState({
+            //     cartData: x.data
+            // })
+            console.log(x.data)
+        })
         this.setState({
             dropdownOpen: !this.state.dropdownOpen
         });
@@ -25,25 +33,26 @@ class CartBtn extends React.Component {
         })
     }
 
-    render() {
-        if (this.props.isCheckSession == true) {
-            return (
-                <ButtonDropdown type="button" className="btn btn-light cartbtn" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                    <DropdownToggle caret>
-                        <i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart {this.props.user_id}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        <DropdownItem>Another Action</DropdownItem>
-                        <DropdownItem>Another Action</DropdownItem>
-                    </DropdownMenu>
-                </ButtonDropdown>
-            )
-        }
-        else {
+    cartNotLoggedIn() {
+        return (
+            <Link to="/cart"><ButtonDropdown onMouseEnter={this.toggle} onMouseLeave={this.toggle} type="button" className="btn btn-light cartbtn" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                <DropdownToggle caret>
+                    <i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownItem>Empty Cart</DropdownItem>
+                </DropdownMenu>
+            </ButtonDropdown>
+            </Link>
+        )
+    }
+
+    displayCart() {
+        if (this.props.isLoggedIn) {
             return (
                 <React.Fragment>
                     {/* <a href="" type="button" className="btn btn-light"><i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart (<span>{this.props.cart}</span>)</a> */}
-                    <ButtonDropdown type="button" className="btn btn-light cartbtn" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                    <Link to="/cart"><ButtonDropdown onMouseEnter={this.toggle} onMouseLeave={this.toggle} type="button" className="btn btn-light cartbtn" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                         <DropdownToggle caret>
                             <i className="fas fa-shopping-cart fa-sm m-1"></i>Your cart ({this.props.cart.length})
                         </DropdownToggle>
@@ -60,7 +69,25 @@ class CartBtn extends React.Component {
                             <DropdownItem>Another Action</DropdownItem>
                         </DropdownMenu>
                     </ButtonDropdown>
+                    </Link>
                 </React.Fragment>
+            )
+        }
+        else {
+            return this.cartNotLoggedIn()
+        }
+    }
+
+
+    render() {
+        if (this.props.isCheckSession == true) {
+            return (
+                this.cartNotLoggedIn()
+            )
+        }
+        else {
+            return (
+                this.displayCart()
             )
         }
 

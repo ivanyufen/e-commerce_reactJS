@@ -2,7 +2,7 @@ import React from 'react';
 import Breadcrumbs from './../components/Breadcrumbs';
 import Faker from 'faker';
 import ProductDetails from './ProductDetails';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import ProductCard from './../components/ProductCard';
 import axios from 'axios';
 import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';

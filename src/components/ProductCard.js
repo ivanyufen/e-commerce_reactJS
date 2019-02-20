@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import ModalCart from './ModalCart';
+import { Link } from 'react-router-dom';
 
 class ProductCard extends React.Component {
 

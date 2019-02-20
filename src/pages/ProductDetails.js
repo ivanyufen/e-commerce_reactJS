@@ -98,7 +98,8 @@ class ProductDetail extends React.Component {
                 <Breadcrumbs path='/shop' />
 
                 <div className="container">
-                    <Link to="/shop/"><button className="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back to shop</button></Link>
+                    {/* kenapa memakai window.history.back, supaya ttp maintain posisi scroll user terakhir */}
+                    <button onClick={() => { window.history.back() }} className="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back to shop</button>
                 </div>
                 <div className="container p-5 my-5">
                     <div className="row">
@@ -162,7 +163,7 @@ class ProductDetail extends React.Component {
                                             e.preventDefault();
                                         }
                                     }} onChange={(e) => {
-                                        if (this.state.quantity <= 1) {
+                                        if (this.state.quantity < 1) {
                                             this.setState({
                                                 quantity: 1
                                             })
@@ -173,7 +174,7 @@ class ProductDetail extends React.Component {
 
                                     }}
                                     onKeyDown={(e) => {
-                                        if (e.key == 0) {
+                                        if (e.key == 0 && this.state.quantity == "") {
                                             e.preventDefault();
                                             this.setState({
                                                 quantity: 1

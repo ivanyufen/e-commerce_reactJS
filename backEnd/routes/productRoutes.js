@@ -18,6 +18,38 @@ productRouter.use(bodyParser.json());
 productRouter.use(cors());
 productRouter.use(fileupload());
 
+//UPDATE CART
+productRouter.put("/cart/:id", (req, res) => {
+    console.log(req.body);
+    var quantity = req.body.quantity;
+
+    // query untuk dapetin price productnya
+    let sql = `SELECT p.price FROM carts c JOIN products p ON c.id_product = p.id WHERE c.id = ${req.params.id}`
+    let query = db.query(sql, (err, result) => {
+        console.log(result);
+        var price = result[0].price;
+        var totalPrice = quantity * price;
+
+        // setelah dapet dan dihitung total price nya, di update ke database
+
+        let sql = `UPDATE carts SET quantity = ${quantity}, totalPrice = ${totalPrice} where id = ${req.params.id} `;
+        let query = db.query(sql, (err) => {
+            if (err) {
+                throw err;
+            }
+            else {
+                res.send({ "status": "update quantity success" });
+                console.log("Successfully update quantity!");
+            }
+        })
+
+    })
+
+
+
+})
+
+// INPUT CART
 productRouter.post("/cart", (req, res) => {
     console.log(req.body);
     console.log("WAHAHHAHA");
@@ -75,13 +107,30 @@ productRouter.post("/cart", (req, res) => {
 
 })
 
+
+// GET CART OF USER
 productRouter.get("/cart/:id_user", (req, res) => {
     console.log(req.params.id_user);
-    let sql = `SELECT u.id, u.name, p.name, p.price, p.size, p.location, p.photo, c.quantity, c.totalPrice FROM carts c JOIN users u ON c.id_user = u.id JOIN products p ON c.id_product = p.id WHERE c.id_user = ${req.params.id_user}`;
+    let sql = `SELECT c.id as id_cart, u.id, u.name, p.name, p.price, p.size, p.location, p.photo, c.quantity, c.totalPrice FROM carts c JOIN users u ON c.id_user = u.id JOIN products p ON c.id_product = p.id WHERE c.id_user = ${req.params.id_user}`;
     let query = db.query(sql, (err, result) => {
         res.send(result);
     })
 });
+
+//DELETE CART USER
+productRouter.delete("/cart/:id", (req, res) => {
+    console.log("WADIDAW")
+    let cartID = req.params.id;
+    let sql = `DELETE FROM carts WHERE id = ${cartID}`;
+    let query = db.query(sql, (err, result) => {
+        if (err) {
+            throw err;
+        }
+        else {
+            res.send({ "status": "Cart deleted" });
+        }
+    })
+})
 
 productRouter.get("/products", (req, res) => {
     let sql = "SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, p.photo2, p.photo3, c.category_name FROM products p, categories c WHERE p.id_category = c.id;";

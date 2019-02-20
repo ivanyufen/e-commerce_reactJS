@@ -23,7 +23,7 @@ class Breadcrumbs extends React.Component {
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb" style={{ justifyContent: "center" }}>
                     <li className="breadcrumb-item"><Link to="/"><a href="" href="">Home</a></Link></li>
-                    <li className="breadcrumb-item active" aria-current="page">{this.state.path}</li>
+                    <li className="breadcrumb-item active" aria-current="page"><Link to={this.state.path.toLocaleLowerCase()}>{this.state.path}</Link></li>
                 </ol>
             </nav>
         )

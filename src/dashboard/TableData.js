@@ -291,20 +291,26 @@ class TableData extends React.Component {
 
     addDataUser = () => {
         this.props.addDataUser(this.state.data_user, this.state.files);
-        this.setState({
-            modalAddUser: !this.state.modalAddUser
-        });
-        swal("Data added!");
-        this.setState({
-            data_user: {
-                name: "",
-                email: "",
-                username: "",
-                address: "",
-                phone_number: ""
-            },
-            files: ""
-        })
+        if (this.props.posted) {
+            this.setState({
+                modalAddUser: !this.state.modalAddUser
+            });
+            swal("Data added!");
+            this.setState({
+                data_user: {
+                    name: "",
+                    email: "",
+                    username: "",
+                    address: "",
+                    phone_number: ""
+                },
+                files: ""
+            })
+        }
+        else {
+            swal("User already registered!");
+        }
+
     }
 
     reloadData = () => {

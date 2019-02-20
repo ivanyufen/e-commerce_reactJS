@@ -12,7 +12,8 @@ class Tab extends React.Component {
             data_user: "",
             files: "",
             data_product: "",
-            isLoading: false
+            isLoading: false,
+            posted: true
         }
     }
     componentDidMount() {
@@ -104,33 +105,44 @@ class Tab extends React.Component {
 
     addDataUser = (newData, files) => {
         axios.post(`http://localhost:3007/users`, newData).then((x) => {
-
-            //kalau file nya ada, upload
-            if (files) {
-                // upload foto
-                var url = 'http://localhost:3007/upload';
-                var formData = new FormData();
-
-                //ngirim id user ke back end
-                formData.append('userid', x.data.id_user);
-
-                //ngirim file gambarnya ke back end
-                formData.append('file', files);
-
-                var config = {
-                    headers:
-                        { 'Content-Type': 'multipart/form-data' }
-                };
-
-                axios.post(url, formData, config).then(() => {
-                    this.reloadData();
+            if (x.data.status == "wrongPassword" || x.data.status == "notRegistered") {
+                this.setState({
+                    posted: false
                 })
             }
             else {
-                this.reloadData();
+                this.setState({
+                    posted: true
+                })
+                //kalau file nya ada, upload
+                if (files) {
+                    // upload foto
+                    var url = 'http://localhost:3007/upload';
+                    var formData = new FormData();
+
+                    //ngirim id user ke back end
+                    formData.append('userid', x.data.id_user);
+
+                    //ngirim file gambarnya ke back end
+                    formData.append('file', files);
+
+                    var config = {
+                        headers:
+                            { 'Content-Type': 'multipart/form-data' }
+                    };
+
+                    axios.post(url, formData, config).then(() => {
+                        this.reloadData();
+                    })
+                }
+                else {
+                    this.reloadData();
+                }
             }
         })
     }
+
+
 
     removeDataProduct = (id) => {
         axios.delete(`http://localhost:3007/products/${id}`).then((x) => {
@@ -203,7 +215,7 @@ class Tab extends React.Component {
                     <TabPane tabId="1">
                         <Row>
                             <Col sm="12">
-                                <TableData data_user={this.state.data_user} active="1" removeDataUser={this.removeDataUser} editDataUser={this.editDataUser} addDataUser={this.addDataUser} reloadData={this.reloadData} />
+                                <TableData data_user={this.state.data_user} active="1" removeDataUser={this.removeDataUser} editDataUser={this.editDataUser} addDataUser={this.addDataUser} reloadData={this.reloadData} posted={this.state.posted} />
                             </Col>
                         </Row>
                     </TabPane>}
@@ -212,7 +224,7 @@ class Tab extends React.Component {
                     <TabPane tabId="2">
                         <Row>
                             <Col sm="12">
-                                <TableData data_product={this.state.data_product} active="2" removeDataProduct={this.removeDataProduct} editDataproduct={this.editDataProduct} addDataProduct={this.addDataProduct} reloadData={this.reloadData} />
+                                <TableData data_product={this.state.data_product} active="2" removeDataProduct={this.removeDataProduct} editDataproduct={this.editDataProduct} addDataProduct={this.addDataProduct} reloadData={this.reloadData} posted={this.state.posted} />
                             </Col>
                         </Row>
                     </TabPane>

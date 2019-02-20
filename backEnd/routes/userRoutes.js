@@ -74,7 +74,7 @@ userRouter.delete('/session/:id_user', (req, res) => {
 userRouter.post("/login", (req, res) => {
     let username = req.body.username;
     let password = req.body.password;
-    let sql = `SELECT * FROM users WHERE username = '${username}'`;
+    let sql = `SELECT * FROM users WHERE username = '${username}' OR email='${username}'`;
     let query = db.query(sql, (err, result) => {
         console.log(result)
         if (err) {
