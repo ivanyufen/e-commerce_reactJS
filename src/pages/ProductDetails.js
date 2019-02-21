@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 import { Loader } from 'semantic-ui-react';
 import ModalCart from './../components/ModalCart';
+import swal from '@sweetalert/with-react';
 
 class ProductDetail extends React.Component {
 
@@ -70,26 +71,41 @@ class ProductDetail extends React.Component {
     }
 
     addToCart = (id_product, name, image, size) => {
-        // ini untuk dioper ke modal datanya
-        var dataCartTemp = {
-            name: name,
-            image: image,
-            size: size
+        if (!this.props.id_user) {
+            this.setState({
+                dataCartTemp: ""
+            });
+            this.toggle();
         }
-        this.setState({
-            dataCartTemp: dataCartTemp
-        });
-        // sampai sini
+        else if (this.state.quantity > this.state.data_product.stock) {
+            swal("Sorry, the quantity you are about to buy exceed our current stock :(");
+        }
+        else {
+            // ini untuk dioper ke modal datanya
+            var dataCartTemp = {
+                name: name,
+                image: image,
+                size: size
+            }
+            this.setState({
+                dataCartTemp: dataCartTemp
+            });
+            // sampai sini
 
-        axios.post('http://localhost:3007/cart', {
-            id_user: this.props.id_user,
-            id_product: id_product,
-            quantity: this.state.quantity,
-        }).then((x) => {
-            console.log(x);
-        }).catch(() => {
-            console.log("Error post");
-        })
+            // fungsi untuk munculin modal
+            this.toggle();
+
+            axios.post('http://localhost:3007/cart', {
+                id_user: this.props.id_user,
+                id_product: id_product,
+                quantity: this.state.quantity,
+            }).then((x) => {
+                console.log(x);
+            }).catch(() => {
+                console.log("Error post");
+            })
+        }
+
     }
 
     displayProductDetails() {
@@ -204,7 +220,7 @@ class ProductDetail extends React.Component {
 
                             {/* Add to cart */}
                             <div>
-                                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.toggle(); this.addToCart(this.state.data_product.id, this.state.data_product.name, this.state.data_product.photo, this.state.data_product.size) }} className="btn btn-warning mx-3"><i className="fas fa-cart-plus"></i>Add to cart</button>
+                                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.addToCart(this.state.data_product.id, this.state.data_product.name, this.state.data_product.photo, this.state.data_product.size) }} className="btn btn-warning mx-3"><i className="fas fa-cart-plus"></i>Add to cart</button>
                             </div>
 
                         </div>
@@ -217,7 +233,7 @@ class ProductDetail extends React.Component {
                     </div>
                 </div>
 
-                <ModalCart modal={this.state.modal} toggle={this.toggle} data={this.state.dataCartTemp ? this.state.dataCartTemp : "null"} />
+                <ModalCart modal={this.state.modal} toggle={this.toggle} data={this.state.dataCartTemp ? this.state.dataCartTemp : ""} />
             </React.Fragment >
 
         )

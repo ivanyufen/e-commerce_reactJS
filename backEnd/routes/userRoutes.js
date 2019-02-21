@@ -1,6 +1,6 @@
 //supaya connected dengan server utama
 const userRouter = require('express').Router();
-
+const http = require("https");
 //untuk connect ke db
 const db = require("../connection/connection");
 
@@ -55,7 +55,6 @@ userRouter.post("/session", (req, res) => {
         }
         else {
             res.send(result);
-            console.log(result);
         }
     });
 });
@@ -119,12 +118,15 @@ userRouter.post("/login", (req, res) => {
 
 //request register dr user
 userRouter.post("/users", (req, res) => {
+    console.log(req.body)
     let name = req.body.name;
     let username = req.body.username;
     let password = req.body.password;
     let email = req.body.email;
     let phone_number = req.body.phone_number;
     let address = req.body.address;
+    let province = req.body.province;
+    let city = req.body.city;
     let role = "";
     req.body.role ? role = req.body.role : role = "User"
 
@@ -140,7 +142,7 @@ userRouter.post("/users", (req, res) => {
         }
         else {
             bcrypt.hash(password, saltRounds, (err, hash) => {
-                let query = db.query(`INSERT INTO users (name, email, password, username, address, phone_number, role ) VALUES (?, ?, ?, ?, ?, ?, ?)`, [name, email, hash, username, address, phone_number, role], (err, resultt) => {
+                let query = db.query(`INSERT INTO users (name, email, password, username, address, city, province, phone_number, role ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [name, email, hash, username, address, city, province, phone_number, role], (err, resultt) => {
                     if (err) {
                         throw err;
                     };
@@ -239,6 +241,64 @@ userRouter.delete("/users/:id", (req, res) => {
 
     });
 });
+
+userRouter.get("/province", (req, response) => {
+    // utk ambil data provinsi dari api rajaongkir
+    var options = {
+        "method": "GET",
+        "hostname": "api.rajaongkir.com",
+        "port": null,
+        "path": "/starter/province",
+        "headers": {
+            "key": "865b1a0586feba49b34b9e4202ee6a12"
+        }
+    };
+
+    var req = http.request(options, function (res) {
+        var provinceData = [];
+
+        res.on("data", function (data) {
+            provinceData.push(data);
+        });
+
+        res.on("end", function () {
+            var body = Buffer.concat(provinceData);
+            console.log(body.toString());
+            var dataProvinsi = JSON.parse(body)
+            response.send(dataProvinsi.rajaongkir.results);
+        });
+    });
+    req.end();
+})
+
+userRouter.get("/city/:province_id", (req, response) => {
+    // utk ambil data kota dari api rajaongkir
+    var options = {
+        "method": "GET",
+        "hostname": "api.rajaongkir.com",
+        "port": null,
+        "path": `/starter/city?province=${req.params.province_id}`,
+        "headers": {
+            "key": "865b1a0586feba49b34b9e4202ee6a12"
+        }
+    };
+
+    var req = http.request(options, function (res) {
+        var cityData = [];
+
+        res.on("data", function (data) {
+            cityData.push(data);
+        });
+
+        res.on("end", function () {
+            var body = Buffer.concat(cityData);
+            console.log(body.toString());
+            var dataKota = JSON.parse(body)
+            response.send(dataKota.rajaongkir.results);
+        });
+    });
+    req.end();
+})
 
 
 module.exports = userRouter;

@@ -15,6 +15,8 @@ class EditProfile extends React.Component {
                 password: "",
                 username: "",
                 address: "",
+                province: "",
+                city: "",
                 phone_number: "",
                 profpict: ""
             },
@@ -22,7 +24,9 @@ class EditProfile extends React.Component {
             msg: "Save",
             isLoading: false,
             warningMessage: "",
-            tempImageURL: ""
+            tempImageURL: "",
+            provinceData: "",
+            cityData: "",
         }
     }
 
@@ -37,12 +41,30 @@ class EditProfile extends React.Component {
                     email: x.data[0].email,
                     username: x.data[0].username,
                     address: x.data[0].address,
+                    province: x.data[0].province,
+                    city: x.data[0].city,
                     phone_number: x.data[0].phone_number,
                     profpict: x.data[0].profpict
                 }
             });
+            // untuk dapet list citynya
+            this.getCity(x.data[0].province);
         })
 
+        axios.get(`http://localhost:3007/province`).then((x) => {
+            this.setState({
+                provinceData: x.data
+            });
+        })
+
+    }
+
+    getCity = (province_id) => {
+        axios.get(`http://localhost:3007/city/${province_id}`).then((x) => {
+            this.setState({
+                cityData: x.data
+            });
+        })
     }
 
     btnSave() {
@@ -190,6 +212,44 @@ class EditProfile extends React.Component {
                                     data_user: data_userCopy
                                 });
                             }} placeholder="Enter address" ></textarea>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="province">Province</label>
+                            <select className="form-control" id="province" value={this.state.data_user.province} onChange={(e) => {
+                                let data_userCopy = this.state.data_user;
+                                // data_userCopy.province = document.getElementById("province").selectedOptions[0].text;
+                                data_userCopy.province = e.target.value;
+                                this.setState({
+                                    data_user: data_userCopy
+                                });
+                                this.getCity(e.target.value);
+                            }}>
+                                <option hidden>Choose province</option>
+                                {this.state.provinceData ? this.state.provinceData.map((val) => {
+                                    return (
+                                        <option value={val.province_id}>{val.province}</option>
+                                    )
+                                }) : ""}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="city">City</label>
+                            <select className="form-control" id="city" value={this.state.data_user.city} onChange={(e) => {
+                                let data_userCopy = this.state.data_user;
+                                data_userCopy.city = e.target.value;
+                                this.setState({
+                                    data_user: data_userCopy
+                                });
+                            }}>
+                                <option hidden>Choose City</option>
+                                {this.state.cityData ? this.state.cityData.map((val) => {
+                                    return (
+                                        <option value={val.city_id}>{val.city_name}</option>
+                                    )
+                                }) : ""}
+                            </select>
                         </div>
 
                         {/* Phone Number */}

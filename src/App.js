@@ -21,6 +21,7 @@ import NotFound from './pages/NotFound';
 import faq from './pages/Faq';
 import ChangePassword from './pages/ChangePassword';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 
 
 
@@ -92,8 +93,9 @@ class App extends React.Component {
     getCartData(x) {
         this.setState({
             cart: x
-        })
+        });
     }
+
 
     render() {
         return (
@@ -130,9 +132,16 @@ class App extends React.Component {
                         />
 
                         <Route
-                            path='/cart'
-                            render={(props) => <Cart {...props} id_user={this.state.data_user.id} isLoggedIn={this.state.isLoggedIn} />}
+                            exact path='/cart'
+                            render={(props) => <Cart {...props} id_user={this.state.data_user.id} isLoggedIn={this.state.isLoggedIn} checkoutClicked={this.checkoutClicked} />}
                         />
+
+
+                        <Route
+                            exact path='/cart/shipment/'
+                            render={(props) => <Checkout {...props} id_user={this.state.data_user.id} isLoggedIn={this.state.isLoggedIn} />}
+                        />
+
 
 
 

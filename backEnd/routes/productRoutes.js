@@ -1,5 +1,6 @@
 //supaya connected dengan server utama
 const productRouter = require('express').Router();
+const http = require("https");
 
 //untuk connect ke db
 const db = require("../connection/connection");
@@ -20,30 +21,44 @@ productRouter.use(fileupload());
 
 //UPDATE CART
 productRouter.put("/cart/:id", (req, res) => {
-    console.log(req.body);
+    console.log(req.body)
     var quantity = req.body.quantity;
-
-    // query untuk dapetin price productnya
-    let sql = `SELECT p.price FROM carts c JOIN products p ON c.id_product = p.id WHERE c.id = ${req.params.id}`
-    let query = db.query(sql, (err, result) => {
-        console.log(result);
-        var price = result[0].price;
-        var totalPrice = quantity * price;
-
-        // setelah dapet dan dihitung total price nya, di update ke database
-
-        let sql = `UPDATE carts SET quantity = ${quantity}, totalPrice = ${totalPrice} where id = ${req.params.id} `;
+    if (req.body.status) {
+        let sql = `UPDATE carts SET status = '${req.body.status}' where id = ${req.params.id} `;
         let query = db.query(sql, (err) => {
             if (err) {
                 throw err;
             }
             else {
-                res.send({ "status": "update quantity success" });
-                console.log("Successfully update quantity!");
+                res.send({ "status": "update status success" });
+                console.log("Successfully update status!");
             }
         })
+    }
 
-    })
+    else {
+        // query untuk dapetin price productnya
+        let sql = `SELECT p.price FROM carts c JOIN products p ON c.id_product = p.id WHERE c.id = ${req.params.id}`
+        let query = db.query(sql, (err, result) => {
+            console.log(result);
+            var price = result[0].price;
+            var totalPrice = quantity * price;
+
+            // setelah dapet dan dihitung total price nya, di update ke database
+
+            let sql = `UPDATE carts SET quantity = ${quantity}, totalPrice = ${totalPrice} where id = ${req.params.id} `;
+            let query = db.query(sql, (err) => {
+                if (err) {
+                    throw err;
+                }
+                else {
+                    res.send({ "status": "update quantity success" });
+                    console.log("Successfully update quantity!");
+                }
+            })
+
+        })
+    }
 
 
 
@@ -111,7 +126,7 @@ productRouter.post("/cart", (req, res) => {
 // GET CART OF USER
 productRouter.get("/cart/:id_user", (req, res) => {
     console.log(req.params.id_user);
-    let sql = `SELECT c.id as id_cart, u.id, u.name, p.name, p.price, p.size, p.location, p.photo, c.quantity, c.totalPrice FROM carts c JOIN users u ON c.id_user = u.id JOIN products p ON c.id_product = p.id WHERE c.id_user = ${req.params.id_user}`;
+    let sql = `SELECT c.id as id_cart, u.id, u.name, p.name, p.price, p.size, p.location, p.stock, p.photo, c.quantity, c.status, c.totalPrice FROM carts c JOIN users u ON c.id_user = u.id JOIN products p ON c.id_product = p.id WHERE c.id_user = ${req.params.id_user}`;
     let query = db.query(sql, (err, result) => {
         res.send(result);
     })
@@ -119,7 +134,6 @@ productRouter.get("/cart/:id_user", (req, res) => {
 
 //DELETE CART USER
 productRouter.delete("/cart/:id", (req, res) => {
-    console.log("WADIDAW")
     let cartID = req.params.id;
     let sql = `DELETE FROM carts WHERE id = ${cartID}`;
     let query = db.query(sql, (err, result) => {
@@ -228,6 +242,64 @@ productRouter.delete("/products/:id", (req, res) => {
     });
 
 });
+
+productRouter.get("/province/:province_id", (req, response) => {
+    // utk ambil data provinsi dari api rajaongkir
+    var options = {
+        "method": "GET",
+        "hostname": "api.rajaongkir.com",
+        "port": null,
+        "path": `/starter/province?id=${req.params.province_id}`,
+        "headers": {
+            "key": "865b1a0586feba49b34b9e4202ee6a12"
+        }
+    };
+
+    var req = http.request(options, function (res) {
+        var provinceData = [];
+
+        res.on("data", function (data) {
+            provinceData.push(data);
+        });
+
+        res.on("end", function () {
+            var body = Buffer.concat(provinceData);
+            console.log(body.toString());
+            var dataProvinsi = JSON.parse(body)
+            response.send(dataProvinsi.rajaongkir.results);
+        });
+    });
+    req.end();
+})
+
+productRouter.get("/city/name/:city_id", (req, response) => {
+    // utk ambil data kota dari api rajaongkir
+    var options = {
+        "method": "GET",
+        "hostname": "api.rajaongkir.com",
+        "port": null,
+        "path": `/starter/city?id=${req.params.city_id}`,
+        "headers": {
+            "key": "865b1a0586feba49b34b9e4202ee6a12"
+        }
+    };
+
+    var req = http.request(options, function (res) {
+        var cityData = [];
+
+        res.on("data", function (data) {
+            cityData.push(data);
+        });
+
+        res.on("end", function () {
+            var body = Buffer.concat(cityData);
+            console.log(body.toString());
+            var dataKota = JSON.parse(body)
+            response.send(dataKota.rajaongkir.results);
+        });
+    });
+    req.end();
+})
 
 
 

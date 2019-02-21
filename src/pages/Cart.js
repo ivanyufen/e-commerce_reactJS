@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Loader } from 'semantic-ui-react';
 import { Table, Card, Button, CardTitle, CardText, CardBody } from 'reactstrap';
 import swal from '@sweetalert/with-react';
+import Checkout from './Checkout';
 
 
 
@@ -28,6 +29,7 @@ class Cart extends React.Component {
         axios.get(`http://localhost:3007/cart/${this.props.id_user}`).then((x) => {
 
             if (x.data.length > 0) {
+                console.log(x.data)
                 this.setState({
                     cartData: x.data,
                     isLoading: false
@@ -42,6 +44,7 @@ class Cart extends React.Component {
 
         })
     }
+
     componentDidMount() {
         this.loadCart();
     }
@@ -52,6 +55,17 @@ class Cart extends React.Component {
             totalPrice = totalPrice + (this.state.cartData[i].quantity * this.state.cartData[i].price);
         }
         return totalPrice
+    }
+
+    checkout = () => {
+        for (var i = 0; i < this.state.cartData.length; i++) {
+            console.log(this.state.cartData[i].id_cart)
+            axios.put(`http://localhost:3007/cart/${this.state.cartData[i].id_cart}`, {
+                status: "CheckedOut"
+            }).then(() => {
+                this.props.history.push("/cart/shipment");
+            })
+        }
     }
 
     deleteCart = (id, productName, productSize) => {
@@ -115,23 +129,40 @@ class Cart extends React.Component {
                                     if (quantityTemp == "") {
                                         this.setState({
                                             canCheckout: false
-                                        })
+                                        });
                                     }
 
-                                    this.setState({
-                                        cartData: cartDataTemp
-                                    });
+                                    // cek jika quantity yg user mau melebihi stock
+                                    if (quantityTemp > val.stock) {
+                                        this.setState({
+                                            canCheckout: false
+                                        });
 
-                                    if (quantityTemp != "") {
                                         axios.put(`http://localhost:3007/cart/${val.id_cart}`, {
-                                            quantity: quantityTemp
+                                            quantity: 1
                                         }).then(() => {
-                                            // jika quantity masih ada isi, maka user bisa checkout
-                                            this.setState({
-                                                canCheckout: true
-                                            })
-                                        })
+                                            swal("Sorry, your desired quantity exceed our current stock.");
+                                        });
+
                                     }
+                                    else {
+                                        this.setState({
+                                            cartData: cartDataTemp
+                                        });
+
+                                        if (quantityTemp != "") {
+                                            axios.put(`http://localhost:3007/cart/${val.id_cart}`, {
+                                                quantity: quantityTemp
+                                            }).then(() => {
+                                                // jika quantity ada isi, maka user bisa checkout
+                                                this.setState({
+                                                    canCheckout: true
+                                                });
+                                            })
+                                        }
+                                    }
+
+
 
 
                                 }}
@@ -202,8 +233,6 @@ class Cart extends React.Component {
     // fungsi untuk menghitung jumlah seluruh barang user
     totalProduct() {
         if (this.state.cartData) {
-            // dibuat copy dari state cartData
-            var cartDataTemp = this.state.cartData;
             // buat variable sementara untuk jadi penampung hasil tambah quantity nya
             var temp = 0;
             // di mapping di setiap cartData quantity nya ditambahkan, ditampung ke temp, dan di return ke totalProductTemp
@@ -230,7 +259,7 @@ class Cart extends React.Component {
 
                     {/* VALIDASI JIKA ADA QUANTITY YANG BELUM DIISI */}
 
-                    {this.state.canCheckout ? <Button color="success" block size="lg">Checkout ({this.totalProduct()})</Button> : <Button color="success" block disabled size="lg">Checkout ({this.totalProduct()})</Button>}
+                    {this.state.canCheckout ? <Button color="success" block size="lg" onClick={this.checkout}>Checkout ({this.totalProduct()})</Button> : <Button color="success" block disabled size="lg">Checkout ({this.totalProduct()})</Button>}
                     {/* {this.totalProduct() ? <Button color="success" block size="lg">Checkout ({this.totalProduct()})</Button> : <Button color="success" block disabled size="lg">Checkout ({this.totalProduct()})</Button>} */}
                 </CardBody>
 

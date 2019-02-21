@@ -23,28 +23,36 @@ class ProductCard extends React.Component {
 
 
     onClickCart = (id_product, name, image, size) => {
-        // ini untuk dioper ke modal datanya
-        var dataCartTemp = {
-            name: name,
-            image: image,
-            size: size
+        //jika user tidak login dan mau add to cart
+        if (!this.props.id_user) {
+            this.setState({
+                dataCartTemp: ""
+            });
         }
-        this.setState({
-            dataCartTemp: dataCartTemp
-        });
-        // sampai sini
+        else {
+            // ini untuk dioper ke modal datanya
+            var dataCartTemp = {
+                name: name,
+                image: image,
+                size: size
+            }
+            this.setState({
+                dataCartTemp: dataCartTemp
+            });
+            // sampai sini
 
-        // ini utk di post ke database table cart
-        axios.post('http://localhost:3007/cart', {
-            id_user: this.props.id_user,
-            id_product: id_product,
-            quantity: 1,
-        }).then((x) => {
-            console.log(x);
-        }).catch(() => {
-            console.log("Error post");
-        })
-        // sampai sini
+            // ini utk di post ke database table cart
+            axios.post('http://localhost:3007/cart', {
+                id_user: this.props.id_user,
+                id_product: id_product,
+                quantity: 1,
+            }).then((x) => {
+                console.log(x);
+            }).catch(() => {
+                console.log("Error post");
+            })
+            // sampai sini
+        }
     }
 
     render() {
@@ -72,7 +80,7 @@ class ProductCard extends React.Component {
                     </a>
                 </div>
 
-                <ModalCart modal={this.state.modal} toggle={this.toggle} data={this.state.dataCartTemp ? this.state.dataCartTemp : "null"} />
+                <ModalCart modal={this.state.modal} toggle={this.toggle} data={this.state.dataCartTemp ? this.state.dataCartTemp : ""} />
 
             </React.Fragment >
         )

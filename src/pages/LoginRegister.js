@@ -19,11 +19,16 @@ class LoginRegister extends React.Component {
                 password: "",
                 username: "",
                 address: "",
-                phone_number: ""
+                province: "",
+                city: "",
+                phone_number: "",
+
             },
             files: "",
             warningMessage: "",
-            tempImageURL: ""
+            tempImageURL: "",
+            provinceData: "",
+            cityData: ""
         }
     }
 
@@ -31,6 +36,19 @@ class LoginRegister extends React.Component {
         if (this.props.location.isFromCart) {
             swal("You need to login first to view your cart!");
         }
+        axios.get(`http://localhost:3007/province`).then((x) => {
+            this.setState({
+                provinceData: x.data
+            });
+        })
+    }
+
+    getCity = (province_id) => {
+        axios.get(`http://localhost:3007/city/${province_id}`).then((x) => {
+            this.setState({
+                cityData: x.data
+            });
+        })
     }
 
     login = (e) => {
@@ -84,6 +102,12 @@ class LoginRegister extends React.Component {
         else if (this.state.data_user.address == "") {
             this.setState({ warningMessage: "Address can't be blank" });
         }
+        else if (this.state.data_user.province == "") {
+            this.setState({ warningMessage: "Province can't be blank" });
+        }
+        else if (this.state.data_user.city == "") {
+            this.setState({ warningMessage: "City can't be blank" });
+        }
         else if (this.state.data_user.phone_number == "") {
             this.setState({ warningMessage: "Phone Number can't be blank" });
         }
@@ -127,7 +151,8 @@ class LoginRegister extends React.Component {
                         if (user_session) {
                             swal("Register sukses! Anda telah ter-login!").then(() => {
                                 this.props.checkUserSession();
-                                this.props.history.push('/shop');
+                                // this.props.history.push('/shop');
+                                window.location.href = '/shop';
                             });
                         }
 
@@ -263,6 +288,45 @@ class LoginRegister extends React.Component {
                                                     data_user: data_userCopy
                                                 });
                                             }} placeholder="Enter address" ></textarea>
+                                            <small className="text-muted d-block">Alamat ini akan menjadi alamat utama pengiriman</small>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="province">Province</label>
+                                            <select className="form-control" id="province" onChange={(e) => {
+                                                let data_userCopy = this.state.data_user;
+                                                // data_userCopy.province = document.getElementById("province").selectedOptions[0].text;
+                                                data_userCopy.province = e.target.value;
+                                                this.setState({
+                                                    data_user: data_userCopy
+                                                });
+                                                this.getCity(e.target.value);
+                                            }}>
+                                                <option>Choose province</option>
+                                                {this.state.provinceData ? this.state.provinceData.map((val) => {
+                                                    return (
+                                                        <option value={val.province_id}>{val.province}</option>
+                                                    )
+                                                }) : ""}
+                                            </select>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="city">City</label>
+                                            <select className="form-control" id="city" onChange={(e) => {
+                                                let data_userCopy = this.state.data_user;
+                                                data_userCopy.city = e.target.value;
+                                                this.setState({
+                                                    data_user: data_userCopy
+                                                });
+                                            }}>
+                                                <option> {this.state.data_user.province ? 'Choose City' : 'Please choose Province first'}</option>
+                                                {this.state.cityData ? this.state.cityData.map((val) => {
+                                                    return (
+                                                        <option value={val.city_id}>{val.city_name}</option>
+                                                    )
+                                                }) : ""}
+                                            </select>
                                         </div>
 
                                         {/* Phone Number */}

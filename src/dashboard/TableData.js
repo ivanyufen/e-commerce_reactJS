@@ -561,6 +561,7 @@ class TableData extends React.Component {
 
                                 {/* Address */}
                                 <div className="form-group">
+                                <label htmlFor="address">Address</label>
                                     <textarea className="form-control" id="address" value={this.state.data_user.address} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.address = e.target.value;
