@@ -138,7 +138,8 @@ class ProductList extends React.Component {
                         location={val.location}
                         description={val.description}
                         size={val.size}
-                        index={index} />
+                        index={index}
+                        getCartData={this.props.getCartData} />
                 );
             });
         }

@@ -86,7 +86,7 @@ class Tabs extends React.Component {
                             <Col sm="6" className="mt-3">
                                 <Card body>
                                     <CardTitle>Shipping Method</CardTitle>
-                                    <CardText>JNE | Instant Courier | J&T | Pos Indonesia</CardText>
+                                    <CardText>JNE</CardText>
                                     {/* <Button>Go somewhere</Button> */}
                                 </Card>
                             </Col>

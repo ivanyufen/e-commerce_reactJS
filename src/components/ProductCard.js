@@ -30,6 +30,7 @@ class ProductCard extends React.Component {
             });
         }
         else {
+            this.props.getCartData(this.props.id_user);
             // ini untuk dioper ke modal datanya
             var dataCartTemp = {
                 name: name,

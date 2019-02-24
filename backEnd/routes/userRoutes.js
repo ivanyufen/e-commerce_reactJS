@@ -50,8 +50,16 @@ userRouter.post("/session", (req, res) => {
     let user_session = req.body.user_session;
     let sql = `SELECT * FROM sessions WHERE session_token = '${user_session}'`;
     let query = db.query(sql, (err, result) => {
+        console.log(result)
+        console.log(result.length)
         if (err) {
             throw err;
+        }
+        else if (result.length == 0) {
+            res.send({
+                "status": "wrongSession"
+            });
+
         }
         else {
             res.send(result);
@@ -75,7 +83,6 @@ userRouter.post("/login", (req, res) => {
     let password = req.body.password;
     let sql = `SELECT * FROM users WHERE username = '${username}' OR email='${username}'`;
     let query = db.query(sql, (err, result) => {
-        console.log(result)
         if (err) {
             throw err;
         }
@@ -242,6 +249,9 @@ userRouter.delete("/users/:id", (req, res) => {
     });
 });
 
+// https://www.npmjs.com/package/rajaongkir-nodejs
+// sebenarnya bisa pakai yg diatas, tp keburu tahu di pertengahan
+
 userRouter.get("/province", (req, response) => {
     // utk ambil data provinsi dari api rajaongkir
     var options = {
@@ -292,7 +302,6 @@ userRouter.get("/city/:province_id", (req, response) => {
 
         res.on("end", function () {
             var body = Buffer.concat(cityData);
-            console.log(body.toString());
             var dataKota = JSON.parse(body)
             response.send(dataKota.rajaongkir.results);
         });

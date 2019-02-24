@@ -31,7 +31,8 @@ class Checkout extends React.Component {
             modal: false,
             provinceData: "",
             cityData: "",
-            postal_code: ""
+            postal_code: "",
+            deliverycost: ""
         }
     }
 
@@ -69,6 +70,7 @@ class Checkout extends React.Component {
     save = () => {
         this.getProvinceName(this.state.cust_province_temp);
         this.getCityName(this.state.cust_city_temp);
+        this.getDeliveryCost(this.state.cust_city_temp);
         this.setState({
             modal: !this.state.modal,
             cust_name: this.state.cust_name_temp,
@@ -119,6 +121,7 @@ class Checkout extends React.Component {
                 this.getCity(x.data[0].province);
                 this.getProvinceName(x.data[0].province);
                 this.getCityName(x.data[0].city);
+                this.getDeliveryCost(x.data[0].city);
             });
         }
 
@@ -169,9 +172,10 @@ class Checkout extends React.Component {
                 return (
                     <tr>
                         <td><img src={val.photo} style={{ maxWidth: 100, maxHeight: 150 }} /></td>
-                        <td>{val.name} {val.size} mm</td>
-                        <td>{val.quantity}</td>
-                        <td>Rp {val.price.toLocaleString()}</td>
+                        <td><p className="font-weight-bold">{val.name} {val.size} mm ({val.quantity} pcs)</p>
+                            <span className="text-muted">Rp {val.price.toLocaleString()}</span>
+                        </td>
+                        <td className="font-weight-bold">Subtotal: Rp {val.totalPrice.toLocaleString()}</td>
                     </tr>
                 )
             }
@@ -183,10 +187,10 @@ class Checkout extends React.Component {
             <Table size="sm">
                 <thead>
                     <tr>
-                        <th>Product Image</th>
+                        {/* <th>Product Image</th>
                         <th>Product Name</th>
                         <th>Quantity</th>
-                        <th>Price</th>
+                        <th>Price</th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -214,6 +218,15 @@ class Checkout extends React.Component {
         }
     }
 
+    getDeliveryCost = (city_id) => {
+        axios.get(`http://localhost:3007/shipping/${city_id}`).then((x) => {
+            console.log(x.data.price)
+            this.setState({
+                deliverycost: x.data.price
+            })
+        })
+    }
+
 
     cartSummary() {
         return (
@@ -221,9 +234,9 @@ class Checkout extends React.Component {
                 <CardBody>
                     <CardTitle>Ringkasan Belanja</CardTitle>
                     <hr></hr>
-                    <CardTitle className="my-3">Total harga: Rp {this.totalPrice().toLocaleString()}</CardTitle>
-                    <CardTitle className="my-3">Ongkos kirim: Rp</CardTitle>
-                    <p className="text-danger">FREE DELIVERY!</p>
+                    <CardTitle className="my-3">Harga: Rp {this.totalPrice().toLocaleString()}</CardTitle>
+                    <CardTitle className="my-3">Ongkos kirim: Rp {this.state.deliverycost.toLocaleString()}</CardTitle>
+                    <CardTitle className="my-3">Total Harga: Rp {(this.totalPrice() + this.state.deliverycost).toLocaleString()}</CardTitle>
 
                     {<Button color="success" block size="lg">Pay</Button>}
                 </CardBody>

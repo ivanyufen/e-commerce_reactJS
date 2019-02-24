@@ -46,36 +46,37 @@ class App extends React.Component {
             axios.post("http://localhost:3007/session", {
                 user_session: localStorage.getItem("user_session")
             }).then((x) => {
-                // kalau ada sessionnya di table session, kita minta data user yg login
-                axios.get(`http://localhost:3007/users/${x.data[0].id_user}`).then((y) => {
-
-                    // ambil data cart
-                    // axios.get(`http://localhost:3007/cart/${x.data[0].id_user}`).then((cart) => {
-                    //     this.setState({
-                    //         cart: cart.data
-                    //     });
-                    // })
-
-                    // dan kita kasi data2 user yg mau dipakai
-                    //buat object sementara
-                    let data_user_temp = {
-                        id: y.data[0].id,
-                        name: y.data[0].name,
-                        username: y.data[0].username,
-                        email: y.data[0].email,
-                        address: y.data[0].address,
-                        phone_number: y.data[0].phone_number,
-                        profpict: y.data[0].profpict,
-                        role: y.data[0].role
-                    };
-                    // dikasi ke state objectnya
+                console.log(x.data.status)
+                if (x.data.status == "wrongSession") {
+                    localStorage.removeItem("user_session");
                     this.setState({
-                        isLoggedIn: true,
-                        data_user: data_user_temp,
                         isCheckingSession: false
                     });
-                });
-
+                }
+                else {
+                    // kalau ada sessionnya di table session, kita minta data user yg login
+                    axios.get(`http://localhost:3007/users/${x.data[0].id_user}`).then((y) => {
+                        this.getCartData(y.data[0].id);
+                        // dan kita kasi data2 user yg mau dipakai
+                        //buat object sementara
+                        let data_user_temp = {
+                            id: y.data[0].id,
+                            name: y.data[0].name,
+                            username: y.data[0].username,
+                            email: y.data[0].email,
+                            address: y.data[0].address,
+                            phone_number: y.data[0].phone_number,
+                            profpict: y.data[0].profpict,
+                            role: y.data[0].role
+                        };
+                        // dikasi ke state objectnya
+                        this.setState({
+                            isLoggedIn: true,
+                            data_user: data_user_temp,
+                            isCheckingSession: false
+                        });
+                    });
+                }
             });
         }
         // kalau session gaada di local storage, user harus login
@@ -90,9 +91,11 @@ class App extends React.Component {
         this.checkUserSession();
     }
 
-    getCartData(x) {
-        this.setState({
-            cart: x
+    getCartData = (id_user) => {
+        axios.get(`http://localhost:3007/cart/${id_user}`).then((x) => {
+            this.setState({
+                cartQty: x.data.length
+            });
         });
     }
 
@@ -101,7 +104,8 @@ class App extends React.Component {
         return (
             <React.Fragment>
                 <SmallNavbar />
-                <Navbar cart={this.state.cart} data_user={this.state.data_user} isCheckingSession={this.state.isCheckingSession} isLoggedIn={this.state.isLoggedIn} />
+                <Navbar cart={this.state.cart} data_user={this.state.data_user} isCheckingSession={this.state.isCheckingSession} isLoggedIn={this.state.isLoggedIn} cartQty={this.state.cartQty} />
+
 
                 {this.state.isCheckingSession == false &&
                     <Switch>
@@ -128,12 +132,12 @@ class App extends React.Component {
 
                         <Route
                             path='/shop'
-                            render={(props) => <ProductList {...props} id_user={this.state.data_user.id} />}
+                            render={(props) => <ProductList {...props} id_user={this.state.data_user.id} getCartData={this.getCartData} />}
                         />
 
                         <Route
                             exact path='/cart'
-                            render={(props) => <Cart {...props} id_user={this.state.data_user.id} isLoggedIn={this.state.isLoggedIn} checkoutClicked={this.checkoutClicked} />}
+                            render={(props) => <Cart {...props} id_user={this.state.data_user.id} isLoggedIn={this.state.isLoggedIn} checkoutClicked={this.checkoutClicked} getCartData={this.getCartData} />}
                         />
 
 

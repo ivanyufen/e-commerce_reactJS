@@ -1,6 +1,7 @@
 //supaya connected dengan server utama
 const productRouter = require('express').Router();
 const http = require("https");
+var qs = require("querystring");
 
 //untuk connect ke db
 const db = require("../connection/connection");
@@ -264,7 +265,6 @@ productRouter.get("/province/:province_id", (req, response) => {
 
         res.on("end", function () {
             var body = Buffer.concat(provinceData);
-            console.log(body.toString());
             var dataProvinsi = JSON.parse(body)
             response.send(dataProvinsi.rajaongkir.results);
         });
@@ -293,12 +293,52 @@ productRouter.get("/city/name/:city_id", (req, response) => {
 
         res.on("end", function () {
             var body = Buffer.concat(cityData);
-            console.log(body.toString());
             var dataKota = JSON.parse(body)
             response.send(dataKota.rajaongkir.results);
         });
     });
     req.end();
+})
+
+// API untuk dapat harga ongkos kirim
+productRouter.get("/shipping/:destination_id", (req, response) => {
+    var destination_id = req.params.destination_id;
+    var hasil = "";
+    var options = {
+        "method": "POST",
+        "hostname": "api.rajaongkir.com",
+        "port": null,
+        "path": "/starter/cost",
+        "headers": {
+            "key": "865b1a0586feba49b34b9e4202ee6a12",
+            "content-type": "application/x-www-form-urlencoded"
+        }
+    };
+
+    var req = http.request(options, function (res) {
+        var chunks = [];
+
+        res.on("data", function (chunk) {
+            chunks.push(chunk);
+        });
+
+        res.on("end", function () {
+            var body = Buffer.concat(chunks);
+            hasil = JSON.parse(body.toString());
+            var cost = {
+                price: hasil.rajaongkir.results[0].costs[0].cost[0].value
+            }
+            response.send(cost)
+        });
+    });
+
+    req.end(qs.stringify({
+        origin: '152', //ini kode city jakarta, karena semua item dikirim dari jakarta
+        destination: destination_id, //ini kode city si user pilih
+        weight: 1000,
+        courier: 'jne'
+    }));
+
 })
 
 

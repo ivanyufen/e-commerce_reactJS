@@ -27,9 +27,7 @@ class Cart extends React.Component {
             isLoading: true
         })
         axios.get(`http://localhost:3007/cart/${this.props.id_user}`).then((x) => {
-
             if (x.data.length > 0) {
-                console.log(x.data)
                 this.setState({
                     cartData: x.data,
                     isLoading: false
@@ -71,7 +69,8 @@ class Cart extends React.Component {
     deleteCart = (id, productName, productSize) => {
         axios.delete(`http://localhost:3007/cart/${id}`).then((x) => {
             swal(`${productName} ${productSize} mm deleted from cart!`);
-            this.loadCart();
+            this.loadCart(); //cart di load ulang
+            this.props.getCartData(); //jalanin fungsi untuk component button cart yg di navbar supaya ke reload lagi
         });
     }
 
@@ -215,7 +214,6 @@ class Cart extends React.Component {
             <Table size="sm">
                 <thead>
                     <tr>
-                        {/* <th>No</th> */}
                         <th>Product Image</th>
                         <th>Product Name</th>
                         <th>Quantity</th>
