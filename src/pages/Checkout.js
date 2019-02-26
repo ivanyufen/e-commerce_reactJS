@@ -6,8 +6,6 @@ import { Table, Card, Button, CardTitle, CardText, CardBody, CardHeader, CardFoo
 import swal from '@sweetalert/with-react';
 var md5 = require("md5");
 
-
-
 class Checkout extends React.Component {
 
     constructor() {
@@ -70,6 +68,8 @@ class Checkout extends React.Component {
     }
 
     togglePay = () => {
+        this.props.isCheckOut(); //fungsi untuk kasitau app untuk enable route ke checkout success
+
         this.setState({
             modalPay: !this.state.modalPay
         });
@@ -278,7 +278,23 @@ class Checkout extends React.Component {
                     quantity: this.state.cartData[i].quantity,
                     order_id: order_id,
                 }).then(() => {
-                    axios.delete(`http://localhost:3007/cart/${this.state.cartData[i].id_cart}`);
+                    axios.delete(`http://localhost:3007/cart/${this.state.cartData[i].id_cart}`).then(() => {
+                        // <Redirect to={{
+                        //     pathname: "/checkout-success",
+                        //     state: { isCheckOut: true }
+                        // }} />
+                        setTimeout(() => {
+                            // this.props.history.push("/checkout-success");
+                            this.props.history.push({
+                                pathname: '/checkout-success',
+                                state: {
+                                    order_id: order_id,
+                                    totalPrice: this.totalPrice() + this.state.deliverycost
+                                }
+                            })
+                        }, 500)
+
+                    });
                 });
             }
 

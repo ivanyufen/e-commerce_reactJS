@@ -13,6 +13,10 @@ const cors = require("cors");
 const fileupload = require("express-fileupload");
 const mkdirp = require('mkdirp');
 
+// nodemailer
+var nodemailer = require('nodemailer');
+var xoauth2 = require('xoauth2');
+
 
 //pakai middleware
 productRouter.use(bodyParser.urlencoded({ extended: true }));
@@ -142,6 +146,9 @@ productRouter.delete("/cart/:id", (req, res) => {
             throw err;
         }
         else {
+
+
+            // kasi respon ke user
             res.send({ "status": "Cart deleted" });
         }
     })
@@ -362,15 +369,95 @@ productRouter.post("/orders", (req, res) => {
             let query = db.query(sql, (err, resultGet) => {
                 res.send({ "order_id": resultGet[0].id });
             })
-
         }
     })
 })
 
 productRouter.post("/transactions", (req, res) => {
+    var email_user = "";
     console.log(req.body);
     let sql = `INSERT INTO transactions SET ?`;
     let query = db.query(sql, req.body, (err, result) => {
+        let sql = `SELECT name, email FROM users where id = ${req.body.id_user}`;
+        let query = db.query(sql, (err, response) => {
+            email_user = response[0].email;
+            nama_user = response[0].name;
+
+            // fungsi email setelah semua proses checkout berjalan
+            var sender = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: 'vanandco279@gmail.com',
+                    type: 'OAuth2',
+                    clientId: '890127507981-ecd3fi6g37rp8j6r51uoqosqmj6ffqrp.apps.googleusercontent.com',
+                    clientSecret: 'E4QkZR6QdcGEg8ClFvHHbLbp',
+                    refreshToken: '1/8r_shqeTRWHhX_MPclHF5gSUYH9UdLYM6qv1J9mJEEs'
+                }
+            })
+
+
+
+            var html = `
+            <div className="container">
+            <div className="row">
+                <div className="col-lg-8">
+                    <h1>Van & Co</h1>
+                </div>
+                <div className="col-lg-4">
+                    <p className="text-muted">ORDER # ${req.body.order_id}</p>
+                </div>
+
+                <div className="row">
+                    <div className="col-lg-12">
+                        <h3>Hai ${nama_user}, terima kasih atas pemesanan anda.</h3>
+                        <p>Segera lakukan pembayaran sesuai total biaya Anda yaitu, ke rekening kami di bawah ini:</p>
+                        <p>BCA: 527-135-8564 a/n Ivan Yufen Stefanus</p>
+    
+                        <p>Jika sudah, konfirmasi pembayaran dengan klik tombol di bawah agar barang Anda bisa langsung kami kirim.</p>
+            </div>
+
+            <a style="background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;" href = 'http://localhost:3000/confirmPayment';">Konfirmasi Pembayaran</a> or <a style="text-decoration:none;" href="http://localhost:3000/my-orders">Lihat Order</a>
+
+                    </div>
+                </div>
+
+
+            </div>
+            `
+
+            var myEmail = {
+                from: 'Van & Co <vanandco279@gmail.com>',
+                to: `${email_user}`,
+                subject: `Van & Co - Invoice Number ${req.body.order_id} !`,
+                // html: '<h2>INVOICE OF PT Van and Co</h2>',
+                html: html,
+                attachments: { //kalau lebih dr satu, masukin array
+                    filename: "vanandco.jpg",
+                    path: "http://localhost:3007/files/logo/logo.png"
+                }
+            }
+
+            sender.sendMail(myEmail, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log('Email terkirim');
+                }
+            })
+        })
+
+
+
         res.send({ "status": "moved" })
     });
 })

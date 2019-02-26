@@ -22,6 +22,8 @@ import faq from './pages/Faq';
 import ChangePassword from './pages/ChangePassword';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import MyOrders from './pages/MyOrders';
+import CheckoutSuccess from './pages/CheckoutSuccess';
 
 
 
@@ -35,7 +37,8 @@ class App extends React.Component {
             data_user: "",
             files: "",
             isLoggedIn: false,
-            isCheckingSession: true
+            isCheckingSession: true,
+            isCheckOut: false
         }
     }
 
@@ -99,6 +102,12 @@ class App extends React.Component {
         });
     }
 
+    isCheckOut = () => {
+        this.setState({
+            isCheckOut: true
+        })
+    }
+
 
     render() {
         return (
@@ -143,9 +152,13 @@ class App extends React.Component {
 
                         <Route
                             exact path='/cart/shipment/'
-                            render={(props) => <Checkout {...props} id_user={this.state.data_user.id} isLoggedIn={this.state.isLoggedIn} username={this.state.data_user.username} />}
+                            render={(props) => <Checkout {...props} id_user={this.state.data_user.id} isLoggedIn={this.state.isLoggedIn} username={this.state.data_user.username} isCheckOut={this.isCheckOut} />}
                         />
 
+                        {this.state.isCheckOut && <Route
+                            exact path='/checkout-success/'
+                            render={(props) => <CheckoutSuccess {...props} email={this.state.data_user.email} />}
+                        />}
 
 
 
@@ -160,14 +173,29 @@ class App extends React.Component {
 
                         {this.state.isLoggedIn &&
                             <Route
+                                path='/my-orders'
+                                render={(props) => <MyOrders {...props} id_user={this.state.data_user.id} data={this.state.data_user} checkUserSession={this.checkUserSession} />}
+                            />
+                        }
+
+                        {this.state.isLoggedIn &&
+                            <Route
                                 path='/changePassword'
                                 render={(props) => <ChangePassword {...props} data={this.state.data_user} checkUserSession={this.checkUserSession} />}
                             />
                         }
 
+                        {/* {this.state.isLoggedIn && */}
+                        <Route
+                            path='/confirmPayment'
+                            render={(props) => <ConfirmPayment {...props} data={this.state.data_user} checkUserSession={this.checkUserSession} isLoggedIn={this.state.isLoggedIn} />}
+                        />
+                        {/* } */}
+
                         <Route path="/joinUs" component={JoinUs}></Route>
                         <Route path="/contact" component={Contact}></Route>
-                        <Route path="/confirmPayment" component={ConfirmPayment}></Route>
+
+
                         <Route path="/faq" component={faq}></Route>
                         <Route path="/aboutUs" component={AboutUs}></Route>
                         <Route path="/404" component={NotFound}></Route>

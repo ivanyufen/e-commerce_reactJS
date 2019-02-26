@@ -4,6 +4,8 @@ const http = require("https");
 //untuk connect ke db
 const db = require("../connection/connection");
 
+var transporter = require('./../mailer');
+
 //middleware
 const bodyParser = require("body-parser");
 const fs = require("fs-extra");
@@ -307,6 +309,66 @@ userRouter.get("/city/:province_id", (req, response) => {
         });
     });
     req.end();
+})
+
+// route utk validate payment
+userRouter.post("/payment", (req, res) => {
+    console.log(req.body);
+    let sql = `SELECT * FROM orders where id = '${req.body.order_id}'`;
+    let query = db.query(sql, (err, result) => {
+        if (err) {
+            throw err;
+        }
+        else {
+            console.log(result)
+            if (result.length <= 0) {
+                res.send({ "status": "orderNotFound" });
+            }
+            else {
+                if (result[0].totalPrice != req.body.transfer_amount) {
+                    res.send({
+                        "status": "amountNotMatch"
+                    });
+                }
+                else {
+                    let sql = `UPDATE orders SET status = "Paid" where id = '${req.body.order_id}'`;
+                    let query = db.query(sql, (err, response) => {
+                        res.send({ "status": "success" });
+                    })
+
+                }
+            }
+        }
+    })
+
+})
+
+
+//get order data of user
+userRouter.get("/orders/:id_user", (req, res) => {
+
+
+    // let sql = `SELECT * FROM orders o INNER JOIN transactions t ON o.id = t.order_id WHERE o.id_user = 79 GROUP BY o.id;`;
+    let sql = `SELECT * FROM orders WHERE id_user = ${req.params.id_user}`;
+    let query = db.query(sql, (err, result) => {
+        if (err) {
+            throw err;
+        }
+        else {
+            console.log(result);
+            res.send(result);
+        }
+    })
+
+})
+
+//get order complete data by order id
+userRouter.get("/order/:order_id", (req, res) => {
+    let sql = `SELECT o.id, o.totalPrice,o.status, o.cust_name, o.cust_phone, 0.cust_address, t.quantity, p.name,p.size, p.price, p.photo FROM orders o INNER JOIN TRANSACTIONS t ON o.id = t.order_id INNER JOIN products p ON t.id_product = p.id where o.id = '${req.params.order_id}';`
+    let query = db.query(sql, (err, result) => {
+        console.log(result)
+        res.send(result)
+    })
 })
 
 

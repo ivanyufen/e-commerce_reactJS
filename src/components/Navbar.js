@@ -31,7 +31,7 @@ class Navbar extends React.Component {
                                     </a>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <Link to="/confirmPayment"><a href="" className="dropdown-item" style={window.location.pathname == '/confirmPayment' ? { color: '#4183c4' } : { color: 'black' }}>Confirm Payment</a></Link>
-                                        <a href="#" className="dropdown-item" >Order History</a>
+                                        <a href="/my-orders" className="dropdown-item" >Order History</a>
                                     </div>
                                 </li>
                                 <li className="nav-item dropdown">
