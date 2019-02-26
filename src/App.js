@@ -143,7 +143,7 @@ class App extends React.Component {
 
                         <Route
                             exact path='/cart/shipment/'
-                            render={(props) => <Checkout {...props} id_user={this.state.data_user.id} isLoggedIn={this.state.isLoggedIn} />}
+                            render={(props) => <Checkout {...props} id_user={this.state.data_user.id} isLoggedIn={this.state.isLoggedIn} username={this.state.data_user.username} />}
                         />
 
 

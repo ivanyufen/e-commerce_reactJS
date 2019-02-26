@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Loader } from 'semantic-ui-react';
 import { Table, Card, Button, CardTitle, CardText, CardBody, CardHeader, CardFooter, Row, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText, Col } from 'reactstrap';
 import swal from '@sweetalert/with-react';
+var md5 = require("md5");
 
 
 
@@ -29,6 +30,7 @@ class Checkout extends React.Component {
             cityName: "",
             provinceName: "",
             modal: false,
+            modalPay: false,
             provinceData: "",
             cityData: "",
             postal_code: "",
@@ -64,6 +66,12 @@ class Checkout extends React.Component {
             cust_name_temp: this.state.cust_name,
             cust_address_temp: this.state.cust_address,
             cust_phone_temp: this.state.cust_phone,
+        });
+    }
+
+    togglePay = () => {
+        this.setState({
+            modalPay: !this.state.modalPay
         });
     }
 
@@ -227,6 +235,56 @@ class Checkout extends React.Component {
         })
     }
 
+    displayModalPay() {
+        return (
+            <Modal centered isOpen={this.state.modalPay} toggle={this.togglePay}>
+                <ModalHeader toggle={this.togglePay}>WARNING!</ModalHeader>
+                <ModalBody>
+                    You can't change the shipping and items once you proceed to the next step, are you sure?
+                    </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={this.pay}>Continue to pay</Button>{' '}
+                    <Button color="secondary" onClick={this.togglePay}>Edit my data</Button>
+                </ModalFooter>
+            </Modal>
+        )
+    }
+
+    pay = () => {
+        // ini semua untuk generate order id nya
+        let date = new Date();
+        let tanggal = date.getDate();
+        let bulan = date.getMonth();
+        let tahun = date.getFullYear();
+        let jam = date.getHours();
+        let menit = date.getMinutes();
+        let order_id_temp = `${this.props.username + tanggal + (bulan + 1) + tahun + jam + menit}`;
+        let order_id = md5(order_id_temp).slice(0, 5);
+
+        axios.post("http://localhost:3007/orders", {
+            id: order_id,
+            id_user: this.props.id_user,
+            totalPrice: this.totalPrice() + this.state.deliverycost,
+            cust_name: this.state.cust_name,
+            cust_phone: this.state.cust_phone,
+            cust_address: `${this.state.cust_address},${this.state.cityName}, ${this.state.provinceName}`,
+            status: "Unpaid"
+        }).then((x) => {
+            let order_id = x.data.order_id
+            for (let i = 0; i < this.state.cartData.length; i++) {
+                axios.post("http://localhost:3007/transactions", {
+                    id_user: this.props.id_user,
+                    id_product: this.state.cartData[i].id_product,
+                    quantity: this.state.cartData[i].quantity,
+                    order_id: order_id,
+                }).then(() => {
+                    axios.delete(`http://localhost:3007/cart/${this.state.cartData[i].id_cart}`);
+                });
+            }
+
+        })
+    }
+
 
     cartSummary() {
         return (
@@ -238,7 +296,7 @@ class Checkout extends React.Component {
                     <CardTitle className="my-3">Ongkos kirim: Rp {this.state.deliverycost.toLocaleString()}</CardTitle>
                     <CardTitle className="my-3">Total Harga: Rp {(this.totalPrice() + this.state.deliverycost).toLocaleString()}</CardTitle>
 
-                    {<Button color="success" block size="lg">Pay</Button>}
+                    {<Button color="success" block size="lg" onClick={this.togglePay}>Pay</Button>}
                 </CardBody>
             </Card>
         )
@@ -376,6 +434,7 @@ class Checkout extends React.Component {
 
                     {/* Modal untuk menampilkan edit alamat pengiriman */}
                     {this.modalEditAddress()}
+                    {this.displayModalPay()}
 
                 </React.Fragment>
             )

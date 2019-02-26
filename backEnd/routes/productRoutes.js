@@ -127,7 +127,7 @@ productRouter.post("/cart", (req, res) => {
 // GET CART OF USER
 productRouter.get("/cart/:id_user", (req, res) => {
     console.log(req.params.id_user);
-    let sql = `SELECT c.id as id_cart, u.id, u.name, p.name, p.price, p.size, p.location, p.stock, p.photo, c.quantity, c.status, c.totalPrice FROM carts c JOIN users u ON c.id_user = u.id JOIN products p ON c.id_product = p.id WHERE c.id_user = ${req.params.id_user}`;
+    let sql = `SELECT c.id as id_cart, u.id, u.name, p.name, p.price, p.size, p.location, p.stock, p.photo, c.id_product, c.quantity, c.status, c.totalPrice FROM carts c JOIN users u ON c.id_user = u.id JOIN products p ON c.id_product = p.id WHERE c.id_user = ${req.params.id_user}`;
     let query = db.query(sql, (err, result) => {
         res.send(result);
     })
@@ -339,6 +339,40 @@ productRouter.get("/shipping/:destination_id", (req, response) => {
         courier: 'jne'
     }));
 
+})
+
+productRouter.get("/orders", (req, res) => {
+    console.log(req.body)
+    // let sql = 'SELECT id FROM orders order by id desc limit 1';
+    // let query = db.query(sql, (err, result) => {
+    //     console.log(result);
+    //     res.send(result);
+    // });
+})
+
+productRouter.post("/orders", (req, res) => {
+    console.log(req.body)
+    let sql = `INSERT INTO orders SET ?`;
+    let query = db.query(sql, req.body, (err, result) => {
+        if (err) {
+            throw err;
+        }
+        else {
+            let sql = `SELECT * FROM orders where id = '${req.body.id}'`;
+            let query = db.query(sql, (err, resultGet) => {
+                res.send({ "order_id": resultGet[0].id });
+            })
+
+        }
+    })
+})
+
+productRouter.post("/transactions", (req, res) => {
+    console.log(req.body);
+    let sql = `INSERT INTO transactions SET ?`;
+    let query = db.query(sql, req.body, (err, result) => {
+        res.send({ "status": "moved" })
+    });
 })
 
 
