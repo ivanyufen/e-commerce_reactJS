@@ -4,6 +4,10 @@ import LoginBtn from './LoginBtn';
 import CartBtn from './CartBtn';
 
 class Navbar extends React.Component {
+
+    state = {
+        search: ""
+    }
     render() {
 
         return (
@@ -22,7 +26,7 @@ class Navbar extends React.Component {
                                     <a href="/" className="nav-link navmenu" style={window.location.pathname == '/' ? { color: '#4183c4' } : { color: 'gray' }}>Home</a>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/shop" className="nav-link navmenu" style={window.location.pathname == '/shop' ? { color: '#4183c4' } : { color: 'gray' }}>Shop</Link>
+                                    <a href="/shop" className="nav-link navmenu" style={window.location.pathname == '/shop' ? { color: '#4183c4' } : { color: 'gray' }}>Shop</a>
                                 </li>
                                 <li className="nav-item dropdown">
                                     <a href="" className="nav-link dropdown-toggle navmenu" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -50,8 +54,17 @@ class Navbar extends React.Component {
                             </ul>
 
                             <form className="form-inline my-2 my-lg-0 mr-5">
-                                <input className="form-control mr-sm-2" type="search" placeholder="Search product.." aria-label="Search" style={{ width: "11rem" }} />
-                                <button className="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search{this.props.username_user}</button>
+                                <input className="form-control mr-sm-2" type="search" value={this.state.search} placeholder="Search product.." style={{ width: "11rem" }} onChange={(e) => {
+                                    this.setState({
+                                        search: e.target.value
+                                    });
+                                }} />
+                                <button className="btn btn-outline-secondary my-2 my-sm-0" onClick={() => {
+                                    this.props.history.push({
+                                        pathname: '/shop',
+                                        state: { search: this.state.search }
+                                    })
+                                }}>Search</button>
                             </form>
 
                             <LoginBtn data={this.props.data_user} isCheckSession={this.props.isCheckingSession} />

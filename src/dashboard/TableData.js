@@ -2,6 +2,7 @@ import React from 'react';
 import { Table } from 'reactstrap';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import swal from 'sweetalert';
+import axios from 'axios';
 
 
 class TableData extends React.Component {
@@ -16,6 +17,7 @@ class TableData extends React.Component {
             modalAddProduct: false,
             modalEditProduct: false,
             modalDeleteProduct: false,
+            modalDetailItem: false,
             id_temp: "",
             data_user: {
                 name: "",
@@ -43,6 +45,7 @@ class TableData extends React.Component {
             tempImageURL: "",
             tempImageURL2: "",
             tempImageURL3: "",
+            item_details_temp: ""
         }
     }
 
@@ -68,6 +71,23 @@ class TableData extends React.Component {
         this.setState({
             modalDeleteUser: !this.state.modalDeleteUser
         })
+    }
+
+    showDetailItem = (order_id) => {
+        axios.get(`http://localhost:3007/order/${order_id}`).then((x) => {
+            console.log(x.data)
+            this.setState({
+                item_details_temp: x.data
+            })
+            this.toggleDetailItem();
+
+        })
+    }
+
+    toggleDetailItem = () => {
+        this.setState({
+            modalDetailItem: !this.state.modalDetailItem
+        });
     }
 
     toggleAddYes = (activeTab) => {
@@ -510,6 +530,30 @@ class TableData extends React.Component {
         )
     }
 
+    displayModalItemDetails() {
+        return (
+            <React.Fragment>
+                {/* Modal untuk add data product */}
+                <Modal isOpen={this.state.modalDetailItem} fade={false} centered={true} toggle={this.toggleDetailItem}>
+                    <ModalHeader toggle={this.toggleDetailItem}>Detail Pesanan</ModalHeader>
+                    <ModalBody>
+                        <ul>
+                            {this.state.item_details_temp ? this.state.item_details_temp.map((val) => {
+                                return (
+                                    <li>{val.name} - {val.size} mm ({val.quantity} pcs)</li>
+                                )
+                            }) : ""}
+                        </ul>
+
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={this.toggleDetailItem}>Close</Button>
+                    </ModalFooter>
+                </Modal>
+            </React.Fragment>
+        )
+    }
+
     displayModalEditUser() {
         return (
             <React.Fragment>
@@ -561,7 +605,7 @@ class TableData extends React.Component {
 
                                 {/* Address */}
                                 <div className="form-group">
-                                <label htmlFor="address">Address</label>
+                                    <label htmlFor="address">Address</label>
                                     <textarea className="form-control" id="address" value={this.state.data_user.address} onChange={(e) => {
                                         let data_userCopy = this.state.data_user;
                                         data_userCopy.address = e.target.value;
@@ -891,6 +935,32 @@ class TableData extends React.Component {
         )
     }
 
+    displayOrdersTable() {
+
+        if (this.props.data_order) {
+            console.log(this.props.data_order)
+            return this.props.data_order.map((val, i) => {
+
+                return (
+                    <tr>
+                        <td>{val.order_id}</td>
+                        <td>{val.id_user}</td>
+                        <td>{val.product_name}...</td>
+                        <td>{`${val.cust_name} (${val.cust_phone}), ${val.cust_address}`}</td>
+                        <td>{`${val.order_date.split('-')[2].split('')[0]}${val.order_date.split('-')[2].split('')[1]}-${val.order_date.split('-')[1]}-${val.order_date.split('-')[0]} - ${val.order_date.split('-')[2].split('')[3]}${val.order_date.split('-')[2].split('')[4]} : ${val.order_date.split('-')[2].split('')[6]}${val.order_date.split('-')[2].split('')[7]} : ${val.order_date.split('-')[2].split('')[9]}${val.order_date.split('-')[2].split('')[10]}`}</td>
+                        <td><button type="button" className="btn btn-primary" onClick={() => { this.showDetailItem(val.order_id) }}>Detail Pesanan</button></td>
+                        <td>{val.status == "Processed" ? <button type="button" className="btn btn-primary" disabled>Diproses <i class="fas fa-check"></i></button> : <button type="button" className="btn btn-primary" onClick={() => { this.props.processOrder(val.order_id) }}>Proses Pesanan</button>} </td>
+                        {/* <td><button type="button" className="btn btn-primary" onClick={() => { this.props.processOrder(val.order_id) }}>{val.status == "Processed" ? "Diproses" : "Proses Pesanan"}</button></td> */}
+                    </tr>
+                )
+            })
+        }
+        else {
+            console.log("No order data");
+        }
+
+    }
+
     render() {
 
         return (
@@ -898,13 +968,13 @@ class TableData extends React.Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-6">
-                            <p className="my-3 d-inline">Showing {this.props.active == 1 && this.props.data_user.length - 1 || this.props.active == 2 && this.props.data_product.length} data.</p>
+                            <p className="my-3 d-inline">Showing {this.props.active == 1 && this.props.data_user.length - 1 || this.props.active == 2 && this.props.data_product.length || this.props.active == 3 && this.props.data_order.length} data.</p>
                             <button type="button" className="btn btn-outline-secondary mx-3 my-2" onClick={this.reloadData}>
                                 <i class="fas fa-sync-alt"></i> Reload </button>
                         </div>
                         <div className="col-lg-6 d-flex flex-row-reverse">
-                            <button type="button" className="btn btn-outline-secondary mx-3 my-2" onClick={() => { this.toggleAddYes(this.props.active) }}>
-                                <i class="fas fa-plus"></i> Add data </button>
+                            {this.props.active == 3 || <button type="button" className="btn btn-outline-secondary mx-3 my-2" onClick={() => { this.toggleAddYes(this.props.active) }}>
+                                <i class="fas fa-plus"></i> Add data </button>}
                         </div>
                     </div>
                 </div>
@@ -939,11 +1009,29 @@ class TableData extends React.Component {
                                 <th colSpan="2" className="text-center">Action</th>
                             </tr>
                         }
+                        {this.props.active == 3 ? this.props.data_order.length != 0 ?
+                            <tr>
+                                <th>Order ID</th>
+                                <th>ID User</th>
+                                <th>Pesanan</th>
+                                <th>Alamat</th>
+                                <th style={{ width: "200px" }}>Waktu Order</th>
+                                <th colSpan="2">Action</th>
+                            </tr>
+                            :
+                            <div className="text-center my-5">
+                                <h1>Data order is empty :(</h1>
+                            </div>
+
+                            :
+                            <React.Fragment></React.Fragment>
+                        }
 
                     </thead>
                     <tbody>
                         {this.displayUsersTable()}
                         {this.displayProductsTable()}
+                        {this.displayOrdersTable()}
                     </tbody>
                 </Table>
 
@@ -958,6 +1046,8 @@ class TableData extends React.Component {
                 {this.displayModalDeleteProduct()}
 
                 {this.displayModalEditProduct()}
+
+                {this.displayModalItemDetails()}
 
             </React.Fragment>
         )

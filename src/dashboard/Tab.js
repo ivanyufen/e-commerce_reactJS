@@ -3,6 +3,7 @@ import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, Ca
 import classnames from 'classnames';
 import TableData from './TableData';
 import axios from 'axios';
+import swal from '@sweetalert/with-react';
 
 class Tab extends React.Component {
 
@@ -13,7 +14,8 @@ class Tab extends React.Component {
             files: "",
             data_product: "",
             isLoading: false,
-            posted: true
+            posted: true,
+            data_order: ""
         }
     }
     componentDidMount() {
@@ -36,6 +38,13 @@ class Tab extends React.Component {
             });
             console.log(x.data)
         })
+
+        axios.get("http://localhost:3007/orders").then((x) => {
+            var dataReverse = [...x.data].reverse();
+            this.setState({
+                data_order: dataReverse
+            });
+        });
         // }
     }
 
@@ -191,6 +200,13 @@ class Tab extends React.Component {
         })
     }
 
+    processOrder = (order_id) => {
+        axios.put(`http://localhost:3007/order/${order_id}`).then(() => {
+            swal("Pesanan diproses");
+            this.reloadData();
+        })
+    }
+
     reloadData = () => {
         // if (this.props.activeTab == '1') {
         axios.get('http://localhost:3007/products').then((x) => {
@@ -202,6 +218,12 @@ class Tab extends React.Component {
         axios.get('http://localhost:3007/users').then((x) => {
             this.setState({
                 data_user: x.data
+            });
+        });
+        axios.get("http://localhost:3007/orders").then((x) => {
+            var dataReverse = [...x.data].reverse();
+            this.setState({
+                data_order: dataReverse
             });
         });
         // }
@@ -218,13 +240,24 @@ class Tab extends React.Component {
                                 <TableData data_user={this.state.data_user} active="1" removeDataUser={this.removeDataUser} editDataUser={this.editDataUser} addDataUser={this.addDataUser} reloadData={this.reloadData} posted={this.state.posted} />
                             </Col>
                         </Row>
-                    </TabPane>}
+                    </TabPane>
+                }
 
                 {this.props.activeTab == 2 &&
                     <TabPane tabId="2">
                         <Row>
                             <Col sm="12">
                                 <TableData data_product={this.state.data_product} active="2" removeDataProduct={this.removeDataProduct} editDataproduct={this.editDataProduct} addDataProduct={this.addDataProduct} reloadData={this.reloadData} posted={this.state.posted} />
+                            </Col>
+                        </Row>
+                    </TabPane>
+                }
+
+                {this.props.activeTab == 3 &&
+                    <TabPane tabId="3">
+                        <Row>
+                            <Col sm="12">
+                                <TableData data_order={this.state.data_order} active="3" reloadData={this.reloadData} processOrder={this.processOrder} />
                             </Col>
                         </Row>
                     </TabPane>

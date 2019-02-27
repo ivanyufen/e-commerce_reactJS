@@ -372,4 +372,17 @@ userRouter.get("/order/:order_id", (req, res) => {
 })
 
 
+userRouter.put("/order/:order_id", (req, res) => {
+    let sql = `UPDATE orders SET status = 'Processed' where id = '${req.params.order_id}'`;
+    let query = db.query(sql, (err, result) => {
+        if (err) {
+            throw err;
+        }
+        else {
+            console.log(result);
+            res.send(result);
+        }
+    })
+})
+
 module.exports = userRouter;

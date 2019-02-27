@@ -46,8 +46,17 @@ class MyOrders extends React.Component {
                         <h4>Items:</h4>
                         {this.state.orderDetails.map((val) => <p>{val.name} - {val.size} ({val.quantity} pcs) / Rp {val.price.toLocaleString()}</p>)}
                         <h4>Total Price: Rp {parseInt(this.state.orderDetails[0].totalPrice).toLocaleString()}</h4>
-                        <h4>Status: {this.state.orderDetails[0].status == "Paid" ? <span className="text-info">Paid and ready to ship</span> : <span className="text-info">Waiting for payment</span>}</h4>
-                        {/* <h4>Status: {this.state.orderDetails[0].status}</h4> */}
+                        {/* <h4>Status: {this.state.orderDetails[0].status == "Paid" ? <span className="text-info">Paid and ready to ship</span> : <span className="text-info">Waiting for payment</span>}</h4> */}
+                        <h4>Status: {
+                            (this.state.orderDetails[0].status == "Processed") ?
+                                <span className="text-info">Ready to ship</span>
+                                :
+                                (this.state.orderDetails[0].status == "Paid")
+                                    ?
+                                    <span className="text-info">Payment Received and waiting for processed</span>
+                                    :
+                                    <span className="text-info">Waiting for payment</span>}
+                        </h4>
 
 
                     </ModalBody>
@@ -88,7 +97,15 @@ class MyOrders extends React.Component {
                     <td>{i + 1}</td>
                     <td>{val.id}</td>
                     <td>Rp {parseInt(val.totalPrice).toLocaleString()}</td>
-                    <td>{val.status == "Paid" ? val.status : "Waiting for payment"}</td>
+                    <td>{
+                        (val.status == "Processed") ?
+                            <span className="text-info">Ready to ship</span>
+                            :
+                            (val.status == "Paid")
+                                ?
+                                <span className="text-info">Payment Received and waiting for processed</span>
+                                :
+                                <span className="text-info">Waiting for payment</span>}</td>
                     <td><button className="btn btn-info" onClick={() => {
                         this.setState({
                             order_id_chosen: val.id, status_chosen: val.status

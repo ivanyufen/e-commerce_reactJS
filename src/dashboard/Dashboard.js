@@ -52,6 +52,14 @@ class Dashboard extends React.Component {
                                     Products
                                     </NavLink>
                             </NavItem>
+                            <NavItem style={{ cursor: "pointer" }}>
+                                <NavLink
+                                    className={classnames({ active: this.state.activeTab === '3' })}
+                                    onClick={() => { this.toggle('3'); this.setState({ tabId: 3 }) }}
+                                >
+                                    Orders
+                                    </NavLink>
+                            </NavItem>
                         </Nav>
                         {/* END OF NAVIGATION NAME */}
 

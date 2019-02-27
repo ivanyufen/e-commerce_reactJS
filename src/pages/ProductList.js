@@ -23,7 +23,10 @@ class ProductList extends React.Component {
             init: 0,
             size: 12,
             hasMore: true,
-            isDone: false
+            isDone: false,
+            filter: [],
+            search: "",
+            dataNotFoundMsg: ""
         }
     }
 
@@ -82,7 +85,61 @@ class ProductList extends React.Component {
                     isLoading: false
                 })
             }
+            else if (this.state.filter != "") {
+                this.setState({
+                    search: ""
+                })
+                var result = [];
 
+                for (var i = 0; i < this.state.filter.length; i++) {
+                    var hasil = x.data.filter((val) => {
+                        if (val.name.includes(`${this.state.filter[i]}`)) {
+                            // console.log(val);
+                            result.push(val);
+                            return val;
+
+                        }
+                    })
+                    console.log(result)
+                }
+
+
+                this.setState({
+                    data_products: result,
+                    data_productsShown: hasil.slice(this.state.init, this.state.size),
+                    isLoading: false
+                });
+
+            }
+            else if (this.state.search !== "") {
+                this.setState({
+                    dataNotFoundMsg: ""
+                });
+                // let search = this.state.search.toLowerCase();
+                var hasil = x.data.filter((val) => {
+                    // if (val.name.includes(`${this.state.search}`)) {
+                    return val.name.includes(`${this.state.search}`)
+                    // }
+                })
+
+                if (hasil.length != 0) {
+                    this.setState({
+                        data_products: hasil,
+                        data_productsShown: hasil.slice(this.state.init, this.state.size),
+                        isLoading: false,
+                        search: ""
+                    });
+                }
+                else {
+                    this.setState({
+                        dataNotFoundMsg: "Produk tidak ditemukan",
+                        data_products: "hasil",
+                        data_productsShown: hasil.slice(this.state.init, this.state.size),
+                        isLoading: false,
+                        search: ""
+                    });
+                }
+            }
             else {
                 this.setState({
                     data_products: x.data,
@@ -90,7 +147,6 @@ class ProductList extends React.Component {
                     isLoading: false
                 });
             }
-
         });
     }
 
@@ -181,11 +237,13 @@ class ProductList extends React.Component {
 
                                         {/* CARI KATEGORI */}
                                         <li class="list-group-item">
-                                            <h5 class="card-title">Cari di kategori ini</h5>
+                                            <h5 class="card-title">Cari</h5>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" placeholder="Cari.." />
+                                                <input type="text" class="form-control" value={this.state.search} placeholder="Cari.." onChange={(e) => {
+                                                    this.setState({ search: e.target.value })
+                                                }} />
                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-default border-light" type="button"><i class="fas fa-search"></i></button>
+                                                    <button class="btn btn-default border-light" type="button" onClick={() => { this.loadProducts(); }}><i class="fas fa-search"></i></button>
                                                 </span>
                                             </div>
                                         </li>
@@ -209,9 +267,7 @@ class ProductList extends React.Component {
 
                                         {/* Size */}
                                         <label for="size">Size </label>
-                                        <select class="mx-1" style={{ padding: "10px 20px" }} id="size" onChange={(e) => {
-                                            this.loadProducts(`http://localhost:3007/products?size=${e.target.value}`)
-                                        }}>
+                                        <select class="mx-1" style={{ padding: "10px 20px" }} id="size">
                                             <option selected disabled hidden>Select your size..</option>
                                             <option value="18">18 mm</option>
                                             <option value="20">20 mm</option>
@@ -254,9 +310,23 @@ class ProductList extends React.Component {
 
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="Nato" id="nato" onChange={(e) => {
-                                                    this.loadProducts(`http://localhost:3007/products?type=${e.target.value}`)
-                                                }
 
+                                                    var filterTemp = this.state.filter;
+                                                    if (filterTemp.includes(`${e.target.value}`)) {
+                                                        filterTemp.splice(filterTemp.indexOf(`${e.target.value}`), 1);
+                                                        this.setState({
+                                                            filter: filterTemp
+                                                        });
+                                                        this.loadProducts();
+                                                    } else {
+                                                        filterTemp.push(e.target.value);
+                                                        console.log(filterTemp)
+                                                        this.setState({
+                                                            filter: filterTemp
+                                                        });
+                                                        this.loadProducts();
+                                                    }
+                                                }
                                                 } />
                                                 <label class="form-check-label" for="nato">
                                                     Nato
@@ -264,32 +334,79 @@ class ProductList extends React.Component {
                                             </div>
 
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="Zulu" id="zulu" />
-                                                <label class="form-check-label" for="zulu">
-                                                    Zulu
+                                                <input class="form-check-input" type="checkbox" value="Canvas" id="canvas" onChange={(e) => {
+
+                                                    var filterTemp = this.state.filter;
+                                                    if (filterTemp.includes(`${e.target.value}`)) {
+                                                        filterTemp.splice(filterTemp.indexOf(`${e.target.value}`), 1);
+                                                        this.setState({
+                                                            filter: filterTemp
+                                                        });
+                                                        console.log(filterTemp)
+                                                        this.loadProducts();
+                                                    } else {
+                                                        filterTemp.push(e.target.value);
+                                                        console.log(filterTemp)
+                                                        this.setState({
+                                                            filter: filterTemp
+                                                        });
+                                                        this.loadProducts();
+                                                    }
+                                                }
+                                                } />
+                                                <label class="form-check-label" for="canvas">
+                                                    Canvas
                                             </label>
                                             </div>
 
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="Perlon" id="perlon" />
+                                                <input class="form-check-input" type="checkbox" value="Perlon" id="perlon" onChange={(e) => {
+
+                                                    var filterTemp = this.state.filter;
+                                                    if (filterTemp.includes(`${e.target.value}`)) {
+                                                        filterTemp.splice(filterTemp.indexOf(`${e.target.value}`), 1);
+                                                        this.setState({
+                                                            filter: filterTemp
+                                                        });
+                                                        this.loadProducts();
+                                                    } else {
+                                                        filterTemp.push(e.target.value);
+                                                        this.setState({
+                                                            filter: filterTemp
+                                                        });
+                                                        this.loadProducts();
+                                                    }
+                                                }
+                                                } />
                                                 <label class="form-check-label" for="perlon">
                                                     Perlon
                                                 </label>
                                             </div>
 
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="Leather" id="leather" />
+                                                <input class="form-check-input" type="checkbox" value="Leather" id="leather" onChange={(e) => {
+
+                                                    var filterTemp = this.state.filter;
+                                                    if (filterTemp.includes(`${e.target.value}`)) {
+                                                        filterTemp.splice(filterTemp.indexOf(`${e.target.value}`), 1);
+                                                        this.setState({
+                                                            filter: filterTemp
+                                                        });
+                                                        this.loadProducts();
+                                                    } else {
+                                                        filterTemp.push(e.target.value);
+                                                        this.setState({
+                                                            filter: filterTemp
+                                                        });
+                                                        this.loadProducts();
+                                                    }
+                                                }
+                                                } />
                                                 <label class="form-check-label" for="leather">
                                                     Leather
                                                 </label>
                                             </div>
 
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="Canvas" id="canvas" />
-                                                <label class="form-check-label" for="canvas">
-                                                    Canvas
-                                                </label>
-                                            </div>
                                         </li>
 
                                         {/* DUKUNGAN PENGIRIMAN */}
@@ -323,7 +440,14 @@ class ProductList extends React.Component {
                                         </li>
                                     */}
                                         <button className="btn btn-success text-center d-block" onClick={() => {
-                                            this.loadProducts('http://localhost:3007/products');
+                                            this.setState({
+                                                filter: []
+                                            });
+                                            document.getElementById("nato").checked = false;
+                                            document.getElementById("canvas").checked = false;
+                                            document.getElementById("perlon").checked = false;
+                                            document.getElementById("leather").checked = false;
+                                            this.loadProducts();
                                         }}>Reset</button>
                                     </ul>
 
@@ -339,7 +463,9 @@ class ProductList extends React.Component {
                                 <div className="col-lg-6 text-right">
                                     <div class="form-group">
                                         <label for="sort">Urutkan: </label>
-                                        <select class="mx-1" style={{ padding: "10px 20px" }} id="sort" onChange={(e) => { this.loadProducts(e.target.value) }}>
+                                        <select class="mx-1" style={{ padding: "10px 20px" }} id="sort" onChange={(e) => {
+                                            this.loadProducts(e.target.value)
+                                        }}>
                                             <option value="typeStrap">Type Strap</option>
                                             <option value="alphabet">Alphabet</option>
                                             <option value="lowestPrice">Harga Terendah</option>
@@ -350,32 +476,17 @@ class ProductList extends React.Component {
                             </div>
                             <hr />
                             <div className="row">
-                                {this.state.isLoading ? this.loader() : this.showProducts()}
+                                {this.state.isLoading ? this.loader() : this.state.dataNotFoundMsg ? <div className="container text-center"><p>Produk tidak ditemukan</p></div> : this.showProducts()}
 
                             </div>
                             {!this.state.isDone ? this.state.isViewMore ? <p className="d-block my-3 text-primary text-center"> <b>Loading... </b></p> :
                                 <a className="d-block text-center my-3 text-primary" style={{ cursor: "pointer" }} onClick={this.fetchMoreData}>View More... </a>
                                 :
                                 <p className="text-center">
+                                    {/* <b>{this.state.dataNotFoundMsg && "Wow! You've seen all of our high quality products!"}</b> */}
                                     <b>Wow! You've seen all of our high quality products!</b>
-                                </p>}
-                            {/* PAGINATION */}
-                            {/* <nav aria-label="...">
-                                <ul class="pagination">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                    <li class="page-item active"><a class="page-link" href="#">1<span class="sr-only">(current)</span></a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">2 </a>
-                                    </li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav> */}
-
+                                </p>
+                            }
                         </div>
                     </div>
                 </div>

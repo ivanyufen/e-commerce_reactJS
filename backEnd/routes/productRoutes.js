@@ -158,8 +158,9 @@ productRouter.get("/products", (req, res) => {
     let sql = "SELECT p.id, p.name, p.id_category, p.price, p.stock, p.description, p.size, p.location, p.photo, p.photo2, p.photo3, c.category_name FROM products p, categories c WHERE p.id_category = c.id;";
     let query = db.query(sql, (err, result) => {
         if (err) throw err;
-        // console.log("All data successfuly fetched");
-        res.send(result);
+        else {
+            res.send(result);
+        }
         // console.log(result)
     });
 });
@@ -349,12 +350,12 @@ productRouter.get("/shipping/:destination_id", (req, response) => {
 })
 
 productRouter.get("/orders", (req, res) => {
-    console.log(req.body)
-    // let sql = 'SELECT id FROM orders order by id desc limit 1';
-    // let query = db.query(sql, (err, result) => {
-    //     console.log(result);
-    //     res.send(result);
-    // });
+    // untuk ambil data order yang sudah dibayar
+    let sql = ` SELECT o.id AS order_id, o.id_user AS id_user, o.status as status, o.created_at as order_date, o.cust_name AS cust_name, o.cust_phone AS cust_phone, o.cust_address AS cust_address, p.name AS product_name, p.size AS product_size, t.quantity AS quantity from orders o INNER JOIN transactions t ON o.id = t.order_id INNER JOIN products p ON t.id_product = p.id WHERE o.status = 'Paid' OR o.status = 'Processed' GROUP BY o.id`;
+    let query = db.query(sql, (err, result) => {
+        console.log(result);
+        res.send(result);
+    });
 })
 
 productRouter.post("/orders", (req, res) => {
@@ -410,10 +411,10 @@ productRouter.post("/transactions", (req, res) => {
                 <div className="row">
                     <div className="col-lg-12">
                         <h3>Hai ${nama_user}, terima kasih atas pemesanan anda.</h3>
-                        <p>Segera lakukan pembayaran sesuai total biaya Anda yaitu, ke rekening kami di bawah ini:</p>
-                        <p>BCA: 527-135-8564 a/n Ivan Yufen Stefanus</p>
+                        <p>Segera lakukan pembayaran sesuai total biaya Anda, ke rekening kami di bawah ini:</p>
+                        <p style="font-style: italic">BCA: 527-135-8564 a/n Ivan Yufen Stefanus</p>
     
-                        <p>Jika sudah, konfirmasi pembayaran dengan klik tombol di bawah agar barang Anda bisa langsung kami kirim.</p>
+                        <p>Jika sudah, konfirmasi pembayaran dengan klik tombol di bawah agar barang Anda bisa langsung kami proses.</p>
             </div>
 
             <a style="background-color: #4CAF50;
@@ -437,7 +438,7 @@ productRouter.post("/transactions", (req, res) => {
             var myEmail = {
                 from: 'Van & Co <vanandco279@gmail.com>',
                 to: `${email_user}`,
-                subject: `Van & Co - Invoice Number ${req.body.order_id} !`,
+                subject: `Van & Co - Invoice Number ${req.body.order_id} `,
                 // html: '<h2>INVOICE OF PT Van and Co</h2>',
                 html: html,
                 attachments: { //kalau lebih dr satu, masukin array
